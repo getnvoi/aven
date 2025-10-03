@@ -1,0 +1,17 @@
+<div data-controller="sqema--hello">
+  <div data-sqema--hello-target="output">okxx</div>
+  <button data-action="click->sqema--hello#greet">check</button>
+</div>
+
+<%= ui("button", label: "ok") %>
+
+<div data-controller="<%= controller_name %>">
+  view
+</div>
+
+<% if current_user %>
+  <div><%= current_user.id %></div>
+  <%= link_to("Logout", helpers.auth_logout_path) %>
+<% else %>
+  <%= link_to("Login", helpers.authenticate_path(provider: :google_oauth2)) %>
+<% end %>

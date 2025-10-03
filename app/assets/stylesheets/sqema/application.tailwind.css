@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    @apply text-stone-700;
+  }
+}

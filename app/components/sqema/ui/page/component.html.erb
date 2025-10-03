@@ -1,0 +1,24 @@
+<div class="flex flex-col w-full">
+  <div class="flex items-center justify-between py-6 space-x-6">
+    <div class="w-full min-w-0 truncate">
+      <h1 class="flex items-center space-x-2 font-semibold text-3xl tracking-tight">
+        <span class="flex-shrink truncate min-w-0 max-w-2/3"><%= title %></span>
+        <% if subtitle %>
+          <span class="text-gray-500/70 flex-shrink-0"><%= subtitle %></span>
+        <% end %>
+      </h1>
+      <% if description %>
+        <p class="mt-2 text-gray-600"><%= description %></p>
+      <% end %>
+    </div>
+    <% if actions_area %>
+      <div class="flex-shrink-0">
+        <%= actions_area %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="pb-6 w-full">
+    <%= content %>
+  </div>
+</div>

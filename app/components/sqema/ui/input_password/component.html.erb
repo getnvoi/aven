@@ -1,0 +1,43 @@
+<%= ui("input_wrapper",
+    label: label,
+    helper_text: helper_text,
+    error_text: error_text,
+    name: name,
+    id: id,
+    disabled: disabled,
+    required: required) do %>
+  <div class="relative" data-controller="<%= controller_name %>">
+    <input
+      type="password"
+      id="<%= id %>"
+      name="<%= name %>"
+      value="<%= value %>"
+      placeholder="<%= placeholder %>"
+      autocomplete="<%= autocomplete %>"
+      class="<%= Ui::FormBuilder::BaseComponent::INPUT_BASE_CLASSES.join(' ') %> <%= show_toggle ? 'pr-10' : '' %>"
+      data-<%= controller_name %>-target="input"
+      <%= 'disabled' if disabled %>
+      <%= 'required' if required %>
+      <% if data.any? %>
+        <% data.each do |key, val| %>
+          data-<%= key.to_s.dasherize %>="<%= val %>"
+        <% end %>
+      <% end %>
+    />
+    <% if show_toggle %>
+      <button
+        type="button"
+        class="absolute inset-y-0 right-0 pr-3 flex items-center"
+        data-action="click-><%= controller_name %>#toggle"
+        tabindex="-1"
+      >
+        <span data-<%= controller_name %>-target="showIcon">
+          <%= lucide_icon("eye", class: "h-4 w-4 text-gray-400 hover:text-gray-600") %>
+        </span>
+        <span data-<%= controller_name %>-target="hideIcon" class="hidden">
+          <%= lucide_icon("eye-off", class: "h-4 w-4 text-gray-400 hover:text-gray-600") %>
+        </span>
+      </button>
+    <% end %>
+  </div>
+<% end %>

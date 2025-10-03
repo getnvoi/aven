@@ -1,0 +1,2 @@
+web: bin/rails s -p3000
+tailwind: bundle exec rake app:sqema:tailwind_engine_watch
