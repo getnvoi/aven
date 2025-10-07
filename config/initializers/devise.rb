@@ -28,7 +28,7 @@ Devise.setup do |config|
   config.navigational_formats = ['*/*', :html, :turbo_stream]
 
   # The default HTTP method used to sign out a resource. Default is :delete.
-  config.sign_out_via = [:delete, :get]
+  config.sign_out_via = %i[delete get]
 
   # ==> Mountable engine configuration
   # Set parent controller for the engine

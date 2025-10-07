@@ -3,9 +3,6 @@
 module Sqema
   class AuthController < ApplicationController
     AVAILABLE_PROVIDERS = %w[google_oauth2]
-    
-    def sample
-    end
 
     def authenticate
       provider = params[:provider].to_s

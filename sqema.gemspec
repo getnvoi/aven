@@ -39,6 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "random_username", "~> 1.1"
   spec.add_dependency "omniauth-google-oauth2", "~> 1.2"
   spec.add_dependency "dotenv-rails", "~> 3.1"
+  spec.add_dependency "json_skooma"
 
   spec.add_development_dependency "rspec-rails", "~> 6.1"
   spec.add_development_dependency "factory_bot_rails", "~> 6.4.4"

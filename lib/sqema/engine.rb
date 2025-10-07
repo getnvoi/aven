@@ -9,6 +9,7 @@ require "view_component-contrib"
 require "dry-effects"
 require "tailwind_merge"
 require "random_username"
+require "json_skooma"
 
 module Sqema
   class << self

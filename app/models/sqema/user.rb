@@ -68,7 +68,7 @@ module Sqema
       def generate_unique_username
         loop do
           username = [ RandomUsername.adjective, RandomUsername.noun ].join("-")
-          return username unless User.exists?(username:)
+          return username unless Sqema::User.exists?(username:)
         end
       end
   end

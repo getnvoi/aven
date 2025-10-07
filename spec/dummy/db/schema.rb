@@ -10,9 +10,46 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_03_090752) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_04_190110) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "sqema_app_record_schemas", force: :cascade do |t|
+    t.jsonb "schema", null: false
+    t.bigint "workspace_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["schema"], name: "index_sqema_app_record_schemas_on_schema", using: :gin
+    t.index ["workspace_id"], name: "index_sqema_app_record_schemas_on_workspace_id"
+  end
+
+  create_table "sqema_app_records", force: :cascade do |t|
+    t.jsonb "data", null: false
+    t.bigint "app_record_schema_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["app_record_schema_id"], name: "index_sqema_app_records_on_app_record_schema_id"
+    t.index ["data"], name: "index_sqema_app_records_on_data", using: :gin
+  end
+
+  create_table "sqema_logs", force: :cascade do |t|
+    t.string "level", default: "info", null: false
+    t.string "loggable_type", null: false
+    t.bigint "loggable_id", null: false
+    t.text "message", null: false
+    t.jsonb "metadata"
+    t.string "state"
+    t.string "state_machine"
+    t.string "run_id"
+    t.bigint "workspace_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_sqema_logs_on_created_at"
+    t.index ["level"], name: "index_sqema_logs_on_level"
+    t.index ["loggable_type", "loggable_id", "run_id", "state", "created_at"], name: "idx_sqema_logs_on_loggable_run_state_created_at"
+    t.index ["loggable_type", "loggable_id"], name: "index_sqema_logs_on_loggable"
+    t.index ["workspace_id"], name: "index_sqema_logs_on_workspace_id"
+  end
 
   create_table "sqema_users", force: :cascade do |t|
     t.string "username", null: false
@@ -31,4 +68,53 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_03_090752) do
     t.index ["reset_password_token"], name: "index_sqema_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_sqema_users_on_username", unique: true
   end
+
+  create_table "sqema_workspace_roles", force: :cascade do |t|
+    t.bigint "workspace_id"
+    t.string "label", null: false
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workspace_id", "label"], name: "idx_sqema_workspace_roles_on_ws_label", unique: true
+    t.index ["workspace_id"], name: "index_sqema_workspace_roles_on_workspace_id"
+  end
+
+  create_table "sqema_workspace_user_roles", force: :cascade do |t|
+    t.bigint "workspace_role_id"
+    t.bigint "workspace_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workspace_role_id", "workspace_user_id"], name: "idx_sqema_ws_user_roles_on_role_user", unique: true
+    t.index ["workspace_role_id"], name: "index_sqema_workspace_user_roles_on_workspace_role_id"
+    t.index ["workspace_user_id"], name: "index_sqema_workspace_user_roles_on_workspace_user_id"
+  end
+
+  create_table "sqema_workspace_users", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "workspace_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "workspace_id"], name: "idx_sqema_workspace_users_on_user_workspace", unique: true
+    t.index ["user_id"], name: "index_sqema_workspace_users_on_user_id"
+    t.index ["workspace_id"], name: "index_sqema_workspace_users_on_workspace_id"
+  end
+
+  create_table "sqema_workspaces", force: :cascade do |t|
+    t.string "label"
+    t.string "slug"
+    t.text "description"
+    t.string "domain"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_sqema_workspaces_on_slug", unique: true
+  end
+
+  add_foreign_key "sqema_app_record_schemas", "sqema_workspaces", column: "workspace_id"
+  add_foreign_key "sqema_app_records", "sqema_app_record_schemas", column: "app_record_schema_id"
+  add_foreign_key "sqema_logs", "sqema_workspaces", column: "workspace_id"
+  add_foreign_key "sqema_workspace_roles", "sqema_workspaces", column: "workspace_id"
+  add_foreign_key "sqema_workspace_user_roles", "sqema_workspace_roles", column: "workspace_role_id"
+  add_foreign_key "sqema_workspace_user_roles", "sqema_workspace_users", column: "workspace_user_id"
+  add_foreign_key "sqema_workspace_users", "sqema_users", column: "user_id"
+  add_foreign_key "sqema_workspace_users", "sqema_workspaces", column: "workspace_id"
 end
