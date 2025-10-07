@@ -5,6 +5,7 @@ This document describes how to release a new version of Sqema to RubyGems.
 ## Setup (One-time)
 
 1. **Get your RubyGems API key:**
+
    - Log in to [RubyGems.org](https://rubygems.org)
    - Go to your account settings → API Keys
    - Create a new API key with push permissions
@@ -20,18 +21,21 @@ This document describes how to release a new version of Sqema to RubyGems.
 ## Releasing a New Version
 
 1. **Update the version:**
+
    ```bash
    # Edit lib/sqema/version.rb
    # Change VERSION = "0.1.0" to your new version
    ```
 
 2. **Update the CHANGELOG:**
+
    ```bash
    # Edit CHANGELOG.md
    # Add a new section for your version with changes
    ```
 
 3. **Commit your changes:**
+
    ```bash
    git add lib/sqema/version.rb CHANGELOG.md
    git commit -m "Bump version to X.Y.Z"
@@ -39,16 +43,18 @@ This document describes how to release a new version of Sqema to RubyGems.
    ```
 
 4. **Create and push a git tag:**
+
    ```bash
    git tag vX.Y.Z
    git push origin vX.Y.Z
    ```
 
 5. **Wait for the GitHub Action to complete:**
+
    - The release workflow will automatically:
-     - Build the gem
-     - Create a GitHub release with release notes
-     - Publish the gem to RubyGems.org
+      - Build the gem
+      - Create a GitHub release with release notes
+      - Publish the gem to RubyGems.org
 
 6. **Verify the release:**
    - Check the [GitHub releases page](https://github.com/ben/sqema/releases)
