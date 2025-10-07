@@ -38,9 +38,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "dotenv-rails", "~> 3.1"
   spec.add_dependency "json_skooma"
 
-  spec.add_development_dependency "rspec-rails", "~> 6.1"
+  spec.add_development_dependency "rspec-rails", "~> 8.0"
   spec.add_development_dependency "shoulda-matchers", "~> 6.5"
   spec.add_development_dependency "factory_bot_rails", "~> 6.5.1"
-  spec.add_development_dependency "shoulda-matchers", "~> 5.3"
   spec.add_development_dependency "ffaker"
 end
