@@ -25,7 +25,7 @@ group :development, :test do
   gem "factory_bot_rails", "~> 6.4.4"
   gem "shoulda-matchers", "~> 5.3"
   gem "ffaker"
-  gem "database_cleaner", "~> 2.0.1"
+  gem "database_cleaner", "~> 2.1.0"
 end
 
 # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
