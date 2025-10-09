@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in sqema.gemspec.
+# Specify your gem's dependencies in aven.gemspec.
 gemspec
 
 gem "puma"
@@ -13,16 +13,16 @@ gem "turbo-rails"
 gem "stimulus-rails"
 
 # OAuth dependencies (these are in gemspec but needed for development)
-gem "devise", "~> 4.9"
-gem "omniauth", "~> 2.1"
-gem "omniauth-rails_csrf_protection", "~> 1.0.0"
 gem "omniauth-github", "~> 2.0"
-gem "repost", "~> 0.4.2"
+gem "omniauth-google-oauth2", "~> 1.2"
+
+group :development do
+  gem "annotaterb", "~> 4.19"
+end
 
 # Testing dependencies
 group :development, :test do
   gem "rspec-rails", "~> 8.0"
-  gem "rspec-rails", "~> 6.1"
   gem "factory_bot_rails", "~> 6.5.1"
   gem "shoulda-matchers", "~> 5.3"
   gem "ffaker"
@@ -32,5 +32,4 @@ end
 # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
 gem "rubocop-rails-omakase", require: false
 
-# Start debugger with binding.b [https://github.com/ruby/debug]
-# gem "debug", ">= 1.0.0"
+gem("aeros", github: "getnvoi/ui", branch: :main)

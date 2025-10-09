@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount Sqema::Engine => "/sqema"
+  mount Aven::Engine => "/aven"
 end

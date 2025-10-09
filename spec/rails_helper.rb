@@ -10,10 +10,12 @@ Dir[File.join(__dir__, "support/**/*.rb")].sort.each { |f| require f }
 # Ensure engine and dummy app migrations are applied
 ActiveRecord::Migrator.migrations_paths = [
   File.expand_path("../db/migrate", __dir__),
-  File.expand_path("dummy/db/migrate", __dir__)
 ].uniq
 
 ActiveRecord::Migration.maintain_test_schema!
+
+# Silence OmniAuth debug output
+OmniAuth.config.logger = Logger.new("/dev/null")
 
 RSpec.configure do |config|
   config.use_active_record = true

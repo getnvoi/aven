@@ -1,6 +1,6 @@
-# Releasing Sqema
+# Releasing Aven
 
-This document describes how to release a new version of Sqema to RubyGems.
+This document describes how to release a new version of Aven to RubyGems.
 
 ## Setup (One-time)
 
@@ -23,7 +23,7 @@ This document describes how to release a new version of Sqema to RubyGems.
 1. **Update the version:**
 
    ```bash
-   # Edit lib/sqema/version.rb
+   # Edit lib/aven/version.rb
    # Change VERSION = "0.1.0" to your new version
    ```
 
@@ -37,7 +37,7 @@ This document describes how to release a new version of Sqema to RubyGems.
 3. **Commit your changes:**
 
    ```bash
-   git add lib/sqema/version.rb CHANGELOG.md
+   git add lib/aven/version.rb CHANGELOG.md
    git commit -m "Bump version to X.Y.Z"
    git push
    ```
@@ -57,12 +57,12 @@ This document describes how to release a new version of Sqema to RubyGems.
       - Publish the gem to RubyGems.org
 
 6. **Verify the release:**
-   - Check the [GitHub releases page](https://github.com/ben/sqema/releases)
-   - Check [RubyGems.org](https://rubygems.org/gems/sqema)
+   - Check the [GitHub releases page](https://github.com/ben/aven/releases)
+   - Check [RubyGems.org](https://rubygems.org/gems/aven)
 
 ## Troubleshooting
 
 - If the release fails, check the GitHub Actions logs
 - Ensure your RUBYGEMS_API_KEY secret is set correctly
-- Verify that the version in `lib/sqema/version.rb` matches your git tag (without the 'v' prefix)
+- Verify that the version in `lib/aven/version.rb` matches your git tag (without the 'v' prefix)
 - Make sure you have MFA enabled on RubyGems (required by the gem configuration)

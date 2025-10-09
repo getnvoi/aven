@@ -32,12 +32,12 @@ Devise.setup do |config|
 
   # ==> Mountable engine configuration
   # Set parent controller for the engine
-  config.parent_controller = 'Sqema::ApplicationController'
+  config.parent_controller = 'Aven::ApplicationController'
 
   # ==> OmniAuth
-  # OmniAuth providers are configured dynamically via Sqema.configuration
-  # in the engine initializer (lib/sqema/engine.rb)
+  # OmniAuth providers are configured dynamically via Aven.configuration
+  # in the engine initializer (lib/aven/engine.rb)
 
   # Configure OmniAuth to work with the engine's mounted path
-  # config.omniauth_path_prefix = '/sqema/users/auth'
+  # config.omniauth_path_prefix = '/aven/users/auth'
 end

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html  class='bg-slate-50'>
+  <head>
+    <title>Aven</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= yield :head %>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+    <%= stylesheet_link_tag "aven/application", media: "all" %>
+    <%= stylesheet_link_tag "aven/tailwind", media: "all" %>
+    <%= javascript_importmap_tags "aven/application", importmap: Aven.importmap %>
+  </head>
+  <body class='bg-slate-100'>
+    <%= yield %>
+  </body>
+</html>

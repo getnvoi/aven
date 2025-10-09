@@ -1,0 +1,17 @@
+<%= ui("button", label: "ok") %>
+
+<div data-controller="<%= controller_name %>"></div>
+
+<% if current_user %>
+  <div><%= current_user.id %></div>
+  <%= link_to("Logout", helpers.logout_path) %>
+<% else %>
+  <% Aven.configuration.auth.providers.each do |provider_config| %>
+    <%=
+      link_to(
+        "Login with #{provider_config[:provider]}",
+        helpers.authenticate_path(provider: provider_config[:provider])
+      )
+    %>
+  <% end %>
+<% end %>
