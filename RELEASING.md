@@ -57,7 +57,7 @@ This document describes how to release a new version of Aven to RubyGems.
       - Publish the gem to RubyGems.org
 
 6. **Verify the release:**
-   - Check the [GitHub releases page](https://github.com/ben/aven/releases)
+   - Check the [GitHub releases page](https://github.com/getnvoi/aven/releases)
    - Check [RubyGems.org](https://rubygems.org/gems/aven)
 
 ## Troubleshooting
