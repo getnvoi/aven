@@ -81,7 +81,7 @@ module Aven
           auth_tenant = request.host
 
           user = Aven::User.where(auth_tenant:)
-                           .where("remote_id = ? OR email = ?", user_info[:id], user_info[:email])
+                           .where("remote_id = ? OR email = ?", user_info[:id].to_s, user_info[:email])
                            .first_or_initialize
 
           user.tap do |u|

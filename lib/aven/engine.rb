@@ -19,6 +19,15 @@ module Aven
     Aeros::EngineHelpers.setup_assets(self, namespace: Aven)
     Aeros::EngineHelpers.setup_importmap(self, namespace: Aven)
 
+    # Append engine migrations to the main app
+    initializer :append_migrations do |app|
+      unless app.root.to_s.include?("spec/dummy")
+        config.paths["db/migrate"].expanded.each do |expanded_path|
+          app.config.paths["db/migrate"] << expanded_path
+        end
+      end
+    end
+
     # Include engine route helpers and controller helpers in controllers and views (like Devise does)
     initializer "aven.helpers" do
       ActiveSupport.on_load(:action_controller) do
