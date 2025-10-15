@@ -22,6 +22,10 @@ Aven::Engine.routes.draw do
     # GitHub OAuth
     get "github", to: "github#create", as: :github
     get "github/callback", to: "github#callback", as: :github_callback
+
+    # Auth0 OAuth
+    get "auth0", to: "auth0#create", as: :auth0
+    get "auth0/callback", to: "auth0#callback", as: :auth0_callback
   end
 
   # Workspace switching
