@@ -24,7 +24,7 @@ end
 group :development, :test do
   gem "rspec-rails", "~> 8.0"
   gem "factory_bot_rails", "~> 6.5.1"
-  gem "shoulda-matchers", "~> 5.3"
+  gem "shoulda-matchers", "~> 6.5"
   gem "ffaker"
   gem "database_cleaner", "~> 2.1.0"
   gem "webmock", "~> 3.24"
