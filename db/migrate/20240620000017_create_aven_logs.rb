@@ -15,8 +15,7 @@ class CreateAvenLogs < ActiveRecord::Migration[8.0]
 
     add_index :aven_logs, :created_at
     add_index :aven_logs, :level
-    add_index :aven_logs, [:loggable_type, :loggable_id], name: "index_aven_logs_on_loggable"
-    add_index :aven_logs, [:loggable_type, :loggable_id, :run_id, :state, :created_at], name: "idx_aven_logs_on_loggable_run_state_created_at"
+    add_index :aven_logs, [ :loggable_type, :loggable_id ], name: "index_aven_logs_on_loggable"
+    add_index :aven_logs, [ :loggable_type, :loggable_id, :run_id, :state, :created_at ], name: "idx_aven_logs_on_loggable_run_state_created_at"
   end
 end
-

@@ -25,4 +25,3 @@ FactoryBot.define do
     description { "A role" }
   end
 end
-

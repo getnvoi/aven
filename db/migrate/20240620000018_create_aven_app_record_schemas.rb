@@ -9,4 +9,3 @@ class CreateAvenAppRecordSchemas < ActiveRecord::Migration[8.0]
     add_index :aven_app_record_schemas, :schema, using: :gin
   end
 end
-

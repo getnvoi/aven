@@ -21,9 +21,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "rails", ">= 8.0.3"
   spec.add_dependency "devise", "~> 4.9"
-  spec.add_dependency "omniauth", "~> 2.1"
-  spec.add_dependency "omniauth-rails_csrf_protection", "~> 1.0.0"
-  spec.add_dependency "repost", "~> 0.4.2"
   spec.add_dependency "importmap-rails", "~> 2.2.2"
   spec.add_dependency "turbo-rails", "~> 2.0"
   spec.add_dependency "stimulus-rails", "~> 1.3"
@@ -35,4 +32,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "random_username", "~> 1.1"
   spec.add_dependency "dotenv-rails", "~> 3.1"
   spec.add_dependency "json_skooma"
+  spec.add_dependency "friendly_id", "~> 5.5"
 end

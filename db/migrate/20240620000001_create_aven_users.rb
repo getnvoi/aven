@@ -13,7 +13,7 @@ class CreateAvenUsers < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index(:aven_users, [:email, :auth_tenant], unique: true)
+    add_index(:aven_users, [ :email, :auth_tenant ], unique: true)
     add_index(:aven_users, :reset_password_token, unique: true)
   end
 end

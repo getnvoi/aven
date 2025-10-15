@@ -56,4 +56,3 @@ RSpec.describe Aven::WorkspaceUser, type: :model do
     end
   end
 end
-

@@ -48,4 +48,3 @@ RSpec.describe Aven::Log, type: :model do
     expect(log.workspace).to eq(ws)
   end
 end
-

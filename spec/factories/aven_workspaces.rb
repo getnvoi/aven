@@ -21,4 +21,3 @@ FactoryBot.define do
     domain { "example.com" }
   end
 end
-

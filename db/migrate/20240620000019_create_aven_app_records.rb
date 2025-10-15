@@ -9,4 +9,3 @@ class CreateAvenAppRecords < ActiveRecord::Migration[8.0]
     add_index :aven_app_records, :data, using: :gin
   end
 end
-

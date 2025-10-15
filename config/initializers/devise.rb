@@ -12,27 +12,22 @@ Devise.setup do |config|
 
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user
-  config.authentication_keys = [:email]
+  config.authentication_keys = [ :email ]
 
-  # ==> OAuth configuration
-  # GitHub OAuth will be configured with credentials from the host app
-  # The engine will receive credentials via configuration
-
-  # Configure sign out to use GET request (required for some OAuth providers)
-  config.sign_out_via = :get
+  # ==> Sign out configuration
 
   # ==> Scopes configuration
   config.scoped_views = true
 
   # ==> Navigation configuration
-  config.navigational_formats = ['*/*', :html, :turbo_stream]
+  config.navigational_formats = [ "*/*", :html, :turbo_stream ]
 
   # The default HTTP method used to sign out a resource. Default is :delete.
   config.sign_out_via = %i[delete get]
 
   # ==> Mountable engine configuration
   # Set parent controller for the engine
-  config.parent_controller = 'Aven::ApplicationController'
+  config.parent_controller = "Aven::ApplicationController"
 
   # ==> OmniAuth
   # OmniAuth providers are configured dynamically via Aven.configuration

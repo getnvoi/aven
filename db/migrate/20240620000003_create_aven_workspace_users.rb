@@ -7,6 +7,6 @@ class CreateAvenWorkspaceUsers < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :aven_workspace_users, [:user_id, :workspace_id], unique: true, name: "idx_aven_workspace_users_on_user_workspace"
+    add_index :aven_workspace_users, [ :user_id, :workspace_id ], unique: true, name: "idx_aven_workspace_users_on_user_workspace"
   end
 end

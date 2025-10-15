@@ -37,4 +37,3 @@ FactoryBot.define do
     loggable_id { loggable.id }
   end
 end
-

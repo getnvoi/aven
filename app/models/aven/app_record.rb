@@ -53,7 +53,7 @@ module Aven
           registry = JSONSkooma.create_registry("2020-12", assert_formats: true)
           schema_with_meta = app_record_schema.schema.dup
           schema_with_meta["$schema"] ||= "https://json-schema.org/draft/2020-12/schema"
-          json_schema = JSONSkooma::JSONSchema.new(schema_with_meta, registry: registry)
+          json_schema = JSONSkooma::JSONSchema.new(schema_with_meta, registry:)
           result = json_schema.evaluate(data)
           unless result.valid?
             error_output = result.output(:basic)

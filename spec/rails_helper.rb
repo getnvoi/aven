@@ -4,13 +4,12 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 
 require "rspec/rails"
 require "factory_bot_rails"
+require "webmock/rspec"
 
 Dir[File.join(__dir__, "support/**/*.rb")].sort.each { |f| require f }
 
-# Ensure engine and dummy app migrations are applied
-ActiveRecord::Migrator.migrations_paths = [
-  File.expand_path("../db/migrate", __dir__),
-].uniq
+# Configure WebMock
+WebMock.disable_net_connect!(allow_localhost: true)
 
 ActiveRecord::Migration.maintain_test_schema!
 
@@ -19,7 +18,7 @@ OmniAuth.config.logger = Logger.new("/dev/null")
 
 RSpec.configure do |config|
   config.use_active_record = true
-  config.fixture_paths = [File.join(__dir__, "fixtures")]
+  config.fixture_paths = [ File.join(__dir__, "fixtures") ]
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
@@ -28,5 +27,5 @@ end
 
 # Ensure FactoryBot loads engine factories (engine root/spec/factories)
 FactoryBot.factories.clear
-FactoryBot.definition_file_paths = [File.join(__dir__, "factories")]
+FactoryBot.definition_file_paths = [ File.join(__dir__, "factories") ]
 FactoryBot.find_definitions

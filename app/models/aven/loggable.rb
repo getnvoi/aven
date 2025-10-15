@@ -2,8 +2,8 @@ module Aven
   module Loggable
     def log!(message:, level: "info", metadata: nil, **extra)
       attrs = {
-        message: message,
-        level: level,
+        message:,
+        level:,
         metadata: metadata || {}
       }
 
@@ -18,4 +18,3 @@ module Aven
     end
   end
 end
-

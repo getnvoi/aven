@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.describe "Aven::AppRecord JSON Schema validation", type: :model do
   def build_record_with_schema(schema:, data:)
     ws = create(:aven_workspace)
-    s = create(:aven_app_record_schema, workspace: ws, schema: schema)
-    Aven::AppRecord.new(app_record_schema: s, data: data)
+    s = create(:aven_app_record_schema, workspace: ws, schema:)
+    Aven::AppRecord.new(app_record_schema: s, data:)
   end
 
   describe "required properties" do
@@ -13,17 +13,17 @@ RSpec.describe "Aven::AppRecord JSON Schema validation", type: :model do
         "$schema" => "https://json-schema.org/draft/2020-12/schema",
         "type" => "object",
         "properties" => { "name" => { "type" => "string" } },
-        "required" => ["name"]
+        "required" => [ "name" ]
       }
     end
 
     it "passes when required field present" do
-      rec = build_record_with_schema(schema: schema, data: { "name" => "Alice" })
+      rec = build_record_with_schema(schema:, data: { "name" => "Alice" })
       expect(rec).to be_valid
     end
 
     it "fails when required field missing" do
-      rec = build_record_with_schema(schema: schema, data: { "other" => 1 })
+      rec = build_record_with_schema(schema:, data: { "other" => 1 })
       expect(rec).not_to be_valid
       msg = rec.errors[:data].join
       expect(msg).to include("schema validation failed")
@@ -41,7 +41,7 @@ RSpec.describe "Aven::AppRecord JSON Schema validation", type: :model do
     end
 
     it "allows missing optional field" do
-      rec = build_record_with_schema(schema: schema, data: { "other" => true })
+      rec = build_record_with_schema(schema:, data: { "other" => true })
       expect(rec).to be_valid
     end
   end
@@ -52,13 +52,13 @@ RSpec.describe "Aven::AppRecord JSON Schema validation", type: :model do
         "$schema" => "https://json-schema.org/draft/2020-12/schema",
         "type" => "object",
         "properties" => { "email" => { "type" => "string", "format" => "email" } },
-        "required" => ["email"]
+        "required" => [ "email" ]
       }
 
-      ok = build_record_with_schema(schema: schema, data: { "email" => "user@example.com" })
+      ok = build_record_with_schema(schema:, data: { "email" => "user@example.com" })
       expect(ok).to be_valid
 
-      bad = build_record_with_schema(schema: schema, data: { "email" => "not-an-email" })
+      bad = build_record_with_schema(schema:, data: { "email" => "not-an-email" })
       expect(bad).not_to be_valid
       expect(bad.errors[:data].join).to include("/email")
     end
@@ -68,13 +68,13 @@ RSpec.describe "Aven::AppRecord JSON Schema validation", type: :model do
         "$schema" => "https://json-schema.org/draft/2020-12/schema",
         "type" => "object",
         "properties" => { "url" => { "type" => "string", "format" => "uri" } },
-        "required" => ["url"]
+        "required" => [ "url" ]
       }
 
-      ok = build_record_with_schema(schema: schema, data: { "url" => "https://example.com/x" })
+      ok = build_record_with_schema(schema:, data: { "url" => "https://example.com/x" })
       expect(ok).to be_valid
 
-      bad = build_record_with_schema(schema: schema, data: { "url" => "not a url" })
+      bad = build_record_with_schema(schema:, data: { "url" => "not a url" })
       expect(bad).not_to be_valid
       expect(bad.errors[:data].join).to include("/url")
     end
@@ -92,24 +92,24 @@ RSpec.describe "Aven::AppRecord JSON Schema validation", type: :model do
     end
 
     it "passes valid arrays" do
-      rec = build_record_with_schema(schema: schema, data: [1, 2])
+      rec = build_record_with_schema(schema:, data: [ 1, 2 ])
       expect(rec).to be_valid
     end
 
     it "fails when element has wrong type" do
-      rec = build_record_with_schema(schema: schema, data: ["a", 2])
+      rec = build_record_with_schema(schema:, data: [ "a", 2 ])
       expect(rec).not_to be_valid
       expect(rec.errors[:data].join).to include("/0")
     end
 
     it "fails when below minItems" do
-      rec = build_record_with_schema(schema: schema, data: [1])
+      rec = build_record_with_schema(schema:, data: [ 1 ])
       expect(rec).not_to be_valid
       expect(rec.errors[:data].join).to match(/too few elements|minimum 2/i)
     end
 
     it "fails when not unique" do
-      rec = build_record_with_schema(schema: schema, data: [1, 1])
+      rec = build_record_with_schema(schema:, data: [ 1, 1 ])
       expect(rec).not_to be_valid
       expect(rec.errors[:data].join).to match(/must all be unique/i)
     end
@@ -128,13 +128,13 @@ RSpec.describe "Aven::AppRecord JSON Schema validation", type: :model do
             ]
           }
         },
-        "required" => ["code"]
+        "required" => [ "code" ]
       }
 
-      expect(build_record_with_schema(schema: schema, data: { "code" => "ABC" })).to be_valid
-      expect(build_record_with_schema(schema: schema, data: { "code" => 123 })).to be_valid
+      expect(build_record_with_schema(schema:, data: { "code" => "ABC" })).to be_valid
+      expect(build_record_with_schema(schema:, data: { "code" => 123 })).to be_valid
 
-      bad = build_record_with_schema(schema: schema, data: { "code" => "abc" })
+      bad = build_record_with_schema(schema:, data: { "code" => "abc" })
       expect(bad).not_to be_valid
       expect(bad.errors[:data].join).to include("/code")
     end
@@ -151,16 +151,16 @@ RSpec.describe "Aven::AppRecord JSON Schema validation", type: :model do
             ]
           }
         },
-        "required" => ["age"]
+        "required" => [ "age" ]
       }
 
-      expect(build_record_with_schema(schema: schema, data: { "age" => 30 })).to be_valid
+      expect(build_record_with_schema(schema:, data: { "age" => 30 })).to be_valid
 
-      too_young = build_record_with_schema(schema: schema, data: { "age" => 10 })
+      too_young = build_record_with_schema(schema:, data: { "age" => 10 })
       expect(too_young).not_to be_valid
       expect(too_young.errors[:data].join).to include("/age").and match(/less than 18/i)
 
-      too_old = build_record_with_schema(schema: schema, data: { "age" => 70 })
+      too_old = build_record_with_schema(schema:, data: { "age" => 70 })
       expect(too_old).not_to be_valid
       expect(too_old.errors[:data].join).to include("/age").and match(/greater than 65/i)
     end

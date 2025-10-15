@@ -36,4 +36,3 @@ module Aven
     scope :with_role, ->(role_label) { joins(:workspace_role).where(aven_workspace_roles: { label: role_label }) }
   end
 end
-

@@ -51,4 +51,3 @@ RSpec.describe Aven::WorkspaceRole, type: :model do
     end
   end
 end
-

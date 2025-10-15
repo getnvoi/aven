@@ -1,8 +1,11 @@
 # config/initializers/aven.rb
 Aven.configure do |config|
-  config.auth.add(
-    :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'],
-    scope: 'email,profile',
-    path_prefix: "/aven/users/auth"
-  )
+  # Configure Google OAuth (optional, for testing)
+  if ENV['GOOGLE_CLIENT_ID'].present? && ENV['GOOGLE_CLIENT_SECRET'].present?
+    config.configure_oauth(:google, {
+      client_id: ENV['GOOGLE_CLIENT_ID'],
+      client_secret: ENV['GOOGLE_CLIENT_SECRET'],
+      scope: 'openid email profile'
+    })
+  end
 end

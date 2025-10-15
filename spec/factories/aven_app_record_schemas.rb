@@ -23,4 +23,3 @@ FactoryBot.define do
     schema { { "type" => "object", "properties" => { "name" => { "type" => "string" } } } }
   end
 end
-

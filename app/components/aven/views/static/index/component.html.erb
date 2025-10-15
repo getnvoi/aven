@@ -4,13 +4,13 @@
 
 <% if current_user %>
   <div><%= current_user.id %></div>
-  <%= link_to("Logout", helpers.logout_path) %>
+  <%= link_to("Logout", Aven::Engine.routes.url_helpers.logout_path) %>
 <% else %>
-  <% Aven.configuration.auth.providers.each do |provider_config| %>
+  <% Aven.configuration.oauth_providers.each do |provider, config| %>
     <%=
       link_to(
-        "Login with #{provider_config[:provider]}",
-        helpers.authenticate_path(provider: provider_config[:provider])
+        "Login with #{provider.to_s.capitalize}",
+        oauth_path_for(provider)
       )
     %>
   <% end %>

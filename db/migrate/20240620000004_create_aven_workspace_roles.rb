@@ -8,6 +8,6 @@ class CreateAvenWorkspaceRoles < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :aven_workspace_roles, [:workspace_id, :label], unique: true, name: "idx_aven_workspace_roles_on_ws_label"
+    add_index :aven_workspace_roles, [ :workspace_id, :label ], unique: true, name: "idx_aven_workspace_roles_on_ws_label"
   end
 end

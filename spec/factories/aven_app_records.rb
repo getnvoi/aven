@@ -23,4 +23,3 @@ FactoryBot.define do
     data { { "name" => "Example" } }
   end
 end
-

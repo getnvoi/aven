@@ -52,4 +52,3 @@ module Aven
     end
   end
 end
-

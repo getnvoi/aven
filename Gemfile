@@ -27,6 +27,7 @@ group :development, :test do
   gem "shoulda-matchers", "~> 5.3"
   gem "ffaker"
   gem "database_cleaner", "~> 2.1.0"
+  gem "webmock", "~> 3.24"
 end
 
 # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]

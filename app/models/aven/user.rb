@@ -22,10 +22,9 @@
 #
 module Aven
   class User < ApplicationRecord
-    devise(
-      :omniauthable,
-      omniauth_providers: Aven.configuration.auth.providers.map { |p| p[:provider] }
-    )
+    # Remove omniauthable, keep other Devise modules as needed
+    devise :database_authenticatable, :registerable,
+           :recoverable, :rememberable, :validatable
 
     has_many :workspace_users, dependent: :destroy
     has_many :workspaces, through: :workspace_users
@@ -41,23 +40,5 @@ module Aven
     validates :remote_id, uniqueness: { scope: :auth_tenant, case_sensitive: false }, allow_blank: true
 
     encrypts(:access_token)
-
-    def self.create_from_omniauth!(request_env, auth_tenant)
-      user = request_env.dig("omniauth.auth")
-      remote_id = user["uid"]
-      email = user.dig("info", "email") || "#{SecureRandom.uuid}@aven.dev"
-
-      u = where(auth_tenant:, remote_id:).or(
-        where(auth_tenant:, email:)
-      ).first_or_initialize
-
-      u.auth_tenant = auth_tenant
-      u.remote_id = remote_id
-      u.email = email
-      u.access_token = user.dig("credentials", "token")
-      u.save!
-
-      u
-    end
   end
 end

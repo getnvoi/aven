@@ -35,7 +35,7 @@ RSpec.describe Aven::WorkspaceUserRole, type: :model do
   describe "delegates and scopes" do
     let(:ws) { create(:aven_workspace) }
     let(:user) { create(:aven_user, email: "alice@example.com", auth_tenant: "test") }
-    let(:wu) { create(:aven_workspace_user, workspace: ws, user: user) }
+    let(:wu) { create(:aven_workspace_user, workspace: ws, user:) }
     let(:role) { create(:aven_workspace_role, workspace: ws, label: "member", description: "Member role") }
     let!(:wur) { create(:aven_workspace_user_role, workspace_user: wu, workspace_role: role) }
 
@@ -54,4 +54,3 @@ RSpec.describe Aven::WorkspaceUserRole, type: :model do
     end
   end
 end
-

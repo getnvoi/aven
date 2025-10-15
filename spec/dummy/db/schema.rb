@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_04_190110) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_14_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -107,6 +107,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_04_190110) do
     t.index ["slug"], name: "index_aven_workspaces_on_slug", unique: true
   end
 
+  create_table "test_projects", force: :cascade do |t|
+    t.string "name"
+    t.bigint "workspace_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workspace_id"], name: "index_test_projects_on_workspace_id"
+  end
+
+  create_table "test_resources", force: :cascade do |t|
+    t.string "title"
+    t.bigint "workspace_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workspace_id"], name: "index_test_resources_on_workspace_id"
+  end
+
   add_foreign_key "aven_app_record_schemas", "aven_workspaces", column: "workspace_id"
   add_foreign_key "aven_app_records", "aven_app_record_schemas", column: "app_record_schema_id"
   add_foreign_key "aven_logs", "aven_workspaces", column: "workspace_id"
@@ -115,4 +131,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_04_190110) do
   add_foreign_key "aven_workspace_user_roles", "aven_workspace_users", column: "workspace_user_id"
   add_foreign_key "aven_workspace_users", "aven_users", column: "user_id"
   add_foreign_key "aven_workspace_users", "aven_workspaces", column: "workspace_id"
+  add_foreign_key "test_projects", "aven_workspaces", column: "workspace_id"
+  add_foreign_key "test_resources", "aven_workspaces", column: "workspace_id"
 end

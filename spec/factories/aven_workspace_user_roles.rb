@@ -25,4 +25,3 @@ FactoryBot.define do
     association :workspace_role, factory: :aven_workspace_role
   end
 end
-

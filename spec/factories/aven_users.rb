@@ -24,7 +24,6 @@ FactoryBot.define do
   factory :aven_user, class: "Aven::User" do
     sequence(:email) { |n| "user#{n}@example.com" }
     auth_tenant { "test" }
-    encrypted_password { "" }
+    password { "password123" }
   end
 end
-
