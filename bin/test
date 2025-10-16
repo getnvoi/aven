@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+require "fileutils"
+
+# path to your application root.
+APP_ROOT = File.expand_path("..", __dir__)
+
+def system!(*args)
+  system(*args, exception: true)
+end
+
+FileUtils.chdir APP_ROOT do
+  puts "\n== Running tests =="
+
+  if ARGV.empty?
+    # Run all Minitest tests by default
+    system! "bundle exec rails test"
+  elsif ARGV[0] =~ /^test\//
+    # Run specific test file
+    system! "bundle exec rails test #{ARGV.join(' ')}"
+  else
+    # Pass through any flags to rails test
+    system! "bundle exec rails test #{ARGV.join(' ')}"
+  end
+end
