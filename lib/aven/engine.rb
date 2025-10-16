@@ -21,7 +21,7 @@ module Aven
 
     # Append engine migrations to the main app
     initializer :append_migrations do |app|
-      unless app.root.to_s.include?("spec/dummy")
+      unless app.root.to_s.include?("test/dummy")
         config.paths["db/migrate"].expanded.each do |expanded_path|
           app.config.paths["db/migrate"] << expanded_path
         end

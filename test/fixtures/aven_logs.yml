@@ -1,0 +1,24 @@
+_fixture:
+  model_class: Aven::Log
+
+one:
+  id: 1
+  level: "info"
+  message: "Test log message"
+  workspace_id: 1
+  loggable_type: "Aven::Workspace"
+  loggable_id: 1
+  metadata: '{}'
+  created_at: 2024-01-01 00:00:00
+  updated_at: 2024-01-01 00:00:00
+
+two:
+  id: 2
+  level: "error"
+  message: "Error log message"
+  workspace_id: 2
+  loggable_type: "Aven::Workspace"
+  loggable_id: 2
+  metadata: '{}'
+  created_at: 2024-01-01 00:00:00
+  updated_at: 2024-01-01 00:00:00

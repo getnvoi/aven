@@ -64,16 +64,20 @@ module Aven
           @auth0_domain ||= oauth_config[:domain] || raise("Auth0 domain not configured")
         end
 
+        def auth0_base_url
+          @auth0_base_url ||= auth0_domain.start_with?("http") ? auth0_domain : "https://#{auth0_domain}"
+        end
+
         def auth0_authorization_url
-          "https://#{auth0_domain}/authorize"
+          "#{auth0_base_url}/authorize"
         end
 
         def auth0_token_url
-          "https://#{auth0_domain}/oauth/token"
+          "#{auth0_base_url}/oauth/token"
         end
 
         def auth0_userinfo_url
-          "https://#{auth0_domain}/userinfo"
+          "#{auth0_base_url}/userinfo"
         end
     end
   end
