@@ -17,7 +17,7 @@ gem "omniauth-github", "~> 2.0"
 gem "omniauth-google-oauth2", "~> 1.2"
 
 group :development do
-  gem "annotaterb", "~> 4.19"
+  gem "annotaterb", "~> 4.20"
 end
 
 # Testing dependencies
