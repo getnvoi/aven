@@ -1,4 +1,3 @@
-require "devise"
 require "importmap-rails"
 require "view_component-contrib"
 require "dry-effects"
@@ -28,10 +27,11 @@ module Aven
       end
     end
 
-    # Include engine route helpers and controller helpers in controllers and views (like Devise does)
+    # Include engine route helpers, authentication, and controller helpers in controllers and views
     initializer "aven.helpers" do
       ActiveSupport.on_load(:action_controller) do
         include Aven::Engine.routes.url_helpers
+        include Aven::Authentication
         include Aven::ControllerHelpers
       end
 

@@ -6,7 +6,6 @@ ActiveRecord::Migrator.migrations_paths = [ File.expand_path("dummy/db/migrate",
 ActiveRecord::Migrator.migrations_paths << File.expand_path("../db/migrate", __dir__)
 require "rails/test_help"
 require "webmock/minitest"
-require "devise"
 
 # Configure WebMock
 WebMock.disable_net_connect!(allow_localhost: true)
@@ -31,9 +30,4 @@ class ActiveSupport::TestCase
   teardown do
     WebMock.reset!
   end
-end
-
-# Include Devise test helpers for integration tests
-class ActionDispatch::IntegrationTest
-  include Devise::Test::IntegrationHelpers
 end

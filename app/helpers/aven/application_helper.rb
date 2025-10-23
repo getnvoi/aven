@@ -8,13 +8,9 @@ module Aven
       ].compact, "\n"
     end
 
-    def view_component(name, *args, status: nil, **kwargs, &block)
+    def view_component(name, *args, **kwargs, &block)
       component = "Aven::Views::#{name.split("/").map(&:camelize).join("::")}::Component".constantize
-      if status
-        render(component.new(*args, **kwargs), status:, &block)
-      else
-        render(component.new(*args, **kwargs), &block)
-      end
+      render(component.new(*args, **kwargs), &block)
     end
   end
 end

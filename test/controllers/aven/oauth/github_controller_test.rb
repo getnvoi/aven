@@ -85,8 +85,7 @@ class Aven::Oauth::GithubControllerTest < ActionDispatch::IntegrationTest
     # Create existing user with same email but no remote_id
     existing_user = Aven::User.create!(
       email: "github@example.com",
-      auth_tenant: "www.example.com",
-      password: SecureRandom.hex(16)
+      auth_tenant: "www.example.com"
     )
 
     # Initiate OAuth flow

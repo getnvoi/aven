@@ -27,7 +27,7 @@ class Aven::WorkspaceUserRoleTest < ActiveSupport::TestCase
   # Delegates and scopes
   test "delegates attributes" do
     workspace = aven_workspaces(:one)
-    user = Aven::User.create!(email: "alice@example.com", auth_tenant: "test", password: "password123")
+    user = Aven::User.create!(email: "alice@example.com", auth_tenant: "test")
     workspace_user = Aven::WorkspaceUser.create!(workspace: workspace, user: user)
     role = Aven::WorkspaceRole.create!(workspace: workspace, label: "custom_member", description: "Member role")
     wur = Aven::WorkspaceUserRole.create!(workspace_user: workspace_user, workspace_role: role)
@@ -48,7 +48,7 @@ class Aven::WorkspaceUserRoleTest < ActiveSupport::TestCase
 
   test "filters by role label" do
     workspace = aven_workspaces(:one)
-    user = Aven::User.create!(email: "bob@example.com", auth_tenant: "test", password: "password123")
+    user = Aven::User.create!(email: "bob@example.com", auth_tenant: "test")
     workspace_user = Aven::WorkspaceUser.create!(workspace: workspace, user: user)
     role = Aven::WorkspaceRole.create!(workspace: workspace, label: "custom_viewer")
     wur = Aven::WorkspaceUserRole.create!(workspace_user: workspace_user, workspace_role: role)

@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.email       = [ "ben@dee.mx" ]
   spec.homepage    = "https://github.com/getnvoi/aven"
   spec.summary     = "Authentication engine for Rails applications."
-  spec.description = "A Rails engine providing authentication with OAuth support (GitHub, Google) using Devise."
+  spec.description = "A Rails engine providing authentication with OAuth support (GitHub, Google, Auth0)."
   spec.license     = "MIT"
 
   spec.metadata["homepage_uri"] = spec.homepage
@@ -20,7 +20,6 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_dependency "rails", ">= 8.0.3"
-  spec.add_dependency "devise", "~> 4.9"
   spec.add_dependency "importmap-rails", "~> 2.2.2"
   spec.add_dependency "turbo-rails", "~> 2.0"
   spec.add_dependency "stimulus-rails", "~> 1.3"

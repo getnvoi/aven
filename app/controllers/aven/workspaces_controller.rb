@@ -14,7 +14,7 @@ module Aven
     private
 
       def after_switch_workspace_path
-        Aven.configuration.authenticated_root_path || root_path
+        Aven.configuration.resolve_authenticated_root_path || root_path
       end
   end
 end

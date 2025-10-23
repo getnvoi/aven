@@ -115,8 +115,7 @@ class Aven::Oauth::Auth0ControllerTest < ActionDispatch::IntegrationTest
     # Create existing user with same email but no remote_id
     existing_user = Aven::User.create!(
       email: "auth0user@example.com",
-      auth_tenant: "www.example.com",
-      password: SecureRandom.hex(16)
+      auth_tenant: "www.example.com"
     )
 
     # Mock Auth0 token exchange
@@ -175,8 +174,7 @@ class Aven::Oauth::Auth0ControllerTest < ActionDispatch::IntegrationTest
     existing_user = Aven::User.create!(
       email: "auth0user@example.com",
       remote_id: "auth0|123456789",
-      auth_tenant: "www.example.com",
-      password: SecureRandom.hex(16)
+      auth_tenant: "www.example.com"
     )
 
     # Mock Auth0 token exchange

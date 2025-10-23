@@ -89,14 +89,28 @@ module Aven
             u.remote_id = user_info[:id].to_s
             u.email = user_info[:email]
             u.access_token = token_data[:access_token]
-            u.password = SecureRandom.hex(16) if u.new_record?
             u.save
           end
         end
 
         def sign_in_and_redirect(user)
-          sign_in(user, scope: :user)
+          sign_in(user)
+          set_current_workspace_for(user)
           redirect_to after_sign_in_path_for(user)
+        end
+
+        def set_current_workspace_for(user)
+          workspace = user.workspaces.first
+
+          # Create default workspace if user has none (new sign up)
+          if workspace.nil?
+            workspace = Aven::Workspace.create!(label: "Default Workspace")
+            Aven::WorkspaceUser.create!(user: user, workspace: workspace)
+            user.reload
+          end
+
+          # Set current workspace in session
+          session[:workspace_id] = workspace.id
         end
 
         def handle_failed_authentication(user)
@@ -121,7 +135,7 @@ module Aven
 
         def after_sign_in_path_for(resource)
           stored_location_for(resource) ||
-            Aven.configuration.authenticated_root_path ||
+            Aven.configuration.resolve_authenticated_root_path ||
             begin
               main_app.root_path
             rescue NoMethodError

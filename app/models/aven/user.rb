@@ -22,10 +22,6 @@
 #
 module Aven
   class User < ApplicationRecord
-    # Remove omniauthable, keep other Devise modules as needed
-    devise :database_authenticatable, :registerable,
-           :recoverable, :rememberable, :validatable
-
     has_many :workspace_users, dependent: :destroy
     has_many :workspaces, through: :workspace_users
     has_many :workspace_user_roles, through: :workspace_users

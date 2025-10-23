@@ -1,14 +1,6 @@
 Aven::Engine.routes.draw do
-  # Devise for session management only
-  devise_for(
-    :users, class_name: "Aven::User", module: :devise,
-    skip: %w[registrations passwords confirmations omniauth_callbacks]
-  )
-
-  # Logout route (using Devise)
-  devise_scope :user do
-    get "/logout", to: "devise/sessions#destroy", as: :logout
-  end
+  # Logout route
+  get(:logout, to: "auth#logout", as: :logout)
 
   # OAuth routes
   namespace :oauth do

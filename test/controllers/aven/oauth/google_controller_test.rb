@@ -86,8 +86,7 @@ class Aven::Oauth::GoogleControllerTest < ActionDispatch::IntegrationTest
     existing_user = Aven::User.create!(
       email: "test@example.com",
       remote_id: "google_123",
-      auth_tenant: "www.example.com",
-      password: SecureRandom.hex(16)
+      auth_tenant: "www.example.com"
     )
 
     # Mock Google token exchange
@@ -137,8 +136,7 @@ class Aven::Oauth::GoogleControllerTest < ActionDispatch::IntegrationTest
     existing_user = Aven::User.create!(
       email: "test@example.com",
       remote_id: "google_123",
-      auth_tenant: "www.example.com",
-      password: SecureRandom.hex(16)
+      auth_tenant: "www.example.com"
     )
 
     # Mock Google token exchange

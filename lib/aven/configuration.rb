@@ -26,6 +26,15 @@ module Aven
     def configure_oauth(provider, credentials = {})
       @oauth_providers[provider.to_sym] = credentials
     end
+
+    # Resolves authenticated_root_path, calling it if it's a lambda/proc
+    #
+    # @return [String] The resolved path
+    def resolve_authenticated_root_path
+      return nil if @authenticated_root_path.nil?
+
+      @authenticated_root_path.respond_to?(:call) ? @authenticated_root_path.call : @authenticated_root_path
+    end
   end
 
   class << self
