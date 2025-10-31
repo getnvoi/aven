@@ -22,7 +22,7 @@ end
 
 # Testing dependencies
 group :development, :test do
-  gem "webmock", "~> 3.24"
+  gem "webmock", "~> 3.26"
 end
 
 # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
