@@ -32,6 +32,33 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_000002) do
     t.index ["data"], name: "index_aven_app_records_on_data", using: :gin
   end
 
+  create_table "aven_item_links", force: :cascade do |t|
+    t.bigint "source_id", null: false
+    t.bigint "target_id", null: false
+    t.string "relation", null: false
+    t.integer "position", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source_id", "relation"], name: "index_aven_item_links_on_source_id_and_relation"
+    t.index ["source_id", "target_id", "relation"], name: "index_aven_item_links_on_source_id_and_target_id_and_relation", unique: true
+    t.index ["source_id"], name: "index_aven_item_links_on_source_id"
+    t.index ["target_id", "relation"], name: "index_aven_item_links_on_target_id_and_relation"
+    t.index ["target_id"], name: "index_aven_item_links_on_target_id"
+  end
+
+  create_table "aven_items", force: :cascade do |t|
+    t.bigint "workspace_id", null: false
+    t.string "schema_slug", null: false
+    t.jsonb "data", default: {}, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["data"], name: "index_aven_items_on_data", using: :gin
+    t.index ["deleted_at"], name: "index_aven_items_on_deleted_at"
+    t.index ["schema_slug"], name: "index_aven_items_on_schema_slug"
+    t.index ["workspace_id"], name: "index_aven_items_on_workspace_id"
+  end
+
   create_table "aven_logs", force: :cascade do |t|
     t.string "level", default: "info", null: false
     t.string "loggable_type", null: false
@@ -125,6 +152,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_000002) do
 
   add_foreign_key "aven_app_record_schemas", "aven_workspaces", column: "workspace_id"
   add_foreign_key "aven_app_records", "aven_app_record_schemas", column: "app_record_schema_id"
+  add_foreign_key "aven_item_links", "aven_items", column: "source_id"
+  add_foreign_key "aven_item_links", "aven_items", column: "target_id"
+  add_foreign_key "aven_items", "aven_workspaces", column: "workspace_id"
   add_foreign_key "aven_logs", "aven_workspaces", column: "workspace_id"
   add_foreign_key "aven_workspace_roles", "aven_workspaces", column: "workspace_id"
   add_foreign_key "aven_workspace_user_roles", "aven_workspace_roles", column: "workspace_role_id"

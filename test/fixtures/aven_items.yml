@@ -1,0 +1,88 @@
+# == Schema Information
+#
+# Table name: aven_items
+#
+#  id           :bigint           not null, primary key
+#  data         :jsonb            not null
+#  deleted_at   :datetime
+#  schema_slug  :string           not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  workspace_id :bigint           not null
+#
+# Indexes
+#
+#  index_aven_items_on_data          (data) USING gin
+#  index_aven_items_on_deleted_at    (deleted_at)
+#  index_aven_items_on_schema_slug   (schema_slug)
+#  index_aven_items_on_workspace_id  (workspace_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (workspace_id => aven_workspaces.id)
+#
+_fixture:
+  model_class: Aven::Item
+
+contact_one:
+  id: 1
+  workspace_id: 1
+  schema_slug: "contact"
+  data:
+    first_name: "John"
+    last_name: "Doe"
+    email: "john@example.com"
+  created_at: 2024-01-01 00:00:00
+  updated_at: 2024-01-01 00:00:00
+
+contact_two:
+  id: 2
+  workspace_id: 1
+  schema_slug: "contact"
+  data:
+    first_name: "Jane"
+    last_name: "Smith"
+    email: "jane@example.com"
+  created_at: 2024-01-01 00:00:00
+  updated_at: 2024-01-01 00:00:00
+
+company_one:
+  id: 3
+  workspace_id: 1
+  schema_slug: "company"
+  data:
+    name: "Acme Corp"
+    industry: "Technology"
+  created_at: 2024-01-01 00:00:00
+  updated_at: 2024-01-01 00:00:00
+
+note_one:
+  id: 4
+  workspace_id: 1
+  schema_slug: "note"
+  data:
+    title: "Meeting Notes"
+    body: "Discussed project timeline"
+  created_at: 2024-01-01 00:00:00
+  updated_at: 2024-01-01 00:00:00
+
+deleted_item:
+  id: 5
+  workspace_id: 1
+  schema_slug: "contact"
+  data:
+    first_name: "Deleted"
+    last_name: "User"
+  deleted_at: 2024-01-01 00:00:00
+  created_at: 2024-01-01 00:00:00
+  updated_at: 2024-01-01 00:00:00
+
+other_workspace_item:
+  id: 6
+  workspace_id: 2
+  schema_slug: "contact"
+  data:
+    first_name: "Other"
+    last_name: "Workspace"
+  created_at: 2024-01-01 00:00:00
+  updated_at: 2024-01-01 00:00:00

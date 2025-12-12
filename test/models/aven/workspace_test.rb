@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: aven_workspaces
+#
+#  id          :bigint           not null, primary key
+#  description :text
+#  domain      :string
+#  label       :string
+#  slug        :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+# Indexes
+#
+#  index_aven_workspaces_on_slug  (slug) UNIQUE
+#
 require "test_helper"
 
 class Aven::WorkspaceTest < ActiveSupport::TestCase

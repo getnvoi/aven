@@ -1,0 +1,45 @@
+# == Schema Information
+#
+# Table name: aven_item_links
+#
+#  id         :bigint           not null, primary key
+#  position   :integer          default(0)
+#  relation   :string           not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  source_id  :bigint           not null
+#  target_id  :bigint           not null
+#
+# Indexes
+#
+#  index_aven_item_links_on_source_id                             (source_id)
+#  index_aven_item_links_on_source_id_and_relation                (source_id,relation)
+#  index_aven_item_links_on_source_id_and_target_id_and_relation  (source_id,target_id,relation) UNIQUE
+#  index_aven_item_links_on_target_id                             (target_id)
+#  index_aven_item_links_on_target_id_and_relation                (target_id,relation)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (source_id => aven_items.id)
+#  fk_rails_...  (target_id => aven_items.id)
+#
+_fixture:
+  model_class: Aven::ItemLink
+
+contact_company_link:
+  id: 1
+  source_id: 1
+  target_id: 3
+  relation: "company"
+  position: 0
+  created_at: 2024-01-01 00:00:00
+  updated_at: 2024-01-01 00:00:00
+
+contact_note_link_one:
+  id: 2
+  source_id: 1
+  target_id: 4
+  relation: "notes"
+  position: 0
+  created_at: 2024-01-01 00:00:00
+  updated_at: 2024-01-01 00:00:00
