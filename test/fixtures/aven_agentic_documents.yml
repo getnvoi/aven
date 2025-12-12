@@ -74,3 +74,15 @@ failed_document:
   embedding_status: "pending"
   processed_at: ~
   metadata: {"ocr_error": "OCR processing failed"}
+
+# Document ready for embedding (OCR completed, embedding pending)
+pending_embedding_document:
+  workspace: one
+  filename: "ready_for_embedding.pdf"
+  content_type: "application/pdf"
+  byte_size: 1024
+  ocr_status: "completed"
+  ocr_content: "This document has OCR content and is ready for embedding."
+  embedding_status: "pending"
+  processed_at: 2024-01-01 12:00:00
+  metadata: {}

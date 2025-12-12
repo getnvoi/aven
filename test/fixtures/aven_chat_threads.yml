@@ -57,6 +57,16 @@ empty_thread:
   documents: ~
   context_markdown: ~
 
+# Fresh thread for user one (for ask_agent tests)
+fresh_thread:
+  workspace: one
+  user: one
+  agent: ~
+  title: "Fresh Thread"
+  tools: ~
+  documents: ~
+  context_markdown: ~
+
 workspace_two_thread:
   workspace: two
   user: one

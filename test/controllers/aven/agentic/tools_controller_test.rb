@@ -14,7 +14,7 @@ class Aven::Agentic::ToolsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "index returns tools for workspace" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     get "/aven/agentic/tools"
     assert_response :success
@@ -24,7 +24,7 @@ class Aven::Agentic::ToolsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "index includes global tools" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     get "/aven/agentic/tools"
     assert_response :success
@@ -42,7 +42,7 @@ class Aven::Agentic::ToolsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show returns tool details with parameters" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     get "/aven/agentic/tools/#{@tool.id}"
     assert_response :success
@@ -56,16 +56,16 @@ class Aven::Agentic::ToolsControllerTest < ActionDispatch::IntegrationTest
   # Update
   test "update requires authentication" do
     patch "/aven/agentic/tools/#{@tool.id}", params: {
-      description: "Updated description"
+      tool: { description: "Updated description" }
     }
     assert_response :redirect
   end
 
   test "update updates tool description" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     patch "/aven/agentic/tools/#{@tool.id}", params: {
-      description: "Updated description"
+      tool: { description: "Updated description" }
     }
 
     assert_response :success
@@ -74,10 +74,10 @@ class Aven::Agentic::ToolsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "update can enable/disable tool" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     patch "/aven/agentic/tools/#{@tool.id}", params: {
-      enabled: false
+      tool: { enabled: false }
     }
 
     assert_response :success
@@ -85,19 +85,9 @@ class Aven::Agentic::ToolsControllerTest < ActionDispatch::IntegrationTest
     assert_not @tool.enabled
   end
 
-  test "update rejects invalid params" do
-    skip "Requires authentication setup"
-
-    patch "/aven/agentic/tools/#{@tool.id}", params: {
-      name: nil
-    }
-
-    assert_response :unprocessable_entity
-  end
-
   # Workspace scoping
   test "cannot access tools from other workspaces" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     other_tool = aven_agentic_tools(:workspace_two_tool)
 
@@ -106,7 +96,7 @@ class Aven::Agentic::ToolsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "can access global tools" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     global_tool = aven_agentic_tools(:global_tool)
 

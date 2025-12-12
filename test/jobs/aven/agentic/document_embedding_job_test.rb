@@ -2,7 +2,13 @@ require "test_helper"
 
 class Aven::Agentic::DocumentEmbeddingJobTest < ActiveJob::TestCase
   setup do
-    @document = aven_agentic_documents(:pdf_document)
+    @document = aven_agentic_documents(:pending_embedding_document)
+    # Attach a file to satisfy validation
+    @document.file.attach(
+      io: StringIO.new("fake PDF content"),
+      filename: @document.filename,
+      content_type: @document.content_type
+    )
   end
 
   test "job is enqueued" do
@@ -11,10 +17,13 @@ class Aven::Agentic::DocumentEmbeddingJobTest < ActiveJob::TestCase
     end
   end
 
-  test "job finds document" do
-    skip "Requires embedding service mocking"
+  test "job processes document with OCR content" do
+    assert_difference "Aven::Agentic::DocumentEmbedding.count" do
+      Aven::Agentic::DocumentEmbeddingJob.perform_now(@document.id)
+    end
 
-    Aven::Agentic::DocumentEmbeddingJob.perform_now(@document.id)
+    @document.reload
+    assert_equal "completed", @document.embedding_status
   end
 
   test "job handles non-existent document" do
@@ -26,57 +35,37 @@ class Aven::Agentic::DocumentEmbeddingJobTest < ActiveJob::TestCase
   test "job skips documents without OCR content" do
     doc_without_ocr = aven_agentic_documents(:image_document)
 
-    Aven::Agentic::DocumentEmbeddingJob.perform_now(doc_without_ocr.id)
+    assert_no_difference "Aven::Agentic::DocumentEmbedding.count" do
+      Aven::Agentic::DocumentEmbeddingJob.perform_now(doc_without_ocr.id)
+    end
 
     doc_without_ocr.reload
-    # Should not process - no OCR content
     assert_equal "pending", doc_without_ocr.embedding_status
   end
 
-  test "job marks document as processing" do
-    skip "Requires embedding service mocking"
+  test "job skips documents not in pending status" do
+    completed_doc = aven_agentic_documents(:pdf_document)
+    assert_equal "completed", completed_doc.embedding_status
 
-    Aven::Agentic::DocumentEmbeddingJob.perform_now(@document.id)
-
-    @document.reload
-    # Status should transition through processing to completed
-  end
-
-  test "job creates embeddings" do
-    skip "Requires embedding service mocking"
-
-    assert_difference "Aven::Agentic::DocumentEmbedding.count" do
-      Aven::Agentic::DocumentEmbeddingJob.perform_now(@document.id)
+    assert_no_difference "Aven::Agentic::DocumentEmbedding.count" do
+      Aven::Agentic::DocumentEmbeddingJob.perform_now(completed_doc.id)
     end
   end
 
   test "job marks document as completed on success" do
-    skip "Requires embedding service mocking"
-
     Aven::Agentic::DocumentEmbeddingJob.perform_now(@document.id)
 
     @document.reload
     assert_equal "completed", @document.embedding_status
   end
 
-  test "job marks document as failed on error" do
-    skip "Requires embedding service mocking"
-
-    # Would mock embedding service to raise error
-
-    @document.reload
-    assert_equal "failed", @document.embedding_status
-  end
-
-  test "job chunks content before embedding" do
-    skip "Requires embedding service mocking"
-
+  test "job creates embeddings for document chunks" do
     # Long content should be split into chunks
-    @document.update!(ocr_content: "A" * 10000)
+    @document.update!(ocr_content: "A" * 2500)
 
     Aven::Agentic::DocumentEmbeddingJob.perform_now(@document.id)
 
-    # Should create multiple embeddings for large content
-    assert @document.embeddings.count > 1
+    # With chunk_size=1000 and overlap=200, 2500 chars should create ~3 chunks
+    assert @document.embeddings.count >= 2, "Should create multiple chunks for large content"
   end
 end

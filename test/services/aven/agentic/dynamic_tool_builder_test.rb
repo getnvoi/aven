@@ -2,27 +2,7 @@ require "test_helper"
 
 class Aven::Agentic::DynamicToolBuilderTest < ActiveSupport::TestCase
   setup do
-    # Define a test tool class for testing
-    unless defined?(Aven::Agentic::Tools::TestSearch)
-      Aven::Agentic::Tools.module_eval do
-        class TestSearch < Aven::Agentic::Tools::Base
-          def self.default_description
-            "Test search tool"
-          end
-
-          def self.parameters
-            [
-              OpenStruct.new(name: "query", type: :string, description: "Search query", required: true),
-              OpenStruct.new(name: "limit", type: :integer, description: "Max results", required: false)
-            ]
-          end
-
-          def self.call(**params)
-            { results: ["result1", "result2"], query: params[:query] }
-          end
-        end
-      end
-    end
+    # TestSearch is defined in test/support/test_tools.rb
 
     @tool_record = Aven::Agentic::Tool.create!(
       workspace: aven_workspaces(:one),

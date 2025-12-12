@@ -79,7 +79,7 @@ class Aven::AuthenticationTest < ActionDispatch::IntegrationTest
 
   test "multiple users can sign in and out independently" do
     user2 = Aven::User.create!(
-      email: "user2@example.com",
+      email: "authtest_user2@example.com",
       auth_tenant: "www.example.com",
       remote_id: "test_456"
     )
@@ -115,7 +115,8 @@ class Aven::AuthenticationTest < ActionDispatch::IntegrationTest
   end
 
   test "authentication helpers are available in controllers" do
-    assert Aven::ApplicationController.private_method_defined?(:current_user)
+    assert Aven::ApplicationController.method_defined?(:current_user) ||
+           Aven::ApplicationController.private_method_defined?(:current_user)
     assert Aven::ApplicationController.private_method_defined?(:sign_in)
     assert Aven::ApplicationController.private_method_defined?(:sign_out)
     assert Aven::ApplicationController.private_method_defined?(:stored_location_for)

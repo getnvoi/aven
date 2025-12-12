@@ -25,12 +25,14 @@ _fixture:
 
 one:
   email: "user1@example.com"
-  auth_tenant: "test"
+  auth_tenant: "www.example.com"
   encrypted_password: "$2a$12$K8zI9v9.vK9c.9Z9ZZ9Z9O"
   admin: false
+  remote_id: "google-user-one-123"
 
 two:
   email: "user2@example.com"
-  auth_tenant: "test"
+  auth_tenant: "www.example.com"
   encrypted_password: "$2a$12$K8zI9v9.vK9c.9Z9ZZ9Z9O"
   admin: false
+  remote_id: "google-user-two-456"

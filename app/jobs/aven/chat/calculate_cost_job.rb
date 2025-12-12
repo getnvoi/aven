@@ -9,7 +9,7 @@ module Aven
         message = Aven::Chat::Message.find_by(id: message_id)
         return unless message
         return unless message.model.present?
-        return if message.cost_usd > 0
+        return if message.cost_usd.to_f > 0
 
         cost = Config.calculate_cost(
           input_tokens: message.input_tokens,

@@ -178,6 +178,44 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_050626) do
     t.index ["workspace_id"], name: "index_aven_chat_threads_on_workspace_id"
   end
 
+  create_table "aven_import_entries", force: :cascade do |t|
+    t.bigint "import_id", null: false
+    t.jsonb "data", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["data"], name: "index_aven_import_entries_on_data", using: :gin
+    t.index ["import_id"], name: "index_aven_import_entries_on_import_id"
+  end
+
+  create_table "aven_import_item_links", force: :cascade do |t|
+    t.bigint "entry_id", null: false
+    t.bigint "item_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["entry_id", "item_id"], name: "index_aven_import_item_links_on_entry_id_and_item_id", unique: true
+    t.index ["entry_id"], name: "index_aven_import_item_links_on_entry_id"
+    t.index ["item_id"], name: "index_aven_import_item_links_on_item_id"
+  end
+
+  create_table "aven_imports", force: :cascade do |t|
+    t.bigint "workspace_id", null: false
+    t.string "source", null: false
+    t.string "status", default: "pending", null: false
+    t.integer "total_count", default: 0
+    t.integer "processed_count", default: 0
+    t.integer "imported_count", default: 0
+    t.integer "skipped_count", default: 0
+    t.text "error_message"
+    t.jsonb "errors_log", default: []
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source"], name: "index_aven_imports_on_source"
+    t.index ["status"], name: "index_aven_imports_on_status"
+    t.index ["workspace_id"], name: "index_aven_imports_on_workspace_id"
+  end
+
   create_table "aven_item_links", force: :cascade do |t|
     t.bigint "source_id", null: false
     t.bigint "target_id", null: false
@@ -337,6 +375,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_050626) do
   add_foreign_key "aven_chat_threads", "aven_agentic_agents", column: "agent_id"
   add_foreign_key "aven_chat_threads", "aven_users", column: "user_id"
   add_foreign_key "aven_chat_threads", "aven_workspaces", column: "workspace_id"
+  add_foreign_key "aven_import_entries", "aven_imports", column: "import_id"
+  add_foreign_key "aven_import_item_links", "aven_import_entries", column: "entry_id"
+  add_foreign_key "aven_import_item_links", "aven_items", column: "item_id"
+  add_foreign_key "aven_imports", "aven_workspaces", column: "workspace_id"
   add_foreign_key "aven_item_links", "aven_items", column: "source_id"
   add_foreign_key "aven_item_links", "aven_items", column: "target_id"
   add_foreign_key "aven_item_schemas", "aven_workspaces", column: "workspace_id"

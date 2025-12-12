@@ -1,9 +1,4 @@
 Aven::Engine.routes.draw do
-  # Test-only route for setting up authenticated sessions
-  if Rails.env.test?
-    post "test_sign_in", to: "test_auth#sign_in"
-  end
-
   # Logout route
   get(:logout, to: "auth#logout", as: :logout)
 

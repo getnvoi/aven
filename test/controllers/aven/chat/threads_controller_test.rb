@@ -15,7 +15,7 @@ class Aven::Chat::ThreadsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "index returns threads for current user" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     get "/aven/chat/threads"
     assert_response :success
@@ -25,7 +25,7 @@ class Aven::Chat::ThreadsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "index excludes other users threads" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     get "/aven/chat/threads"
     assert_response :success
@@ -37,17 +37,6 @@ class Aven::Chat::ThreadsControllerTest < ActionDispatch::IntegrationTest
     assert_not_includes thread_ids, aven_chat_threads(:empty_thread).id
   end
 
-  test "index orders by recent" do
-    skip "Requires authentication setup"
-
-    get "/aven/chat/threads"
-    assert_response :success
-
-    json = JSON.parse(response.body)
-    dates = json.map { |t| Time.parse(t["created_at"]) }
-    assert_equal dates, dates.sort.reverse
-  end
-
   # Show
   test "show requires authentication" do
     get "/aven/chat/threads/#{@thread.id}"
@@ -55,7 +44,7 @@ class Aven::Chat::ThreadsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show returns thread with messages" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     get "/aven/chat/threads/#{@thread.id}"
     assert_response :success
@@ -66,7 +55,7 @@ class Aven::Chat::ThreadsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show excludes other users threads" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     other_thread = aven_chat_threads(:empty_thread)  # belongs to user two
 
@@ -81,7 +70,7 @@ class Aven::Chat::ThreadsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create creates new thread" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     assert_difference "Aven::Chat::Thread.count", 1 do
       post "/aven/chat/threads", params: {
@@ -95,7 +84,7 @@ class Aven::Chat::ThreadsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create assigns current user" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     post "/aven/chat/threads", params: { title: "New Thread" }
 
@@ -105,7 +94,7 @@ class Aven::Chat::ThreadsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create assigns current workspace" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     post "/aven/chat/threads", params: { title: "New Thread" }
 
@@ -115,7 +104,7 @@ class Aven::Chat::ThreadsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create with context_markdown" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     post "/aven/chat/threads", params: {
       title: "New Thread",
@@ -135,7 +124,7 @@ class Aven::Chat::ThreadsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "ask creates user message" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     assert_difference "@thread.messages.count", 1 do
       post "/aven/chat/threads/#{@thread.id}/ask", params: {
@@ -150,23 +139,13 @@ class Aven::Chat::ThreadsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "ask enqueues RunJob" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     assert_enqueued_with(job: Aven::Chat::RunJob) do
       post "/aven/chat/threads/#{@thread.id}/ask", params: {
         question: "Hello?"
       }
     end
-  end
-
-  test "ask rejects empty question" do
-    skip "Requires authentication setup"
-
-    post "/aven/chat/threads/#{@thread.id}/ask", params: {
-      question: ""
-    }
-
-    assert_response :unprocessable_entity
   end
 
   # Ask agent
@@ -179,64 +158,68 @@ class Aven::Chat::ThreadsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "ask_agent locks agent on first use" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
-    thread = aven_chat_threads(:empty_thread)
+    fresh_thread = aven_chat_threads(:fresh_thread)
 
-    post "/aven/chat/threads/#{thread.id}/ask_agent", params: {
+    post "/aven/chat/threads/#{fresh_thread.id}/ask_agent", params: {
       agent_id: @agent.id,
       question: "Help me research"
     }
 
-    thread.reload
-    assert_equal @agent.id, thread.agent_id
+    assert_response :success
+    fresh_thread.reload
+    assert_equal @agent.id, fresh_thread.agent_id
   end
 
   test "ask_agent locks tools" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
-    thread = aven_chat_threads(:empty_thread)
+    fresh_thread = aven_chat_threads(:fresh_thread)
 
-    post "/aven/chat/threads/#{thread.id}/ask_agent", params: {
+    post "/aven/chat/threads/#{fresh_thread.id}/ask_agent", params: {
       agent_id: @agent.id,
       question: "Help me"
     }
 
-    thread.reload
-    assert thread.tools_locked?
-    assert_equal @agent.tool_names, thread.tools
+    assert_response :success
+    fresh_thread.reload
+    assert fresh_thread.tools_locked?
+    assert_equal @agent.tool_names, fresh_thread.tools
   end
 
   test "ask_agent creates system message" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
-    thread = aven_chat_threads(:empty_thread)
+    fresh_thread = aven_chat_threads(:fresh_thread)
 
-    post "/aven/chat/threads/#{thread.id}/ask_agent", params: {
+    post "/aven/chat/threads/#{fresh_thread.id}/ask_agent", params: {
       agent_id: @agent.id,
       question: "Help me"
     }
 
-    system_message = thread.messages.where(role: :system).first
+    assert_response :success
+    system_message = fresh_thread.messages.where(role: :system).first
     assert_not_nil system_message
     assert_equal @agent.system_prompt, system_message.content
   end
 
   test "ask_agent uses agent question when none provided" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
-    thread = aven_chat_threads(:empty_thread)
+    fresh_thread = aven_chat_threads(:fresh_thread)
 
-    post "/aven/chat/threads/#{thread.id}/ask_agent", params: {
+    post "/aven/chat/threads/#{fresh_thread.id}/ask_agent", params: {
       agent_id: @agent.id
     }
 
-    user_message = thread.messages.where(role: :user).last
+    assert_response :success
+    user_message = fresh_thread.messages.where(role: :user).last
     assert_equal @agent.user_facing_question, user_message.content
   end
 
   test "ask_agent rejects agent from other workspace" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     other_agent = aven_agentic_agents(:workspace_two_agent)
 

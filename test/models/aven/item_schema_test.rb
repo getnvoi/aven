@@ -1,5 +1,29 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: aven_item_schemas
+#
+#  id           :bigint           not null, primary key
+#  embeds       :jsonb            not null
+#  fields       :jsonb            not null
+#  links        :jsonb            not null
+#  schema       :jsonb            not null
+#  slug         :string           not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  workspace_id :bigint           not null
+#
+# Indexes
+#
+#  index_aven_item_schemas_on_slug                   (slug)
+#  index_aven_item_schemas_on_workspace_id           (workspace_id)
+#  index_aven_item_schemas_on_workspace_id_and_slug  (workspace_id,slug) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (workspace_id => aven_workspaces.id)
+#
 require "test_helper"
 
 module Aven

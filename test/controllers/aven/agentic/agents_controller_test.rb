@@ -5,31 +5,16 @@ class Aven::Agentic::AgentsControllerTest < ActionDispatch::IntegrationTest
     @workspace = aven_workspaces(:one)
     @user = aven_users(:one)
     @agent = aven_agentic_agents(:research_agent)
-
-    # Set up authenticated session
-    post_via_redirect = false
-    # Simulate login by setting session
-  end
-
-  # Helper to simulate authentication
-  def sign_in(user, workspace)
-    # Set up session for testing
-    post "/aven/oauth/github/callback", params: { code: "test" }, headers: {
-      "Cookie" => "user_id=#{user.id}; workspace_id=#{workspace.id}"
-    }
-  rescue
-    # Fallback: just ensure session is set
   end
 
   # Index
   test "index requires authentication" do
     get "/aven/agentic/agents"
-    # Should redirect or return unauthorized
     assert_response :redirect
   end
 
   test "index returns agents for workspace" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     get "/aven/agentic/agents"
     assert_response :success
@@ -45,7 +30,7 @@ class Aven::Agentic::AgentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show returns agent details" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     get "/aven/agentic/agents/#{@agent.id}"
     assert_response :success
@@ -57,20 +42,19 @@ class Aven::Agentic::AgentsControllerTest < ActionDispatch::IntegrationTest
 
   # Create
   test "create requires authentication" do
-    post "/aven/agentic/agents", params: {
-      label: "New Agent",
-      description: "A new agent"
-    }
+    post "/aven/agentic/agents", params: { label: "New Agent" }
     assert_response :redirect
   end
 
   test "create creates new agent" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     assert_difference "Aven::Agentic::Agent.count", 1 do
       post "/aven/agentic/agents", params: {
-        label: "New Agent",
-        description: "A new agent"
+        agent: {
+          label: "New Agent",
+          system_prompt: "You are helpful"
+        }
       }
     end
 
@@ -80,12 +64,9 @@ class Aven::Agentic::AgentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create returns errors for invalid agent" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
-    post "/aven/agentic/agents", params: {
-      label: nil,
-      description: "No label"
-    }
+    post "/aven/agentic/agents", params: { agent: { label: "" } }
 
     assert_response :unprocessable_entity
     json = JSON.parse(response.body)
@@ -94,18 +75,14 @@ class Aven::Agentic::AgentsControllerTest < ActionDispatch::IntegrationTest
 
   # Update
   test "update requires authentication" do
-    patch "/aven/agentic/agents/#{@agent.id}", params: {
-      label: "Updated Label"
-    }
+    patch "/aven/agentic/agents/#{@agent.id}", params: { label: "Updated" }
     assert_response :redirect
   end
 
   test "update updates agent" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
-    patch "/aven/agentic/agents/#{@agent.id}", params: {
-      label: "Updated Label"
-    }
+    patch "/aven/agentic/agents/#{@agent.id}", params: { agent: { label: "Updated Label" } }
 
     assert_response :success
     @agent.reload
@@ -119,7 +96,7 @@ class Aven::Agentic::AgentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "destroy deletes agent" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     assert_difference "Aven::Agentic::Agent.count", -1 do
       delete "/aven/agentic/agents/#{@agent.id}"
@@ -130,7 +107,7 @@ class Aven::Agentic::AgentsControllerTest < ActionDispatch::IntegrationTest
 
   # Workspace scoping
   test "cannot access agents from other workspaces" do
-    skip "Requires authentication setup"
+    sign_in_as(@user)
 
     other_agent = aven_agentic_agents(:workspace_two_agent)
 

@@ -37,7 +37,7 @@ module Aven
           chunks.each_with_index do |chunk, index|
             embeddings.create!(
               chunk_index: index,
-              chunk_content: chunk,
+              content: chunk,
               embedding: nil # Will be filled by embedding service
             )
           end
