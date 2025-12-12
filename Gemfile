@@ -16,6 +16,9 @@ gem "stimulus-rails"
 gem "omniauth-github", "~> 2.0"
 gem "omniauth-google-oauth2", "~> 1.2"
 
+# Google APIs for contact import
+gem "google-apis-people_v1", "~> 0.42"
+
 group :development do
   gem "annotaterb", "~> 4.19"
 end

@@ -1,0 +1,79 @@
+# == Schema Information
+#
+# Table name: aven_imports
+#
+#  id              :bigint           not null, primary key
+#  completed_at    :datetime
+#  error_message   :text
+#  errors_log      :jsonb
+#  imported_count  :integer          default(0)
+#  processed_count :integer          default(0)
+#  skipped_count   :integer          default(0)
+#  source          :string           not null
+#  started_at      :datetime
+#  status          :string           default("pending"), not null
+#  total_count     :integer          default(0)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  workspace_id    :bigint           not null
+#
+# Indexes
+#
+#  index_aven_imports_on_source        (source)
+#  index_aven_imports_on_status        (status)
+#  index_aven_imports_on_workspace_id  (workspace_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (workspace_id => aven_workspaces.id)
+#
+_fixture:
+  model_class: Aven::Import
+
+pending_google:
+  workspace: one
+  source: "google_contacts"
+  status: "pending"
+  total_count: 0
+  processed_count: 0
+  imported_count: 0
+  skipped_count: 0
+
+processing_gmail:
+  workspace: one
+  source: "gmail_emails"
+  status: "processing"
+  total_count: 100
+  processed_count: 50
+  imported_count: 40
+  skipped_count: 10
+  started_at: <%= 1.hour.ago.to_fs(:db) %>
+
+completed_import:
+  workspace: one
+  source: "google_contacts"
+  status: "completed"
+  total_count: 50
+  processed_count: 50
+  imported_count: 45
+  skipped_count: 5
+  started_at: <%= 2.hours.ago.to_fs(:db) %>
+  completed_at: <%= 1.hour.ago.to_fs(:db) %>
+
+failed_import:
+  workspace: one
+  source: "gmail_emails"
+  status: "failed"
+  total_count: 100
+  processed_count: 25
+  imported_count: 20
+  skipped_count: 5
+  error_message: "API rate limit exceeded"
+  started_at: <%= 3.hours.ago.to_fs(:db) %>
+  completed_at: <%= 2.hours.ago.to_fs(:db) %>
+
+other_workspace_import:
+  workspace: two
+  source: "google_contacts"
+  status: "pending"
+  total_count: 0

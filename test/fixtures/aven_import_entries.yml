@@ -1,0 +1,67 @@
+# == Schema Information
+#
+# Table name: aven_import_entries
+#
+#  id         :bigint           not null, primary key
+#  data       :jsonb            not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  import_id  :bigint           not null
+#
+# Indexes
+#
+#  index_aven_import_entries_on_data       (data) USING gin
+#  index_aven_import_entries_on_import_id  (import_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (import_id => aven_imports.id)
+#
+_fixture:
+  model_class: Aven::Import::Entry
+
+google_entry_one:
+  import: pending_google
+  data:
+    google_resource_name: "people/123"
+    first_name: "Alice"
+    last_name: "Johnson"
+    email: "alice@example.com"
+    phone: "+1234567890"
+
+google_entry_two:
+  import: pending_google
+  data:
+    google_resource_name: "people/456"
+    first_name: "Bob"
+    last_name: "Williams"
+    email: "bob@example.com"
+
+google_entry_no_email:
+  import: pending_google
+  data:
+    google_resource_name: "people/789"
+    first_name: "Charlie"
+    last_name: "Brown"
+
+gmail_entry_one:
+  import: processing_gmail
+  data:
+    email: "contact@company.com"
+    name: "Company Contact"
+    domain: "company.com"
+
+gmail_entry_two:
+  import: processing_gmail
+  data:
+    email: "person@gmail.com"
+    name: "Some Person"
+    domain: "gmail.com"
+
+completed_entry:
+  import: completed_import
+  data:
+    google_resource_name: "people/999"
+    first_name: "Completed"
+    last_name: "Contact"
+    email: "completed@example.com"
