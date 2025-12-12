@@ -15,7 +15,7 @@ module Aven
         param :limit, type: :integer, desc: "Max results", required: false
 
         def self.call(query:, limit: 10, **_params)
-          { results: [], query: query, limit: limit }
+          { results: [], query:, limit: }
         end
       end
 
@@ -27,7 +27,7 @@ module Aven
         param :expression, type: :string, desc: "Math expression", required: true
 
         def self.call(expression:, **_params)
-          { result: "42", expression: expression }
+          { result: "42", expression: }
         end
       end
 
@@ -39,7 +39,7 @@ module Aven
         param :query, type: :string, desc: "Search query", required: true
 
         def self.call(query:, **_params)
-          { results: [], query: query }
+          { results: [], query: }
         end
       end
 
@@ -63,7 +63,7 @@ module Aven
         param :limit, type: :integer, desc: "Max results", required: false
 
         def self.call(query:, limit: 10, **_params)
-          { results: ["result1", "result2"], query: query, limit: limit }
+          { results: ["result1", "result2"], query:, limit: }
         end
       end
     end

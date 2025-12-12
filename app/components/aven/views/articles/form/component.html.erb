@@ -1,0 +1,45 @@
+<%= form_with model: article, url: url, builder: Aeros::FormBuilder, class: "space-y-6" do |f| %>
+  <%= f.text_field :title, label: "Title", required: true %>
+
+  <%= f.text_area_ai_field :intro,
+      label: "Introduction",
+      ai_url: routes.ai_text_generate_path,
+      system_prompts: ["Write a compelling 2-3 sentence introduction for this article."],
+      rows: 3 %>
+
+  <%= f.text_area_ai_field :description,
+      label: "Content",
+      ai_url: routes.ai_text_generate_path,
+      system_prompts: ["Write clear, engaging article content. Use markdown formatting."],
+      rows: 12 %>
+
+  <%= f.tagging_field :tag_list,
+      label: "Tags",
+      tags_url: routes.tags_path(format: :json),
+      create_url: routes.tags_path,
+      selected_tags: article.tag_list.to_a %>
+
+  <%= f.file_field :main_visual, label: "Main Visual", accept: "image/*" %>
+
+  <% if article.main_visual.attached? %>
+    <div class="mt-2">
+      <%= image_tag article.main_visual, class: "max-w-xs rounded-lg" %>
+    </div>
+  <% end %>
+
+  <%= f.attachments_field :article_attachments,
+      label: "Attachments",
+      accept: "image/*,application/pdf",
+      max_files: 20,
+      existing: existing_attachments,
+      direct_upload_url: helpers.main_app.rails_direct_uploads_url %>
+
+  <%= f.datetime_field :published_at,
+      label: "Publish Date",
+      helper_text: "Leave blank to save as draft" %>
+
+  <div class="flex items-center gap-4 pt-4">
+    <%= ui("button", label: article.persisted? ? "Update Article" : "Create Article", type: "submit") %>
+    <%= ui("button", label: "Cancel", href: routes.articles_path, variant: :outline) %>
+  </div>
+<% end %>

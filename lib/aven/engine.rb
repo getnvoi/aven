@@ -5,6 +5,7 @@ require "tailwind_merge"
 require "json_skooma"
 require "aeros"
 require "friendly_id"
+require "acts-as-taggable-on"
 require "aven/model"
 
 module Aven

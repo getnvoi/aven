@@ -61,9 +61,9 @@ module APIStubHelpers
   def stub_openai_embeddings_error(status: 500, message: "API error")
     stub_request(:post, "https://api.openai.com/v1/embeddings")
       .to_return(
-        status: status,
+        status:,
         headers: { "Content-Type" => "application/json" },
-        body: { error: { message: message, type: "server_error" } }.to_json
+        body: { error: { message:, type: "server_error" } }.to_json
       )
   end
 
@@ -80,7 +80,7 @@ module APIStubHelpers
           content: [{ type: "text", text: content }],
           model: "claude-sonnet-4-20250514",
           stop_reason: "end_turn",
-          usage: { input_tokens: input_tokens, output_tokens: output_tokens }
+          usage: { input_tokens:, output_tokens: }
         }.to_json
       )
   end
@@ -88,9 +88,9 @@ module APIStubHelpers
   def stub_anthropic_chat_error(status: 500, message: "API error")
     stub_request(:post, "https://api.anthropic.com/v1/messages")
       .to_return(
-        status: status,
+        status:,
         headers: { "Content-Type" => "application/json" },
-        body: { error: { type: "server_error", message: message } }.to_json
+        body: { error: { type: "server_error", message: } }.to_json
       )
   end
 

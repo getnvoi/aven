@@ -29,7 +29,7 @@ module Aven
 
             def register_tools(server, context)
               workspace = context[:workspace]
-              tools = Aven::Agentic::DynamicToolBuilder.build_all(workspace: workspace)
+              tools = Aven::Agentic::DynamicToolBuilder.build_all(workspace:)
 
               tools.each do |tool_class|
                 adapter = Adapter.new(tool_class, context)

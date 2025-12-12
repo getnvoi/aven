@@ -32,7 +32,7 @@ module Aven
           if config[:cardinality] == :many
             Array(ids).each_with_index do |target_id, position|
               next unless Aven::Item.exists?(target_id)
-              Aven::ItemLink.create!(source_id: id, target_id: target_id, relation: relation_name.to_s, position: position)
+              Aven::ItemLink.create!(source_id: id, target_id:, relation: relation_name.to_s, position:)
             end
           else
             if ids.present? && Aven::Item.exists?(ids)
@@ -72,7 +72,7 @@ module Aven
               update_item_data(target, attr_hash.except(:id, :_destroy))
               # Update position if link exists
               link = Aven::ItemLink.find_by(source_id: id, target_id: target.id, relation: relation_name.to_s)
-              link&.update!(position: position)
+              link&.update!(position:)
             end
           else
             # Create new
@@ -80,13 +80,13 @@ module Aven
 
             data_attrs, nested_attrs = split_attrs(attr_hash)
             target = Aven::Item.create!(
-              workspace: workspace,
+              workspace:,
               schema_slug: target_schema_slug,
               data: data_attrs
             )
             # Apply nested attributes after creation
             apply_nested_attrs(target, nested_attrs)
-            Aven::ItemLink.create!(source_id: id, target_id: target.id, relation: relation_name.to_s, position: position)
+            Aven::ItemLink.create!(source_id: id, target_id: target.id, relation: relation_name.to_s, position:)
           end
         end
       end
@@ -110,7 +110,7 @@ module Aven
 
           data_attrs, nested_attrs = split_attrs(attr_hash)
           target = Aven::Item.create!(
-            workspace: workspace,
+            workspace:,
             schema_slug: target_schema_slug,
             data: data_attrs
           )
@@ -186,9 +186,9 @@ module Aven
 
         @_pending_link_attrs ||= {}
         @_pending_link_attrs[name] = {
-          config: config,
+          config:,
           attrs: normalize_link_attrs(attrs, config[:cardinality]),
-          target_schema_slug: target_schema_slug
+          target_schema_slug:
         }
       end
 

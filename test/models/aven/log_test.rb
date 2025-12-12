@@ -51,7 +51,7 @@ class Aven::LogTest < ActiveSupport::TestCase
   test "allows valid level values" do
     valid_levels = [ "debug", "info", "warn", "error", "fatal" ]
     valid_levels.each do |level|
-      log = Aven::Log.new(message: "test", level: level, loggable: aven_workspaces(:one), workspace: aven_workspaces(:one))
+      log = Aven::Log.new(message: "test", level:, loggable: aven_workspaces(:one), workspace: aven_workspaces(:one))
       assert log.valid?, "#{level} should be valid"
     end
   end

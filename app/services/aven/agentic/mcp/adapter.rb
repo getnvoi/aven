@@ -56,8 +56,8 @@ module Aven
 
             {
               type: "object",
-              properties: properties,
-              required: required
+              properties:,
+              required:
             }
           end
 

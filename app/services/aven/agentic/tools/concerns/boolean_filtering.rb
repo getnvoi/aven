@@ -11,7 +11,7 @@ module Aven
             # Define boolean filter parameters
             def boolean_filterable(name, column:, desc: nil)
               @boolean_filters ||= {}
-              @boolean_filters[name] = { column: column }
+              @boolean_filters[name] = { column: }
 
               param name, type: :boolean, desc: desc || "Filter by #{name}", required: false
             end

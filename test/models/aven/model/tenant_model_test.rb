@@ -23,21 +23,21 @@ class Aven::Model::TenantModelTest < ActiveSupport::TestCase
   # Instance methods
   test "workspace_tenant_id returns class name combined with workspace_id" do
     workspace = aven_workspaces(:one)
-    project = TestProject.create!(name: "Test Project", workspace: workspace)
+    project = TestProject.create!(name: "Test Project", workspace:)
 
     assert_equal "TestProject;#{workspace.id}", project.workspace_tenant_id
   end
 
   test "workspace_scoped? returns true" do
     workspace = aven_workspaces(:one)
-    project = TestProject.create!(name: "Test Project", workspace: workspace)
+    project = TestProject.create!(name: "Test Project", workspace:)
 
     assert project.workspace_scoped?
   end
 
   test "workspace_association_name returns the pluralized association name" do
     workspace = aven_workspaces(:one)
-    project = TestProject.create!(name: "Test Project", workspace: workspace)
+    project = TestProject.create!(name: "Test Project", workspace:)
 
     assert_equal :test_projects, project.workspace_association_name
   end

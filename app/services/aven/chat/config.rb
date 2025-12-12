@@ -41,7 +41,7 @@ module Aven
         # - If thread.tools is an array: only those tools are available (locked by agent)
         def tools(thread = nil)
           workspace = thread&.workspace
-          all_tools = Aven::Agentic::DynamicToolBuilder.build_all(workspace: workspace)
+          all_tools = Aven::Agentic::DynamicToolBuilder.build_all(workspace:)
 
           return all_tools unless thread&.tools_locked?
 

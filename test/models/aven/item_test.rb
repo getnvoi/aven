@@ -123,7 +123,7 @@ class Aven::ItemTest < ActiveSupport::TestCase
 
   test "schema_for returns ItemSchema when no code class" do
     workspace = aven_workspaces(:one)
-    schema = Aven::Item.schema_for("custom_object", workspace: workspace)
+    schema = Aven::Item.schema_for("custom_object", workspace:)
     assert_instance_of Aven::ItemSchema, schema
     assert_equal "custom_object", schema.slug
   end
@@ -131,7 +131,7 @@ class Aven::ItemTest < ActiveSupport::TestCase
   test "schema_for raises when no class or DB schema" do
     workspace = aven_workspaces(:one)
     assert_raises(ActiveRecord::RecordNotFound) do
-      Aven::Item.schema_for("nonexistent", workspace: workspace)
+      Aven::Item.schema_for("nonexistent", workspace:)
     end
   end
 

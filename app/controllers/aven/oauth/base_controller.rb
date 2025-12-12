@@ -105,7 +105,7 @@ module Aven
           # Create default workspace if user has none (new sign up)
           if workspace.nil?
             workspace = Aven::Workspace.create!(label: "Default Workspace")
-            Aven::WorkspaceUser.create!(user: user, workspace: workspace)
+            Aven::WorkspaceUser.create!(user:, workspace:)
             user.reload
           end
 

@@ -32,13 +32,13 @@ module Aven
       #              using: { tsearch: { tsvector_column: "searchable" } }
       #
       def searchable(against:, **options)
-        pg_search_scope :search,
-          against: against,
+        pg_search_scope(:search,
+          against:,
           **options.reverse_merge(
             using: {
               tsearch: { prefix: true, negation: true }
             }
-          )
+          ))
 
         # Convenience scope for workspace + search
         if column_names.include?("workspace_id")
@@ -54,7 +54,7 @@ module Aven
       #   searchable_globally against: [:name, :description]
       #
       def searchable_globally(against:, **options)
-        multisearchable against: against, **options
+        multisearchable against:, **options
       end
     end
   end

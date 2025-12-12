@@ -44,6 +44,17 @@ Aven::Engine.routes.draw do
     end
   end
 
+  # AI text generation (SSE streaming)
+  namespace :ai do
+    post "text/generate", to: "text#generate", as: :text_generate
+  end
+
+  # Tags API (for tagging component)
+  resources :tags, only: [:index, :create]
+
+  # Articles
+  resources :articles
+
   namespace(:admin) do
     root(to: "dashboard#index")
   end

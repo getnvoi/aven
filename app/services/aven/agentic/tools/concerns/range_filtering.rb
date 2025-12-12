@@ -11,7 +11,7 @@ module Aven
             # Define range filter parameters (min/max)
             def range_filterable(name, column:, type: :integer, desc: nil)
               @range_filters ||= {}
-              @range_filters[name] = { column: column }
+              @range_filters[name] = { column: }
 
               param_type = type == :integer ? :number : :number
 

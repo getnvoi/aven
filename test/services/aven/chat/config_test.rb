@@ -48,7 +48,7 @@ class Aven::Chat::ConfigTest < ActiveSupport::TestCase
     thread = aven_chat_threads(:agent_thread)
     # Thread has locked documents [1, 3]
 
-    result = Aven::Chat::Config.system_prompt(thread: thread)
+    result = Aven::Chat::Config.system_prompt(thread:)
 
     # Should include reference documents section
     assert_includes result, "Reference Documents"
@@ -57,7 +57,7 @@ class Aven::Chat::ConfigTest < ActiveSupport::TestCase
   test "system_prompt does not include documents when thread has no locked documents" do
     thread = aven_chat_threads(:basic_thread)
 
-    result = Aven::Chat::Config.system_prompt(thread: thread)
+    result = Aven::Chat::Config.system_prompt(thread:)
 
     assert_not_includes result, "Reference Documents"
   end

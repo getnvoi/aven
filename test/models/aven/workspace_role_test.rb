@@ -53,7 +53,7 @@ class Aven::WorkspaceRoleTest < ActiveSupport::TestCase
     workspace = aven_workspaces(:one)
     existing_role = aven_workspace_roles(:one)
 
-    role = Aven::WorkspaceRole.new(workspace: workspace, label: existing_role.label)
+    role = Aven::WorkspaceRole.new(workspace:, label: existing_role.label)
     assert_not role.valid?
     assert_includes role.errors[:label], "has already been taken"
   end
@@ -68,8 +68,8 @@ class Aven::WorkspaceRoleTest < ActiveSupport::TestCase
 
   test "predefined? and custom? behave as expected" do
     workspace = aven_workspaces(:one)
-    owner_role = Aven::WorkspaceRole.create!(workspace: workspace, label: "owner")
-    custom_role = Aven::WorkspaceRole.create!(workspace: workspace, label: "custom_role")
+    owner_role = Aven::WorkspaceRole.create!(workspace:, label: "owner")
+    custom_role = Aven::WorkspaceRole.create!(workspace:, label: "custom_role")
 
     assert owner_role.predefined?
     assert_not owner_role.custom?

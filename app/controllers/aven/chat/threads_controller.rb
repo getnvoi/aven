@@ -39,7 +39,7 @@ module Aven
       # POST /chat/threads/:id/ask
       def ask
         message = @thread.ask(params[:question])
-        render json: { message: message, thread: @thread }
+        render json: { message:, thread: @thread }
       end
 
       # POST /chat/threads/:id/ask_agent
@@ -48,7 +48,7 @@ module Aven
         question = params[:question].presence
 
         message = @thread.ask_with_agent(agent, question)
-        render json: { message: message, thread: @thread }
+        render json: { message:, thread: @thread }
       end
 
       private

@@ -56,7 +56,7 @@ class Aven::WorkspaceUserTest < ActiveSupport::TestCase
   test "returns empty roles initially" do
     workspace = aven_workspaces(:one)
     user = Aven::User.create!(email: "newuser@example.com", auth_tenant: "test")
-    workspace_user = Aven::WorkspaceUser.create!(user: user, workspace: workspace)
+    workspace_user = Aven::WorkspaceUser.create!(user:, workspace:)
 
     assert_equal [], workspace_user.roles
   end
@@ -64,7 +64,7 @@ class Aven::WorkspaceUserTest < ActiveSupport::TestCase
   test "adds and lists roles" do
     workspace = aven_workspaces(:one)
     user = Aven::User.create!(email: "tester@example.com", auth_tenant: "test")
-    workspace_user = Aven::WorkspaceUser.create!(user: user, workspace: workspace)
+    workspace_user = Aven::WorkspaceUser.create!(user:, workspace:)
 
     workspace_user.add_role("owner")
     workspace_user.add_role("admin")
@@ -76,7 +76,7 @@ class Aven::WorkspaceUserTest < ActiveSupport::TestCase
   test "removes roles" do
     workspace = aven_workspaces(:one)
     user = Aven::User.create!(email: "tester2@example.com", auth_tenant: "test")
-    workspace_user = Aven::WorkspaceUser.create!(user: user, workspace: workspace)
+    workspace_user = Aven::WorkspaceUser.create!(user:, workspace:)
 
     workspace_user.add_role("member")
     assert_includes workspace_user.roles, "member"

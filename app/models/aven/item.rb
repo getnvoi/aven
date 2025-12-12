@@ -66,7 +66,7 @@ module Aven
         # 1. Try code-defined class
         schema_class_for(slug) ||
         # 2. Try DB (requires workspace)
-        (workspace && Aven::ItemSchema.find_by!(workspace: workspace, slug: slug))
+        (workspace && Aven::ItemSchema.find_by!(workspace:, slug:))
       end
     end
 
@@ -82,7 +82,7 @@ module Aven
         return code_schema if code_schema
 
         # 2. DB lookup (raises if not found)
-        Aven::ItemSchema.find_by!(workspace: workspace, slug: schema_slug)
+        Aven::ItemSchema.find_by!(workspace:, slug: schema_slug)
       end
     end
 
@@ -102,7 +102,7 @@ module Aven
           registry = JSONSkooma.create_registry("2020-12", assert_formats: true)
           schema_with_meta = json_schema.dup
           schema_with_meta["$schema"] ||= "https://json-schema.org/draft/2020-12/schema"
-          validator = JSONSkooma::JSONSchema.new(schema_with_meta, registry: registry)
+          validator = JSONSkooma::JSONSchema.new(schema_with_meta, registry:)
           result = validator.evaluate(data)
 
           unless result.valid?

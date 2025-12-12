@@ -32,11 +32,11 @@ module OpenAIHelpers
   def stub_openai_embeddings_error(status: 500, message: "API error")
     stub_request(:post, "https://api.openai.com/v1/embeddings")
       .to_return(
-        status: status,
+        status:,
         headers: { "Content-Type" => "application/json" },
         body: {
           error: {
-            message: message,
+            message:,
             type: "server_error",
             code: nil
           }

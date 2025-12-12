@@ -15,7 +15,7 @@ module Aven
             bytes = File.binread(file_path)
 
             response = client.detect_document_text(
-              document: { bytes: bytes }
+              document: { bytes: }
             )
 
             extract_text_from_response(response)
@@ -88,7 +88,7 @@ module Aven
               attempts = 0
 
               loop do
-                response = client.get_document_text_detection(job_id: job_id)
+                response = client.get_document_text_detection(job_id:)
 
                 case response.job_status
                 when "SUCCEEDED"
@@ -112,7 +112,7 @@ module Aven
               next_token = nil
 
               loop do
-                params = { job_id: job_id }
+                params = { job_id: }
                 params[:next_token] = next_token if next_token
 
                 response = client.get_document_text_detection(params)

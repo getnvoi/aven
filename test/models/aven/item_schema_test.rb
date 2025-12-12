@@ -38,7 +38,7 @@ module Aven
 
     test "valid with required attributes" do
       schema = ItemSchema.new(
-        workspace: workspace,
+        workspace:,
         slug: "test_object",
         schema: { "type" => "object" }
       )
@@ -85,12 +85,12 @@ module Aven
       invalid_slugs = %w[Contact MY_SCHEMA 123schema _underscore schema-dash Schema!]
 
       valid_slugs.each do |slug|
-        schema = ItemSchema.new(workspace: workspace, slug: slug, schema: { "type" => "object" })
+        schema = ItemSchema.new(workspace:, slug:, schema: { "type" => "object" })
         assert schema.valid?, "Expected '#{slug}' to be valid"
       end
 
       invalid_slugs.each do |slug|
-        schema = ItemSchema.new(workspace: workspace, slug: slug, schema: { "type" => "object" })
+        schema = ItemSchema.new(workspace:, slug:, schema: { "type" => "object" })
         assert_not schema.valid?, "Expected '#{slug}' to be invalid"
       end
     end

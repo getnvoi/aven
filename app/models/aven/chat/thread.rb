@@ -93,7 +93,7 @@ module Aven
       def lock_agent!(agent)
         return if agent_locked?
 
-        update!(agent: agent)
+        update!(agent:)
       end
 
       # Ask a question and trigger chat processing

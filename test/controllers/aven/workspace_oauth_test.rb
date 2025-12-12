@@ -7,11 +7,11 @@ class Aven::WorkspaceOauthTest < ActionDispatch::IntegrationTest
       auth_tenant: "www.example.com",
       remote_id: "workspace_123"
     )
-    
+
     @workspace = Aven::Workspace.create!(
       label: "Test Workspace"
     )
-    
+
     Aven::WorkspaceUser.create!(
       user: @user,
       workspace: @workspace
@@ -36,7 +36,7 @@ class Aven::WorkspaceOauthTest < ActionDispatch::IntegrationTest
         body: { sub: @user.remote_id, email: @user.email, name: "Test" }.to_json
       )
 
-    get "/aven/oauth/google/callback", params: { code: "code", state: state }
+    get "/aven/oauth/google/callback", params: { code: "code", state: }
 
     # After OAuth, BOTH session[:user_id] AND session[:workspace_id] should be set
     assert session[:user_id].present?, "User should be signed in"
@@ -73,7 +73,7 @@ class Aven::WorkspaceOauthTest < ActionDispatch::IntegrationTest
 
     assert_difference "Aven::Workspace.count", 1 do
       assert_difference "Aven::WorkspaceUser.count", 1 do
-        get "/aven/oauth/google/callback", params: { code: "code", state: state }
+        get "/aven/oauth/google/callback", params: { code: "code", state: }
       end
     end
 
@@ -87,5 +87,4 @@ class Aven::WorkspaceOauthTest < ActionDispatch::IntegrationTest
     assert session[:workspace_id].present?
     assert_equal new_user.workspaces.first.id, session[:workspace_id]
   end
-
 end

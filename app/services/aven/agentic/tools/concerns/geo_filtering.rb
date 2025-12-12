@@ -11,8 +11,8 @@ module Aven
             # Define geo search parameters
             def geo_searchable(lat_column: :latitude, lng_column: :longitude)
               @geo_config = {
-                lat_column: lat_column,
-                lng_column: lng_column
+                lat_column:,
+                lng_column:
               }
 
               param :latitude, type: :number, desc: "Latitude for geo search"

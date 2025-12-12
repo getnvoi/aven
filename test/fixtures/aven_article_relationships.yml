@@ -1,0 +1,16 @@
+_fixture:
+  model_class: Aven::ArticleRelationship
+
+relationship_one:
+  article: published_article
+  related_article: draft_article
+  position: 0
+  created_at: <%= 1.day.ago.to_fs(:db) %>
+  updated_at: <%= 1.day.ago.to_fs(:db) %>
+
+relationship_two:
+  article: published_article
+  related_article: old_published_article
+  position: 1
+  created_at: <%= 1.day.ago.to_fs(:db) %>
+  updated_at: <%= 1.day.ago.to_fs(:db) %>

@@ -49,9 +49,9 @@ class Aven::WorkspaceUserRoleTest < ActiveSupport::TestCase
   test "delegates attributes" do
     workspace = aven_workspaces(:one)
     user = Aven::User.create!(email: "alice@example.com", auth_tenant: "test")
-    workspace_user = Aven::WorkspaceUser.create!(workspace: workspace, user: user)
-    role = Aven::WorkspaceRole.create!(workspace: workspace, label: "custom_member", description: "Member role")
-    wur = Aven::WorkspaceUserRole.create!(workspace_user: workspace_user, workspace_role: role)
+    workspace_user = Aven::WorkspaceUser.create!(workspace:, user:)
+    role = Aven::WorkspaceRole.create!(workspace:, label: "custom_member", description: "Member role")
+    wur = Aven::WorkspaceUserRole.create!(workspace_user:, workspace_role: role)
 
     assert_equal workspace, wur.workspace
     assert_equal "custom_member", wur.label
@@ -70,9 +70,9 @@ class Aven::WorkspaceUserRoleTest < ActiveSupport::TestCase
   test "filters by role label" do
     workspace = aven_workspaces(:one)
     user = Aven::User.create!(email: "bob@example.com", auth_tenant: "test")
-    workspace_user = Aven::WorkspaceUser.create!(workspace: workspace, user: user)
-    role = Aven::WorkspaceRole.create!(workspace: workspace, label: "custom_viewer")
-    wur = Aven::WorkspaceUserRole.create!(workspace_user: workspace_user, workspace_role: role)
+    workspace_user = Aven::WorkspaceUser.create!(workspace:, user:)
+    role = Aven::WorkspaceRole.create!(workspace:, label: "custom_viewer")
+    wur = Aven::WorkspaceUserRole.create!(workspace_user:, workspace_role: role)
 
     assert_includes Aven::WorkspaceUserRole.with_role("custom_viewer"), wur
     assert_not_includes Aven::WorkspaceUserRole.with_role("owner"), wur

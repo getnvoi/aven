@@ -65,7 +65,7 @@ class Aven::Agentic::AgentToolTest < ActiveSupport::TestCase
     agent = aven_agentic_agents(:math_agent)
     tool = aven_agentic_tools(:search_tool)
 
-    agent.agent_tools.create!(tool: tool)
+    agent.agent_tools.create!(tool:)
 
     assert_includes agent.tools.reload, tool
   end

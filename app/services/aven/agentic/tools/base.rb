@@ -31,10 +31,10 @@ module Aven
           # DSL for defining parameters
           def param(name, type:, desc:, required: false, **constraints)
             parameters << Parameter.new(
-              name: name,
-              type: type,
+              name:,
+              type:,
               description: desc,
-              required: required,
+              required:,
               constraints: constraints.presence
             )
           end

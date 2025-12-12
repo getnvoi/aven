@@ -45,7 +45,7 @@ module Aven
 
     scope :in_progress, -> { where(status: %w[pending fetching processing]) }
     scope :recent, -> { order(created_at: :desc) }
-    scope :by_source, ->(source) { where(source: source) }
+    scope :by_source, ->(source) { where(source:) }
 
     def in_progress?
       %w[pending fetching processing].include?(status)

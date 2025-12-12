@@ -91,7 +91,7 @@ module Aven
           return render_mcp_error("Unauthorized", -32001, status: :unauthorized) if token.blank?
 
           @api_token = validate_token(token)
-          return render_mcp_error("Unauthorized", -32001, status: :unauthorized) unless @api_token
+          render_mcp_error("Unauthorized", -32001, status: :unauthorized) unless @api_token
         end
 
         def extract_token
@@ -111,9 +111,9 @@ module Aven
         def render_mcp_error(message, code, status: :ok)
           render json: {
             jsonrpc: "2.0",
-            error: { code: code, message: message },
+            error: { code:, message: },
             id: nil
-          }, status: status
+          }, status:
         end
 
         def initialization_response?(result)

@@ -12,8 +12,8 @@ module Aven
             def enum_filterable(name, column:, values:, desc: nil)
               @enum_filters ||= {}
               @enum_filters[name] = {
-                column: column,
-                values: values
+                column:,
+                values:
               }
 
               param name, type: :string, desc: desc || "Filter by #{name}", required: false

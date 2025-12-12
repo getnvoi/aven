@@ -44,7 +44,7 @@ module Aven
           type: "message_streaming",
           message: {
             id: message.id,
-            content: content
+            content:
           }
         })
       end

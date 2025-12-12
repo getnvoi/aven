@@ -53,7 +53,7 @@ class Aven::Import::ItemLinkTest < ActiveSupport::TestCase
     entry = aven_import_entries(:google_entry_one)
     item = aven_items(:contact_two)
 
-    link = Aven::Import::ItemLink.new(entry: entry, item: item)
+    link = Aven::Import::ItemLink.new(entry:, item:)
     assert link.valid?
   end
 
@@ -61,7 +61,7 @@ class Aven::Import::ItemLinkTest < ActiveSupport::TestCase
     entry = aven_import_entries(:google_entry_two)
     item = aven_items(:contact_one)
 
-    link = Aven::Import::ItemLink.new(entry: entry, item: item)
+    link = Aven::Import::ItemLink.new(entry:, item:)
     assert link.valid?
   end
 

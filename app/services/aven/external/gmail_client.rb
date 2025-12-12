@@ -33,7 +33,7 @@ module Aven
           break if emails_scanned >= max_emails
 
           messages_response = fetch_messages(
-            page_token: page_token,
+            page_token:,
             max_results: [PAGE_SIZE, max_emails - emails_scanned].min
           )
           messages = messages_response["messages"] || []
@@ -58,14 +58,14 @@ module Aven
         end
 
         {
-          emails_scanned: emails_scanned,
+          emails_scanned:,
           addresses: addresses.values
         }
       end
 
       # Extract addresses and create import entries
       def fetch_into_import(import, max_emails: 2000, &progress_callback)
-        result = extract_email_addresses(max_emails: max_emails, &progress_callback)
+        result = extract_email_addresses(max_emails:, &progress_callback)
 
         result[:addresses].each do |address_data|
           import.entries.create!(data: address_data)
@@ -148,7 +148,7 @@ module Aven
             next unless email.include?("@")
             next if email.length < 5
 
-            results << { name: name.presence, email: email }
+            results << { name: name.presence, email: }
           end
 
           results

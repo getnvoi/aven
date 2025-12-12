@@ -39,7 +39,7 @@ module Aven
     end
 
     def link_to_item!(item)
-      item_links.create!(item: item)
+      item_links.create!(item:)
     end
   end
 end

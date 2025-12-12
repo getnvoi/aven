@@ -40,7 +40,7 @@ module Aven
       end
 
       def array(name, of:, **opts)
-        _builder.array(name, of: of, **opts)
+        _builder.array(name, of:, **opts)
       end
 
       def embeds_many(name, &block)
@@ -52,11 +52,11 @@ module Aven
       end
 
       def links_many(name, class_name: "Aven::Item", inverse_of: nil)
-        _builder.links_many(name, class_name: class_name, inverse_of: inverse_of)
+        _builder.links_many(name, class_name:, inverse_of:)
       end
 
       def links_one(name, class_name: "Aven::Item", inverse_of: nil)
-        _builder.links_one(name, class_name: class_name, inverse_of: inverse_of)
+        _builder.links_one(name, class_name:, inverse_of:)
       end
 
       def fields

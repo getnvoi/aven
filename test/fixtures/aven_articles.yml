@@ -1,0 +1,57 @@
+_fixture:
+  model_class: Aven::Article
+
+published_article:
+  workspace: one
+  author: one
+  title: "Published Article"
+  slug: "published-article"
+  intro: "This is a published article intro"
+  description: "Full description of the published article"
+  published_at: <%= 1.day.ago.to_fs(:db) %>
+  created_at: <%= 2.days.ago.to_fs(:db) %>
+  updated_at: <%= 1.day.ago.to_fs(:db) %>
+
+draft_article:
+  workspace: one
+  author: one
+  title: "Draft Article"
+  slug: "draft-article"
+  intro: "This is a draft article"
+  description: "Not yet published"
+  published_at: ~
+  created_at: <%= 1.day.ago.to_fs(:db) %>
+  updated_at: <%= 1.day.ago.to_fs(:db) %>
+
+scheduled_article:
+  workspace: one
+  author: one
+  title: "Scheduled Article"
+  slug: "scheduled-article"
+  intro: "This will be published later"
+  description: "Scheduled for future"
+  published_at: <%= 1.week.from_now.to_fs(:db) %>
+  created_at: <%= 1.day.ago.to_fs(:db) %>
+  updated_at: <%= 1.day.ago.to_fs(:db) %>
+
+other_workspace_article:
+  workspace: two
+  author: two
+  title: "Other Workspace Article"
+  slug: "other-workspace-article"
+  intro: "Belongs to workspace two"
+  description: "Should not be visible to workspace one users"
+  published_at: <%= 1.day.ago.to_fs(:db) %>
+  created_at: <%= 2.days.ago.to_fs(:db) %>
+  updated_at: <%= 1.day.ago.to_fs(:db) %>
+
+old_published_article:
+  workspace: one
+  author: one
+  title: "Old Published Article"
+  slug: "old-published-article"
+  intro: "An older article"
+  description: "Published a week ago"
+  published_at: <%= 1.week.ago.to_fs(:db) %>
+  created_at: <%= 2.weeks.ago.to_fs(:db) %>
+  updated_at: <%= 1.week.ago.to_fs(:db) %>

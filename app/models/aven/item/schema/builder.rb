@@ -50,11 +50,11 @@ module Aven
 
     # Links to other Items
     def links_many(name, class_name: "Aven::Item", inverse_of: nil)
-      @links[name] = { cardinality: :many, class_name: class_name, inverse_of: inverse_of }
+      @links[name] = { cardinality: :many, class_name:, inverse_of: }
     end
 
     def links_one(name, class_name: "Aven::Item", inverse_of: nil)
-      @links[name] = { cardinality: :one, class_name: class_name, inverse_of: inverse_of }
+      @links[name] = { cardinality: :one, class_name:, inverse_of: }
     end
 
     # JSON Schema generation
@@ -103,37 +103,37 @@ module Aven
         { "type" => "object", "properties" => props, "required" => required }
       end
 
-    # Nested builder for embeds
-    class EmbedBuilder
-      attr_reader :fields
+      # Nested builder for embeds
+      class EmbedBuilder
+        attr_reader :fields
 
-      def initialize
-        @fields = {}
-      end
+        def initialize
+          @fields = {}
+        end
 
-      def string(name, **opts)
-        @fields[name] = { type: :string, **opts }
-      end
+        def string(name, **opts)
+          @fields[name] = { type: :string, **opts }
+        end
 
-      def integer(name, **opts)
-        @fields[name] = { type: :integer, **opts }
-      end
+        def integer(name, **opts)
+          @fields[name] = { type: :integer, **opts }
+        end
 
-      def boolean(name, **opts)
-        @fields[name] = { type: :boolean, **opts }
-      end
+        def boolean(name, **opts)
+          @fields[name] = { type: :boolean, **opts }
+        end
 
-      def date(name, **opts)
-        @fields[name] = { type: :string, format: "date", **opts }
-      end
+        def date(name, **opts)
+          @fields[name] = { type: :string, format: "date", **opts }
+        end
 
-      def datetime(name, **opts)
-        @fields[name] = { type: :string, format: "date-time", **opts }
-      end
+        def datetime(name, **opts)
+          @fields[name] = { type: :string, format: "date-time", **opts }
+        end
 
-      def array(name, of:, **opts)
-        @fields[name] = { type: :array, items: { type: of }, **opts }
+        def array(name, of:, **opts)
+          @fields[name] = { type: :array, items: { type: of }, **opts }
+        end
       end
-    end
   end
 end

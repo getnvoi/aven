@@ -15,7 +15,7 @@ module Aven
         return if @thread.title.present?
 
         title = generate_title
-        @thread.update!(title: title) if title.present?
+        @thread.update!(title:) if title.present?
       end
 
       private

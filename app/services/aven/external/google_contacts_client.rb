@@ -41,7 +41,7 @@ module Aven
             "people/me",
             person_fields: PERSON_FIELDS,
             page_size: PAGE_SIZE,
-            page_token: page_token,
+            page_token:,
             sort_order: "LAST_MODIFIED_DESCENDING"
           )
 

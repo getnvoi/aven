@@ -102,7 +102,7 @@ class Aven::WorkspaceTest < ActiveSupport::TestCase
 
   test "find_tenant_record finds record in workspace" do
     workspace = aven_workspaces(:one)
-    project = TestProject.create!(name: "Test", workspace: workspace)
+    project = TestProject.create!(name: "Test", workspace:)
 
     found = workspace.find_tenant_record("TestProject", project.id)
     assert_equal project, found
@@ -129,8 +129,8 @@ class Aven::WorkspaceTest < ActiveSupport::TestCase
 
   test "dynamic query methods provide query method for tenant models" do
     workspace = aven_workspaces(:one)
-    project1 = TestProject.create!(name: "Project 1", workspace: workspace)
-    project2 = TestProject.create!(name: "Project 2", workspace: workspace)
+    project1 = TestProject.create!(name: "Project 1", workspace:)
+    project2 = TestProject.create!(name: "Project 2", workspace:)
 
     projects = workspace.test_projects
     assert_equal 2, projects.count
@@ -142,7 +142,7 @@ class Aven::WorkspaceTest < ActiveSupport::TestCase
     workspace = aven_workspaces(:one)
     other_workspace = aven_workspaces(:two)
 
-    project = TestProject.create!(name: "Project", workspace: workspace)
+    project = TestProject.create!(name: "Project", workspace:)
     other_project = TestProject.create!(name: "Other", workspace: other_workspace)
 
     assert_not_includes workspace.test_projects, other_project

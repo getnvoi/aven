@@ -1,0 +1,13 @@
+<%= ui("page", title: "New Article") do |page| %>
+  <% page.with_actions_area do %>
+    <%= ui("button", label: "Back to Articles", href: routes.articles_path, variant: :outline) %>
+  <% end %>
+
+  <div class="max-w-4xl">
+    <%= render Aven::Views::Articles::Form::Component.new(
+      article: article,
+      url: routes.articles_path,
+      current_user: current_user
+    ) %>
+  </div>
+<% end %>

@@ -33,6 +33,9 @@ module Aven
     # Chat associations
     has_many :aven_chat_threads, class_name: "Aven::Chat::Thread", dependent: :destroy
 
+    # Article associations
+    has_many :aven_articles, class_name: "Aven::Article", dependent: :destroy
+
     validates :slug, uniqueness: true, allow_blank: true
     validates :label, length: { maximum: 255 }, allow_blank: true
     validates :description, length: { maximum: 1000 }, allow_blank: true
