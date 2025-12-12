@@ -1,0 +1,58 @@
+# == Schema Information
+#
+# Table name: aven_agentic_agents
+#
+#  id                   :bigint           not null, primary key
+#  enabled              :boolean          default(TRUE), not null
+#  label                :string           not null
+#  slug                 :string
+#  system_prompt        :text
+#  user_facing_question :text
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  workspace_id         :bigint           not null
+#
+# Indexes
+#
+#  index_aven_agentic_agents_on_enabled                (enabled)
+#  index_aven_agentic_agents_on_workspace_id           (workspace_id)
+#  index_aven_agentic_agents_on_workspace_id_and_slug  (workspace_id,slug) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (workspace_id => aven_workspaces.id)
+#
+_fixture:
+  model_class: Aven::Agentic::Agent
+
+research_agent:
+  workspace: one
+  label: "Research Agent"
+  slug: "research-agent"
+  system_prompt: "You are a research assistant. Help users find information."
+  user_facing_question: "What would you like to research?"
+  enabled: true
+
+math_agent:
+  workspace: one
+  label: "Math Agent"
+  slug: "math-agent"
+  system_prompt: "You are a math tutor."
+  user_facing_question: "What math problem can I help with?"
+  enabled: true
+
+disabled_agent:
+  workspace: one
+  label: "Disabled Agent"
+  slug: "disabled-agent"
+  system_prompt: "You should not see this"
+  user_facing_question: ~
+  enabled: false
+
+workspace_two_agent:
+  workspace: two
+  label: "Workspace Two Agent"
+  slug: "workspace-two-agent"
+  system_prompt: "You are helpful."
+  user_facing_question: "How can I help?"
+  enabled: true

@@ -1,0 +1,76 @@
+# == Schema Information
+#
+# Table name: aven_agentic_documents
+#
+#  id               :bigint           not null, primary key
+#  byte_size        :bigint           not null
+#  content_type     :string           not null
+#  embedding_status :string           default("pending"), not null
+#  filename         :string           not null
+#  metadata         :jsonb
+#  ocr_content      :text
+#  ocr_status       :string           default("pending"), not null
+#  processed_at     :datetime
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  workspace_id     :bigint           not null
+#
+# Indexes
+#
+#  index_aven_agentic_documents_on_content_type      (content_type)
+#  index_aven_agentic_documents_on_embedding_status  (embedding_status)
+#  index_aven_agentic_documents_on_ocr_status        (ocr_status)
+#  index_aven_agentic_documents_on_workspace_id      (workspace_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (workspace_id => aven_workspaces.id)
+#
+_fixture:
+  model_class: Aven::Agentic::Document
+
+# Note: These fixtures require ActiveStorage attachments
+# In tests, we'll attach files manually
+pdf_document:
+  workspace: one
+  filename: "sample.pdf"
+  content_type: "application/pdf"
+  byte_size: 1024
+  ocr_status: "completed"
+  ocr_content: "This is the OCR content of the PDF document."
+  embedding_status: "completed"
+  processed_at: 2024-01-01 12:00:00
+  metadata: {}
+
+image_document:
+  workspace: one
+  filename: "image.png"
+  content_type: "image/png"
+  byte_size: 2048
+  ocr_status: "pending"
+  ocr_content: ~
+  embedding_status: "pending"
+  processed_at: ~
+  metadata: {}
+
+word_document:
+  workspace: one
+  filename: "document.docx"
+  content_type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  byte_size: 3072
+  ocr_status: "skipped"
+  ocr_content: "Word document text content here."
+  embedding_status: "completed"
+  processed_at: 2024-01-01 12:00:00
+  metadata: {}
+
+failed_document:
+  workspace: one
+  filename: "failed.pdf"
+  content_type: "application/pdf"
+  byte_size: 512
+  ocr_status: "failed"
+  ocr_content: ~
+  embedding_status: "pending"
+  processed_at: ~
+  metadata: {"ocr_error": "OCR processing failed"}

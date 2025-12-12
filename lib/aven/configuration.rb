@@ -2,10 +2,14 @@ module Aven
   class Configuration
     attr_accessor :authenticated_root_path
     attr_accessor :oauth_providers
+    attr_accessor :agentic
+    attr_accessor :ocr
 
     def initialize
       @authenticated_root_path = nil
       @oauth_providers = {}
+      @agentic = AgenticConfiguration.new
+      @ocr = OcrConfiguration.new
     end
 
     # Configure OAuth providers
@@ -34,6 +38,38 @@ module Aven
       return nil if @authenticated_root_path.nil?
 
       @authenticated_root_path.respond_to?(:call) ? @authenticated_root_path.call : @authenticated_root_path
+    end
+  end
+
+  # Agentic configuration (LLM, tools, chat)
+  class AgenticConfiguration
+    attr_accessor :default_model
+    attr_accessor :system_prompt
+    attr_accessor :tools_enabled
+    attr_accessor :mcp_enabled
+    attr_accessor :mcp_api_token
+
+    def initialize
+      @default_model = "claude-sonnet-4-5-20250929"
+      @system_prompt = "You are a helpful assistant."
+      @tools_enabled = true
+      @mcp_enabled = false
+      @mcp_api_token = nil
+    end
+  end
+
+  # OCR configuration
+  class OcrConfiguration
+    attr_accessor :provider
+    attr_accessor :aws_region
+    attr_accessor :aws_access_key_id
+    attr_accessor :aws_secret_access_key
+
+    def initialize
+      @provider = nil  # :textract, :google_vision, etc.
+      @aws_region = nil
+      @aws_access_key_id = nil
+      @aws_secret_access_key = nil
     end
   end
 

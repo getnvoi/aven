@@ -1,4 +1,9 @@
 Aven::Engine.routes.draw do
+  # Test-only route for setting up authenticated sessions
+  if Rails.env.test?
+    post "test_sign_in", to: "test_auth#sign_in"
+  end
+
   # Logout route
   get(:logout, to: "auth#logout", as: :logout)
 
@@ -22,6 +27,27 @@ Aven::Engine.routes.draw do
 
   # Workspace switching
   post("/workspaces/:id/switch", to: "workspaces#switch", as: :switch_workspace)
+
+  # Agentic API routes
+  namespace :agentic do
+    # MCP endpoint
+    match "mcp", to: "mcp#handle", via: [:get, :post, :delete], as: :mcp
+    get "mcp/health", to: "mcp#health", as: :mcp_health
+
+    resources :agents, only: [:index, :show, :create, :update, :destroy]
+    resources :tools, only: [:index, :show, :update]
+    resources :documents, only: [:index, :show, :create, :destroy]
+  end
+
+  # Chat API routes
+  namespace :chat do
+    resources :threads, only: [:index, :show, :create] do
+      member do
+        post :ask
+        post :ask_agent
+      end
+    end
+  end
 
   namespace(:admin) do
     root(to: "dashboard#index")

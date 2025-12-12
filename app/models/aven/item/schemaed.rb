@@ -4,21 +4,31 @@ module Aven
   module Item::Schemaed
     extend ActiveSupport::Concern
 
-    # Runtime schema access - delegates to schema_class based on schema_slug
+    # Runtime schema access - delegates to resolved_schema (code class or DB record)
     def schema_fields
-      schema_class&.fields || {}
+      schema_source = resolved_schema
+      return {} unless schema_source
+
+      # Code class has .fields, DB record has .fields_config
+      schema_source.respond_to?(:fields) ? schema_source.fields : schema_source.fields_config
     end
 
     def schema_embeds
-      schema_class&.embeds || {}
+      schema_source = resolved_schema
+      return {} unless schema_source
+
+      schema_source.respond_to?(:embeds) ? schema_source.embeds : schema_source.embeds_config
     end
 
     def schema_links
-      schema_class&.links || {}
+      schema_source = resolved_schema
+      return {} unless schema_source
+
+      schema_source.respond_to?(:links) ? schema_source.links : schema_source.links_config
     end
 
     def json_schema
-      schema_class&.to_json_schema
+      resolved_schema&.to_json_schema
     end
 
     # Embed accessors

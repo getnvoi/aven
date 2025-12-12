@@ -25,64 +25,46 @@ _fixture:
   model_class: Aven::Item
 
 contact_one:
-  id: 1
-  workspace_id: 1
+  workspace: one
   schema_slug: "contact"
   data:
     first_name: "John"
     last_name: "Doe"
     email: "john@example.com"
-  created_at: 2024-01-01 00:00:00
-  updated_at: 2024-01-01 00:00:00
 
 contact_two:
-  id: 2
-  workspace_id: 1
+  workspace: one
   schema_slug: "contact"
   data:
     first_name: "Jane"
     last_name: "Smith"
     email: "jane@example.com"
-  created_at: 2024-01-01 00:00:00
-  updated_at: 2024-01-01 00:00:00
 
 company_one:
-  id: 3
-  workspace_id: 1
+  workspace: one
   schema_slug: "company"
   data:
     name: "Acme Corp"
     industry: "Technology"
-  created_at: 2024-01-01 00:00:00
-  updated_at: 2024-01-01 00:00:00
 
 note_one:
-  id: 4
-  workspace_id: 1
+  workspace: one
   schema_slug: "note"
   data:
     title: "Meeting Notes"
     body: "Discussed project timeline"
-  created_at: 2024-01-01 00:00:00
-  updated_at: 2024-01-01 00:00:00
 
 deleted_item:
-  id: 5
-  workspace_id: 1
+  workspace: one
   schema_slug: "contact"
   data:
     first_name: "Deleted"
     last_name: "User"
   deleted_at: 2024-01-01 00:00:00
-  created_at: 2024-01-01 00:00:00
-  updated_at: 2024-01-01 00:00:00
 
 other_workspace_item:
-  id: 6
-  workspace_id: 2
+  workspace: two
   schema_slug: "contact"
   data:
     first_name: "Other"
     last_name: "Workspace"
-  created_at: 2024-01-01 00:00:00
-  updated_at: 2024-01-01 00:00:00

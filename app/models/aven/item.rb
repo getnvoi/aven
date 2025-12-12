@@ -35,6 +35,7 @@ module Aven
 
     validates :schema_slug, presence: true
     validates :data, presence: true
+    validate :validate_data_against_schema
 
     scope :active, -> { where(deleted_at: nil) }
     scope :deleted, -> { where.not(deleted_at: nil) }
@@ -53,6 +54,7 @@ module Aven
       deleted_at.present?
     end
 
+    # Schema resolution: code class first, then DB, then raise
     class << self
       def schema_class_for(slug)
         "Aven::Item::Schemas::#{slug.to_s.camelize}".constantize
@@ -60,8 +62,11 @@ module Aven
         nil
       end
 
-      def schema_for(slug)
-        schema_class_for(slug)&.builder
+      def schema_for(slug, workspace: nil)
+        # 1. Try code-defined class
+        schema_class_for(slug) ||
+        # 2. Try DB (requires workspace)
+        (workspace && Aven::ItemSchema.find_by!(workspace: workspace, slug: slug))
       end
     end
 
@@ -69,8 +74,55 @@ module Aven
       self.class.schema_class_for(schema_slug)
     end
 
-    def schema_builder
-      schema_class&.builder
+    # Returns the schema source (code class or DB record)
+    def resolved_schema
+      @_resolved_schema ||= begin
+        # 1. Code class first
+        code_schema = self.class.schema_class_for(schema_slug)
+        return code_schema if code_schema
+
+        # 2. DB lookup (raises if not found)
+        Aven::ItemSchema.find_by!(workspace: workspace, slug: schema_slug)
+      end
     end
+
+    def schema_builder
+      resolved_schema&.builder
+    end
+
+    private
+
+      def validate_data_against_schema
+        return if schema_slug.blank? || data.blank?
+
+        begin
+          json_schema = resolved_schema&.to_json_schema
+          return if json_schema.blank?
+
+          registry = JSONSkooma.create_registry("2020-12", assert_formats: true)
+          schema_with_meta = json_schema.dup
+          schema_with_meta["$schema"] ||= "https://json-schema.org/draft/2020-12/schema"
+          validator = JSONSkooma::JSONSchema.new(schema_with_meta, registry: registry)
+          result = validator.evaluate(data)
+
+          unless result.valid?
+            error_output = result.output(:basic)
+            if error_output["errors"]
+              error_messages = error_output["errors"].map do |err|
+                location = err["instanceLocation"] || "data"
+                message = err["error"] || "validation failed"
+                "#{location}: #{message}"
+              end
+              errors.add(:data, "schema validation failed: #{error_messages.join('; ')}")
+            else
+              errors.add(:data, "does not conform to schema")
+            end
+          end
+        rescue ActiveRecord::RecordNotFound
+          errors.add(:schema_slug, "schema '#{schema_slug}' not found")
+        rescue => e
+          errors.add(:data, "schema validation error: #{e.message}")
+        end
+      end
   end
 end

@@ -11,9 +11,19 @@ module Aven
     private
 
       def assign_embed_ids
-        return if schema_embeds.blank? || data.nil?
+        return if data.nil?
+        return if schema_slug.blank?
 
-        schema_embeds.each do |name, config|
+        # Guard against schema not found - let validation handle the error
+        embeds = begin
+          schema_embeds
+        rescue ActiveRecord::RecordNotFound
+          {}
+        end
+
+        return if embeds.blank?
+
+        embeds.each do |name, config|
           if config[:cardinality] == :many
             assign_many_embed_ids(name)
           else

@@ -18,8 +18,8 @@ module Aven
       extend ActiveSupport::Concern
 
       included do
-        # Validate workspace_id column exists at include time
-        unless column_names.include?("workspace_id")
+        # Validate workspace_id column exists at include time (skip during migrations)
+        if table_exists? && !column_names.include?("workspace_id")
           raise ArgumentError,
             "#{name} includes Aven::TenantModel but does not have a workspace_id column. " \
             "Add a workspace_id column to #{table_name} first."

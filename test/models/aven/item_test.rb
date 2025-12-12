@@ -116,9 +116,23 @@ class Aven::ItemTest < ActiveSupport::TestCase
     assert_nil schema_class
   end
 
-  test "schema_for returns builder" do
-    builder = Aven::Item.schema_for("contact")
-    assert_instance_of Aven::Item::Schema::Builder, builder
+  test "schema_for returns code class when available" do
+    schema = Aven::Item.schema_for("contact")
+    assert_equal Aven::Item::Schemas::Contact, schema
+  end
+
+  test "schema_for returns ItemSchema when no code class" do
+    workspace = aven_workspaces(:one)
+    schema = Aven::Item.schema_for("custom_object", workspace: workspace)
+    assert_instance_of Aven::ItemSchema, schema
+    assert_equal "custom_object", schema.slug
+  end
+
+  test "schema_for raises when no class or DB schema" do
+    workspace = aven_workspaces(:one)
+    assert_raises(ActiveRecord::RecordNotFound) do
+      Aven::Item.schema_for("nonexistent", workspace: workspace)
+    end
   end
 
   test "schema_class returns schema class for item" do
@@ -129,6 +143,32 @@ class Aven::ItemTest < ActiveSupport::TestCase
   test "schema_builder returns builder for item" do
     item = aven_items(:contact_one)
     assert_instance_of Aven::Item::Schema::Builder, item.schema_builder
+  end
+
+  # Resolved schema
+  test "resolved_schema returns code class when available" do
+    item = aven_items(:contact_one)
+    assert_equal Aven::Item::Schemas::Contact, item.resolved_schema
+  end
+
+  test "resolved_schema returns ItemSchema when no code class" do
+    item = Aven::Item.new(
+      workspace: aven_workspaces(:one),
+      schema_slug: "custom_object",
+      data: { "name" => "Test" }
+    )
+    assert_instance_of Aven::ItemSchema, item.resolved_schema
+  end
+
+  test "resolved_schema raises when not found" do
+    item = Aven::Item.new(
+      workspace: aven_workspaces(:one),
+      schema_slug: "nonexistent",
+      data: {}
+    )
+    assert_raises(ActiveRecord::RecordNotFound) do
+      item.resolved_schema
+    end
   end
 
   # TenantModel integration
@@ -161,5 +201,66 @@ class Aven::ItemTest < ActiveSupport::TestCase
     item = aven_items(:contact_one)
     assert item.respond_to?(:first_name)
     assert item.respond_to?(:first_name=)
+  end
+
+  # JSON Schema validation
+  test "validates data against DB schema" do
+    item = Aven::Item.new(
+      workspace: aven_workspaces(:one),
+      schema_slug: "custom_object",
+      data: { "name" => "Test Object" }
+    )
+    assert item.valid?
+  end
+
+  test "rejects invalid data per DB schema" do
+    item = Aven::Item.new(
+      workspace: aven_workspaces(:one),
+      schema_slug: "custom_object",
+      data: { "value" => 123 } # missing required "name"
+    )
+    assert_not item.valid?
+    assert item.errors[:data].any? { |e| e.include?("schema validation failed") }
+  end
+
+  test "rejects wrong data type per DB schema" do
+    item = Aven::Item.new(
+      workspace: aven_workspaces(:one),
+      schema_slug: "custom_object",
+      data: { "name" => "Test", "value" => "not an integer" }
+    )
+    assert_not item.valid?
+    assert item.errors[:data].any? { |e| e.include?("schema validation failed") }
+  end
+
+  test "validates data against code schema" do
+    item = Aven::Item.new(
+      workspace: aven_workspaces(:one),
+      schema_slug: "contact",
+      data: { "first_name" => "John" }
+    )
+    assert item.valid?
+  end
+
+  test "adds schema not found error when schema missing" do
+    item = Aven::Item.new(
+      workspace: aven_workspaces(:one),
+      schema_slug: "nonexistent",
+      data: { "test" => "data" }
+    )
+    assert_not item.valid?
+    assert item.errors[:schema_slug].any? { |e| e.include?("not found") }
+  end
+
+  test "skips validation when data is blank" do
+    # This tests the guard clause - validation should skip, not error
+    item = Aven::Item.new(
+      workspace: aven_workspaces(:one),
+      schema_slug: "custom_object",
+      data: {}
+    )
+    # Will still fail data presence validation, but not schema validation
+    assert_not item.valid?
+    assert_includes item.errors[:data], "can't be blank"
   end
 end

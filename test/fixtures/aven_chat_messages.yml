@@ -1,0 +1,141 @@
+# == Schema Information
+#
+# Table name: aven_chat_messages
+#
+#  id            :bigint           not null, primary key
+#  completed_at  :datetime
+#  content       :text
+#  cost_usd      :decimal(10, 6)   default(0.0)
+#  input_tokens  :integer          default(0)
+#  model         :string
+#  output_tokens :integer          default(0)
+#  role          :string           not null
+#  started_at    :datetime
+#  status        :string           default("pending")
+#  tool_call     :jsonb
+#  total_tokens  :integer          default(0)
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  parent_id     :bigint
+#  thread_id     :bigint           not null
+#
+# Indexes
+#
+#  index_aven_chat_messages_on_parent_id                 (parent_id)
+#  index_aven_chat_messages_on_role                      (role)
+#  index_aven_chat_messages_on_status                    (status)
+#  index_aven_chat_messages_on_thread_id                 (thread_id)
+#  index_aven_chat_messages_on_thread_id_and_created_at  (thread_id,created_at)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (parent_id => aven_chat_messages.id)
+#  fk_rails_...  (thread_id => aven_chat_threads.id)
+#
+_fixture:
+  model_class: Aven::Chat::Message
+
+user_message:
+  thread: basic_thread
+  parent: ~
+  role: "user"
+  status: "success"
+  content: "Hello, how are you?"
+  model: ~
+  tool_call: ~
+  input_tokens: 0
+  output_tokens: 0
+  total_tokens: 0
+  cost_usd: ~
+  started_at: ~
+  completed_at: ~
+
+assistant_message:
+  thread: basic_thread
+  parent: user_message
+  role: "assistant"
+  status: "success"
+  content: "I'm doing well, thank you for asking!"
+  model: "claude-sonnet-4-5-20250929"
+  tool_call: ~
+  input_tokens: 10
+  output_tokens: 15
+  total_tokens: 25
+  cost_usd: 0.0001
+  started_at: 2024-01-01 00:00:01
+  completed_at: 2024-01-01 00:00:02
+
+pending_assistant:
+  thread: basic_thread
+  parent: ~
+  role: "assistant"
+  status: "pending"
+  content: ~
+  model: ~
+  tool_call: ~
+  input_tokens: 0
+  output_tokens: 0
+  total_tokens: 0
+  cost_usd: ~
+  started_at: ~
+  completed_at: ~
+
+tool_message:
+  thread: agent_thread
+  parent: ~
+  role: "tool"
+  status: "success"
+  content: "search"
+  model: ~
+  tool_call: {"id": "call_123", "name": "search", "arguments": {"query": "test"}, "status": "completed", "result": {"data": []}}
+  input_tokens: 0
+  output_tokens: 0
+  total_tokens: 0
+  cost_usd: ~
+  started_at: 2024-01-01 00:00:01
+  completed_at: 2024-01-01 00:00:02
+
+system_message:
+  thread: agent_thread
+  parent: ~
+  role: "system"
+  status: "success"
+  content: "You are a research assistant."
+  model: ~
+  tool_call: ~
+  input_tokens: 0
+  output_tokens: 0
+  total_tokens: 0
+  cost_usd: ~
+  started_at: ~
+  completed_at: ~
+
+error_message:
+  thread: basic_thread
+  parent: ~
+  role: "assistant"
+  status: "error"
+  content: "An error occurred while processing your request."
+  model: ~
+  tool_call: ~
+  input_tokens: 0
+  output_tokens: 0
+  total_tokens: 0
+  cost_usd: ~
+  started_at: 2024-01-01 00:00:01
+  completed_at: 2024-01-01 00:00:02
+
+streaming_message:
+  thread: basic_thread
+  parent: ~
+  role: "assistant"
+  status: "streaming"
+  content: "This is being streamed..."
+  model: ~
+  tool_call: ~
+  input_tokens: 0
+  output_tokens: 0
+  total_tokens: 0
+  cost_usd: ~
+  started_at: 2024-01-01 00:00:01
+  completed_at: ~

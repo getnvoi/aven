@@ -14,9 +14,9 @@ class Aven::Item::SchemaedTest < ActiveSupport::TestCase
     assert_includes @item.schema_fields.keys, :last_name
   end
 
-  test "schema_fields returns empty hash when no schema" do
+  test "schema_fields raises when no schema found" do
     item = Aven::Item.new(workspace: @workspace, schema_slug: "unknown", data: {})
-    assert_equal({}, item.schema_fields)
+    assert_raises(ActiveRecord::RecordNotFound) { item.schema_fields }
   end
 
   test "schema_embeds returns embeds from schema class" do
@@ -24,9 +24,9 @@ class Aven::Item::SchemaedTest < ActiveSupport::TestCase
     assert_includes @item.schema_embeds.keys, :phones
   end
 
-  test "schema_embeds returns empty hash when no schema" do
+  test "schema_embeds raises when no schema found" do
     item = Aven::Item.new(workspace: @workspace, schema_slug: "unknown", data: {})
-    assert_equal({}, item.schema_embeds)
+    assert_raises(ActiveRecord::RecordNotFound) { item.schema_embeds }
   end
 
   test "schema_links returns links from schema class" do
@@ -34,9 +34,9 @@ class Aven::Item::SchemaedTest < ActiveSupport::TestCase
     assert_includes @item.schema_links.keys, :notes
   end
 
-  test "schema_links returns empty hash when no schema" do
+  test "schema_links raises when no schema found" do
     item = Aven::Item.new(workspace: @workspace, schema_slug: "unknown", data: {})
-    assert_equal({}, item.schema_links)
+    assert_raises(ActiveRecord::RecordNotFound) { item.schema_links }
   end
 
   test "json_schema returns JSON schema from schema class" do
@@ -45,9 +45,9 @@ class Aven::Item::SchemaedTest < ActiveSupport::TestCase
     assert_includes schema["properties"].keys, "first_name"
   end
 
-  test "json_schema returns nil when no schema" do
+  test "json_schema raises when no schema found" do
     item = Aven::Item.new(workspace: @workspace, schema_slug: "unknown", data: {})
-    assert_nil item.json_schema
+    assert_raises(ActiveRecord::RecordNotFound) { item.json_schema }
   end
 
   # Dynamic field accessors

@@ -1,0 +1,31 @@
+# == Schema Information
+#
+# Table name: aven_agentic_agent_tools
+#
+#  id         :bigint           not null, primary key
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  agent_id   :bigint           not null
+#  tool_id    :bigint           not null
+#
+# Indexes
+#
+#  index_aven_agentic_agent_tools_on_agent_id              (agent_id)
+#  index_aven_agentic_agent_tools_on_agent_id_and_tool_id  (agent_id,tool_id) UNIQUE
+#  index_aven_agentic_agent_tools_on_tool_id               (tool_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (agent_id => aven_agentic_agents.id)
+#  fk_rails_...  (tool_id => aven_agentic_tools.id)
+#
+_fixture:
+  model_class: Aven::Agentic::AgentTool
+
+research_agent_search:
+  agent: research_agent
+  tool: search_tool
+
+math_agent_calc:
+  agent: math_agent
+  tool: calculator_tool

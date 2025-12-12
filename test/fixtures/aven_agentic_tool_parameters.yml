@@ -1,0 +1,58 @@
+# == Schema Information
+#
+# Table name: aven_agentic_tool_parameters
+#
+#  id                  :bigint           not null, primary key
+#  constraints         :jsonb
+#  default_description :text
+#  description         :text
+#  name                :string           not null
+#  param_type          :string           not null
+#  position            :integer          default(0), not null
+#  required            :boolean          default(FALSE), not null
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  tool_id             :bigint           not null
+#
+# Indexes
+#
+#  index_aven_agentic_tool_parameters_on_tool_id               (tool_id)
+#  index_aven_agentic_tool_parameters_on_tool_id_and_name      (tool_id,name) UNIQUE
+#  index_aven_agentic_tool_parameters_on_tool_id_and_position  (tool_id,position)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (tool_id => aven_agentic_tools.id)
+#
+_fixture:
+  model_class: Aven::Agentic::ToolParameter
+
+search_query:
+  tool: search_tool
+  name: "query"
+  param_type: "string"
+  description: "The search query"
+  default_description: "Search query"
+  required: true
+  constraints: {}
+  position: 0
+
+search_limit:
+  tool: search_tool
+  name: "limit"
+  param_type: "integer"
+  description: "Maximum results"
+  default_description: "Number of results"
+  required: false
+  constraints: {"min": 1, "max": 100}
+  position: 1
+
+calc_expression:
+  tool: calculator_tool
+  name: "expression"
+  param_type: "string"
+  description: "Math expression to evaluate"
+  default_description: "Expression"
+  required: true
+  constraints: {}
+  position: 0

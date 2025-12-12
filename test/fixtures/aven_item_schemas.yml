@@ -1,0 +1,76 @@
+# == Schema Information
+#
+# Table name: aven_item_schemas
+#
+#  id           :bigint           not null, primary key
+#  slug         :string           not null
+#  schema       :jsonb            not null
+#  fields       :jsonb            not null
+#  embeds       :jsonb            not null
+#  links        :jsonb            not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  workspace_id :bigint           not null
+#
+_fixture:
+  model_class: Aven::ItemSchema
+
+custom_object:
+  workspace: one
+  slug: "custom_object"
+  schema:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      value:
+        type: "integer"
+    required:
+      - name
+  fields:
+    name:
+      type: :string
+      required: true
+    value:
+      type: :integer
+  embeds: {}
+  links: {}
+
+product:
+  workspace: one
+  slug: "product"
+  schema:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+      price:
+        type: "number"
+      in_stock:
+        type: "boolean"
+    required:
+      - title
+  fields:
+    title:
+      type: :string
+      required: true
+    price:
+      type: :number
+    in_stock:
+      type: :boolean
+  embeds: {}
+  links: {}
+
+other_workspace_schema:
+  workspace: two
+  slug: "custom_object"
+  schema:
+    type: "object"
+    properties:
+      label:
+        type: "string"
+  fields:
+    label:
+      type: :string
+  embeds: {}
+  links: {}

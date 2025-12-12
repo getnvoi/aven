@@ -27,19 +27,13 @@ _fixture:
   model_class: Aven::ItemLink
 
 contact_company_link:
-  id: 1
-  source_id: 1
-  target_id: 3
+  source: contact_one
+  target: company_one
   relation: "company"
   position: 0
-  created_at: 2024-01-01 00:00:00
-  updated_at: 2024-01-01 00:00:00
 
 contact_note_link_one:
-  id: 2
-  source_id: 1
-  target_id: 4
+  source: contact_one
+  target: note_one
   relation: "notes"
   position: 0
-  created_at: 2024-01-01 00:00:00
-  updated_at: 2024-01-01 00:00:00

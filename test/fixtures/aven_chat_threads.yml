@@ -1,0 +1,67 @@
+# == Schema Information
+#
+# Table name: aven_chat_threads
+#
+#  id               :bigint           not null, primary key
+#  context_markdown :text
+#  documents        :jsonb
+#  title            :string
+#  tools            :jsonb
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  agent_id         :bigint
+#  user_id          :bigint           not null
+#  workspace_id     :bigint           not null
+#
+# Indexes
+#
+#  index_aven_chat_threads_on_agent_id                  (agent_id)
+#  index_aven_chat_threads_on_created_at                (created_at)
+#  index_aven_chat_threads_on_user_id                   (user_id)
+#  index_aven_chat_threads_on_workspace_id              (workspace_id)
+#  index_aven_chat_threads_on_workspace_id_and_user_id  (workspace_id,user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (agent_id => aven_agentic_agents.id)
+#  fk_rails_...  (user_id => aven_users.id)
+#  fk_rails_...  (workspace_id => aven_workspaces.id)
+#
+_fixture:
+  model_class: Aven::Chat::Thread
+
+basic_thread:
+  workspace: one
+  user: one
+  agent: ~
+  title: "General Chat"
+  tools: ~
+  documents: ~
+  context_markdown: ~
+
+agent_thread:
+  workspace: one
+  user: one
+  agent: research_agent
+  title: "Research Session"
+  tools: ["search"]
+  documents: [<%= ActiveRecord::FixtureSet.identify(:pdf_document) %>]
+  context_markdown: "Research context here"
+
+empty_thread:
+  workspace: one
+  user: two
+  agent: ~
+  title: ~
+  tools: ~
+  documents: ~
+  context_markdown: ~
+
+workspace_two_thread:
+  workspace: two
+  user: one
+  agent: ~
+  title: "Workspace Two Chat"
+  tools: ~
+  documents: ~
+  context_markdown: ~
