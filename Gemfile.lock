@@ -16,15 +16,18 @@ GIT
 PATH
   remote: .
   specs:
-    aven (0.0.4)
+    aven (0.0.5)
       acts-as-taggable-on (~> 12.0)
       dotenv-rails (~> 3.1)
       dry-effects (~> 0.5.0)
       friendly_id (~> 5.5)
+      google-apis-people_v1 (~> 0.42)
       importmap-rails (~> 2.2.2)
       json_skooma
       mcp (~> 0.2)
       neighbor (~> 0.6)
+      omniauth-github (~> 2.0)
+      omniauth-google-oauth2 (~> 1.2)
       pg_search (~> 2.3)
       rails (>= 8.0.3)
       random_username (~> 1.1)
