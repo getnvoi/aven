@@ -1,9 +1,9 @@
 GIT
-  remote: https://github.com/getnvoi/ui.git
-  revision: 5463668431aa78c0e3ca367ff24c91073c784cf5
+  remote: https://github.com/getnvoi/aeno.git
+  revision: 141eb85ec85de78d2d948292f0e0132fdeb597d5
   branch: main
   specs:
-    aeros (0.0.1)
+    aeno (0.0.2)
       dry-effects (~> 0.5.0)
       importmap-rails (~> 2.2.2)
       lucide-rails (~> 0.3)
@@ -16,7 +16,7 @@ GIT
 PATH
   remote: .
   specs:
-    aven (0.0.2)
+    aven (0.0.3)
       acts-as-taggable-on (~> 12.0)
       dotenv-rails (~> 3.1)
       dry-effects (~> 0.5.0)
@@ -242,7 +242,7 @@ GEM
       activerecord (>= 7.1)
     net-http (0.8.0)
       uri (>= 0.11.1)
-    net-imap (0.5.12)
+    net-imap (0.6.0)
       date
       net-protocol
     net-pop (0.1.2)
@@ -457,7 +457,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  aeros!
+  aeno!
   annotaterb (~> 4.19)
   aven!
   google-apis-people_v1 (~> 0.42)

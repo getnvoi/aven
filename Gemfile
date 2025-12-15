@@ -31,4 +31,4 @@ end
 # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
 gem "rubocop-rails-omakase", require: false
 
-gem("aeros", github: "getnvoi/ui", branch: :main)
+gem("aeno", github: "getnvoi/aeno", branch: :main)
