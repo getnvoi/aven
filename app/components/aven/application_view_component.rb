@@ -1,5 +1,5 @@
 module Aven
-  class ApplicationViewComponent < Aeros::ApplicationViewComponent
+  class ApplicationViewComponent < Aeno::ApplicationViewComponent
     def controller_name
       # Match JS autoload naming for components/controllers:
       # - aven/controllers/hello_controller -> aven--hello
