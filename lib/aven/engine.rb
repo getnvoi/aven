@@ -1,9 +1,8 @@
 require "importmap-rails"
 require "view_component-contrib"
 require "dry-effects"
-require "tailwind_merge"
 require "json_skooma"
-require "aeros"
+require "aeno"
 require "friendly_id"
 require "acts-as-taggable-on"
 require "aven/model"
@@ -16,8 +15,8 @@ module Aven
   class Engine < ::Rails::Engine
     isolate_namespace Aven
 
-    Aeros::EngineHelpers.setup_assets(self, namespace: Aven)
-    Aeros::EngineHelpers.setup_importmap(self, namespace: Aven)
+    Aeno::EngineHelpers.setup_assets(self, namespace: Aven)
+    Aeno::EngineHelpers.setup_importmap(self, namespace: Aven)
 
     # Append engine migrations to the main app
     initializer :append_migrations do |app|
