@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "dotenv-rails", "~> 3.1"
   spec.add_dependency "json_skooma"
   spec.add_dependency "friendly_id", "~> 5.5"
-  spec.add_dependency "acts-as-taggable-on", "~> 12.0"
+  spec.add_dependency "acts-as-taggable-on", ">= 12", "< 14"
 
   # Search
   spec.add_dependency "pg_search", "~> 2.3"
