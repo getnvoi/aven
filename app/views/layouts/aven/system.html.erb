@@ -4,8 +4,9 @@
     <title>System Admin - Aven</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag "aeno/tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "aven/tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags "aven/application", importmap: Aven.importmap %>
   </head>
 
   <body class="bg-gray-100">
