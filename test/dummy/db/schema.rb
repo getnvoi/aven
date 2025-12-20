@@ -10,11 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_12_093043) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_20_172000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
-  enable_extension "vector"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
@@ -42,100 +41,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_12_093043) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
-  end
-
-  create_table "aven_agentic_agent_documents", force: :cascade do |t|
-    t.bigint "agent_id", null: false
-    t.datetime "created_at", null: false
-    t.bigint "document_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["agent_id", "document_id"], name: "index_aven_agentic_agent_documents_on_agent_id_and_document_id", unique: true
-    t.index ["agent_id"], name: "index_aven_agentic_agent_documents_on_agent_id"
-    t.index ["document_id"], name: "index_aven_agentic_agent_documents_on_document_id"
-  end
-
-  create_table "aven_agentic_agent_tools", force: :cascade do |t|
-    t.bigint "agent_id", null: false
-    t.datetime "created_at", null: false
-    t.bigint "tool_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["agent_id", "tool_id"], name: "index_aven_agentic_agent_tools_on_agent_id_and_tool_id", unique: true
-    t.index ["agent_id"], name: "index_aven_agentic_agent_tools_on_agent_id"
-    t.index ["tool_id"], name: "index_aven_agentic_agent_tools_on_tool_id"
-  end
-
-  create_table "aven_agentic_agents", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.boolean "enabled", default: true, null: false
-    t.string "label", null: false
-    t.string "slug"
-    t.text "system_prompt"
-    t.datetime "updated_at", null: false
-    t.text "user_facing_question"
-    t.bigint "workspace_id", null: false
-    t.index ["enabled"], name: "index_aven_agentic_agents_on_enabled"
-    t.index ["workspace_id", "slug"], name: "index_aven_agentic_agents_on_workspace_id_and_slug", unique: true
-    t.index ["workspace_id"], name: "index_aven_agentic_agents_on_workspace_id"
-  end
-
-  create_table "aven_agentic_document_embeddings", force: :cascade do |t|
-    t.integer "chunk_index", null: false
-    t.text "content", null: false
-    t.datetime "created_at", null: false
-    t.bigint "document_id", null: false
-    t.vector "embedding", limit: 1536
-    t.datetime "updated_at", null: false
-    t.index ["document_id", "chunk_index"], name: "idx_on_document_id_chunk_index_5fe199c056", unique: true
-    t.index ["document_id"], name: "index_aven_agentic_document_embeddings_on_document_id"
-  end
-
-  create_table "aven_agentic_documents", force: :cascade do |t|
-    t.bigint "byte_size", null: false
-    t.string "content_type", null: false
-    t.datetime "created_at", null: false
-    t.string "embedding_status", default: "pending", null: false
-    t.string "filename", null: false
-    t.jsonb "metadata", default: {}
-    t.text "ocr_content"
-    t.string "ocr_status", default: "pending", null: false
-    t.datetime "processed_at"
-    t.datetime "updated_at", null: false
-    t.bigint "workspace_id", null: false
-    t.index ["content_type"], name: "index_aven_agentic_documents_on_content_type"
-    t.index ["embedding_status"], name: "index_aven_agentic_documents_on_embedding_status"
-    t.index ["ocr_status"], name: "index_aven_agentic_documents_on_ocr_status"
-    t.index ["workspace_id"], name: "index_aven_agentic_documents_on_workspace_id"
-  end
-
-  create_table "aven_agentic_tool_parameters", force: :cascade do |t|
-    t.jsonb "constraints", default: {}
-    t.datetime "created_at", null: false
-    t.text "default_description"
-    t.text "description"
-    t.string "name", null: false
-    t.string "param_type", null: false
-    t.integer "position", default: 0, null: false
-    t.boolean "required", default: false, null: false
-    t.bigint "tool_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["tool_id", "name"], name: "index_aven_agentic_tool_parameters_on_tool_id_and_name", unique: true
-    t.index ["tool_id", "position"], name: "index_aven_agentic_tool_parameters_on_tool_id_and_position"
-    t.index ["tool_id"], name: "index_aven_agentic_tool_parameters_on_tool_id"
-  end
-
-  create_table "aven_agentic_tools", force: :cascade do |t|
-    t.string "class_name", null: false
-    t.datetime "created_at", null: false
-    t.text "default_description"
-    t.text "description"
-    t.boolean "enabled", default: true, null: false
-    t.string "name", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "workspace_id"
-    t.index ["enabled"], name: "index_aven_agentic_tools_on_enabled"
-    t.index ["workspace_id", "class_name"], name: "index_aven_agentic_tools_on_workspace_id_and_class_name", unique: true
-    t.index ["workspace_id", "name"], name: "index_aven_agentic_tools_on_workspace_id_and_name", unique: true
-    t.index ["workspace_id"], name: "index_aven_agentic_tools_on_workspace_id"
   end
 
   create_table "aven_article_attachments", force: :cascade do |t|
@@ -357,6 +262,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_12_093043) do
 
   create_table "aven_item_links", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.jsonb "data", default: {}, null: false
     t.integer "position", default: 0
     t.string "relation", null: false
     t.bigint "source_id", null: false
@@ -376,7 +282,9 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_12_093043) do
     t.datetime "created_at", null: false
     t.bigint "created_by_id", null: false
     t.bigint "delegated_from_recipient_id"
+    t.text "description"
     t.bigint "invitee_id"
+    t.string "label"
     t.datetime "otp_sent_at"
     t.integer "position", default: 0
     t.string "security_level", default: "none"
@@ -469,6 +377,19 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_12_093043) do
     t.index ["user_id"], name: "index_aven_sessions_on_user_id"
   end
 
+  create_table "aven_system_users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email", default: "", null: false
+    t.string "name"
+    t.string "password_digest", null: false
+    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at"
+    t.string "reset_password_token"
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_aven_system_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_aven_system_users_on_reset_password_token", unique: true
+  end
+
   create_table "aven_users", force: :cascade do |t|
     t.string "access_token"
     t.boolean "admin", default: false, null: false
@@ -518,11 +439,14 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_12_093043) do
 
   create_table "aven_workspaces", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.bigint "created_by_id"
     t.text "description"
     t.string "domain"
     t.string "label"
+    t.string "onboarding_state", default: "pending"
     t.string "slug"
     t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_aven_workspaces_on_created_by_id"
     t.index ["slug"], name: "index_aven_workspaces_on_slug", unique: true
   end
 
@@ -586,15 +510,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_12_093043) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "aven_agentic_agent_documents", "aven_agentic_agents", column: "agent_id"
-  add_foreign_key "aven_agentic_agent_documents", "aven_agentic_documents", column: "document_id"
-  add_foreign_key "aven_agentic_agent_tools", "aven_agentic_agents", column: "agent_id"
-  add_foreign_key "aven_agentic_agent_tools", "aven_agentic_tools", column: "tool_id"
-  add_foreign_key "aven_agentic_agents", "aven_workspaces", column: "workspace_id"
-  add_foreign_key "aven_agentic_document_embeddings", "aven_agentic_documents", column: "document_id"
-  add_foreign_key "aven_agentic_documents", "aven_workspaces", column: "workspace_id"
-  add_foreign_key "aven_agentic_tool_parameters", "aven_agentic_tools", column: "tool_id"
-  add_foreign_key "aven_agentic_tools", "aven_workspaces", column: "workspace_id"
   add_foreign_key "aven_article_attachments", "aven_articles", column: "article_id"
   add_foreign_key "aven_article_relationships", "aven_articles", column: "article_id"
   add_foreign_key "aven_article_relationships", "aven_articles", column: "related_article_id"
@@ -630,6 +545,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_12_093043) do
   add_foreign_key "aven_item_recipients", "aven_users", column: "user_id"
   add_foreign_key "aven_item_recipients", "aven_workspaces", column: "workspace_id"
   add_foreign_key "aven_item_schemas", "aven_workspaces", column: "workspace_id"
+  add_foreign_key "aven_items", "aven_users", column: "created_by_id"
+  add_foreign_key "aven_items", "aven_users", column: "updated_by_id"
   add_foreign_key "aven_items", "aven_workspaces", column: "workspace_id"
   add_foreign_key "aven_logs", "aven_workspaces", column: "workspace_id"
   add_foreign_key "aven_magic_links", "aven_users", column: "user_id"
@@ -639,6 +556,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_12_093043) do
   add_foreign_key "aven_workspace_user_roles", "aven_workspace_users", column: "workspace_user_id"
   add_foreign_key "aven_workspace_users", "aven_users", column: "user_id"
   add_foreign_key "aven_workspace_users", "aven_workspaces", column: "workspace_id"
+  add_foreign_key "aven_workspaces", "aven_users", column: "created_by_id"
   add_foreign_key "pg_search_documents", "aven_workspaces", column: "workspace_id"
   add_foreign_key "taggings", "tags"
   add_foreign_key "test_projects", "aven_workspaces", column: "workspace_id"

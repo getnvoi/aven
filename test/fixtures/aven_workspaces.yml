@@ -2,17 +2,24 @@
 #
 # Table name: aven_workspaces
 #
-#  id          :bigint           not null, primary key
-#  description :text
-#  domain      :string
-#  label       :string
-#  slug        :string
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id                :bigint           not null, primary key
+#  description       :text
+#  domain            :string
+#  label             :string
+#  onboarding_state  :string           default("pending")
+#  slug              :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  created_by_id     :bigint
 #
 # Indexes
 #
-#  index_aven_workspaces_on_slug  (slug) UNIQUE
+#  index_aven_workspaces_on_created_by_id  (created_by_id)
+#  index_aven_workspaces_on_slug           (slug) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (created_by_id => aven_users.id)
 #
 _fixture:
   model_class: Aven::Workspace
@@ -22,9 +29,11 @@ one:
   description: "A test workspace"
   slug: "workspace-one"
   domain: "example.com"
+  created_by: one
 
 two:
   label: "Workspace Two"
   description: "Another test workspace"
   slug: "workspace-two"
   domain: "example.org"
+  created_by: two

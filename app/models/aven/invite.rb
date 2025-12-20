@@ -34,6 +34,9 @@ module Aven
 
     self.table_name = 'aven_invites'
 
+    # Virtual attributes
+    attr_accessor :skip_otp
+
     # Links
     belongs_to :item_recipient, class_name: 'Aven::ItemRecipient', optional: true
     belongs_to :workspace, class_name: 'Aven::Workspace'
@@ -48,5 +51,15 @@ module Aven
       using: {
         tsearch: { prefix: true }
       }
+
+    # Check if invite has expired
+    def expired?
+      expires_at.present? && expires_at < Time.current
+    end
+
+    # Check if OTP has been verified
+    def otp_verified?
+      otp_verified_at.present?
+    end
   end
 end

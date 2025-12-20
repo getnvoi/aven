@@ -8,7 +8,7 @@ class Aven::Auth::MagicLinksControllerTest < ActionDispatch::IntegrationTest
       email: "magic@example.com",
       auth_tenant: "www.example.com"
     )
-    @workspace = Aven::Workspace.create!(label: "Test Workspace")
+    @workspace = Aven::Workspace.create!(label: "Test Workspace", created_by: @user)
     Aven::WorkspaceUser.create!(user: @user, workspace: @workspace)
   end
 
@@ -126,6 +126,7 @@ class Aven::Auth::MagicLinksControllerTest < ActionDispatch::IntegrationTest
     )
     magic_link = user_without_workspace.magic_links.create!(purpose: :sign_in)
 
+    # This test expects workspace creation to happen automatically in the controller
     assert_difference "Aven::Workspace.count", 1 do
       post aven.auth_consume_magic_link_path, params: { code: magic_link.code }
     end

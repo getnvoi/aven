@@ -227,8 +227,8 @@ end
 class ActiveSupport::TestCase
   include APIStubHelpers
 
-  # Parallelize tests
-  parallelize(workers: :number_of_processors)
+  # Parallelize tests - disabled due to minitest 6.0 compatibility issue
+  # parallelize(workers: :number_of_processors)
 
   teardown do
     WebMock.reset!
