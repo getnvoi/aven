@@ -16,6 +16,7 @@
 #
 module Aven
   class Workspace < ApplicationRecord
+    include PgSearch::Model
     extend FriendlyId
     friendly_id :label, use: :slugged
 
@@ -38,6 +39,12 @@ module Aven
     validates :slug, uniqueness: true, allow_blank: true
     validates :label, length: { maximum: 255 }, allow_blank: true
     validates :description, length: { maximum: 1000 }, allow_blank: true
+
+    pg_search_scope :search,
+      against: [:label, :slug, :description, :domain],
+      using: {
+        tsearch: { prefix: true }
+      }
 
     # Tenant model registry (inspired by Flipper's group registry pattern)
     class << self

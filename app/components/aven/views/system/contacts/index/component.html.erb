@@ -62,4 +62,9 @@
       <% end %>
     <% end %>
   <% end %>
+
+  <%# Pagination %>
+  <div class="mt-4">
+    <%= paginate contacts, theme: 'tailwind', params: { q: params[:q], gender: params[:gender] }.compact %>
+  </div>
 <% end %>

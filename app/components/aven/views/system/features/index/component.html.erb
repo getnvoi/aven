@@ -79,4 +79,9 @@
       <% end %>
     <% end %>
   <% end %>
+
+  <%# Pagination %>
+  <div class="mt-4">
+    <%= paginate features, theme: 'tailwind', params: { q: params[:q], feature_type: params[:feature_type] }.compact %>
+  </div>
 <% end %>

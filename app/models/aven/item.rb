@@ -25,6 +25,7 @@
 #
 module Aven
   class Item < ApplicationRecord
+    include PgSearch::Model
     include Aven::Model::TenantModel
     include Aven::Loggable
     include Item::Schemaed
@@ -53,6 +54,23 @@ module Aven
     validates :schema_slug, presence: true
     validates :data, presence: true
     validate :validate_data_against_schema
+
+    # Search across JSONB data fields (for contacts: display_name, company, job_title, email)
+    pg_search_scope :search,
+      against: [:schema_slug],
+      using: {
+        tsearch: {
+          prefix: true,
+          any_word: true
+        }
+      },
+      additional_where: ->(query) {
+        sanitized_query = ActiveRecord::Base.connection.quote("%#{query}%")
+        "(data->>'display_name' ILIKE #{sanitized_query} OR " \
+        "data->>'company' ILIKE #{sanitized_query} OR " \
+        "data->>'job_title' ILIKE #{sanitized_query} OR " \
+        "data->>'email' ILIKE #{sanitized_query})"
+      }
 
     scope :active, -> { where(deleted_at: nil) }
     scope :deleted, -> { where.not(deleted_at: nil) }

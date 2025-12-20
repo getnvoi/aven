@@ -4,18 +4,16 @@ module Aven
   module System
     class UsersController < BaseController
       def index
-        @users = Aven::User.includes(:workspaces).order(created_at: :desc)
+        @users = Aven::User.includes(:workspaces)
+
+        # Apply search
+        @users = params[:q].present? ? @users.search(params[:q]) : @users.order(created_at: :desc)
 
         # Apply filters
-        if params[:q].present?
-          @users = @users.where("email ILIKE ?", "%#{params[:q]}%")
-        end
+        @users = @users.where(admin: params[:admin] == "true") if params[:admin].present?
 
-        if params[:admin].present?
-          @users = @users.where(admin: params[:admin] == "true")
-        end
-
-        @users = @users.limit(100)
+        # Paginate
+        @users = @users.page(params[:page]).per(params[:per_page] || 25)
 
         view_component("system/users/index", users: @users)
       end

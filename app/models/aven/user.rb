@@ -23,6 +23,8 @@
 #
 module Aven
   class User < ApplicationRecord
+    include PgSearch::Model
+
     # Password authentication (optional - only validates when password is set)
     has_secure_password validations: false
 
@@ -32,6 +34,12 @@ module Aven
     has_many :workspaces, through: :workspace_users
     has_many :workspace_user_roles, through: :workspace_users
     has_many :workspace_roles, through: :workspace_user_roles
+
+    pg_search_scope :search,
+      against: [:email, :remote_id],
+      using: {
+        tsearch: { prefix: true }
+      }
 
     # Token generation for password reset
     generates_token_for :password_reset, expires_in: Aven.configuration.password_reset_expiry do

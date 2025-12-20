@@ -42,4 +42,9 @@
       <% end %>
     <% end %>
   <% end %>
+
+  <%# Pagination %>
+  <div class="mt-4">
+    <%= paginate workspaces, theme: 'tailwind', params: { q: params[:q] }.compact %>
+  </div>
 <% end %>

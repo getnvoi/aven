@@ -86,4 +86,9 @@
       <% end %>
     <% end %>
   <% end %>
+
+  <%# Pagination %>
+  <div class="mt-4">
+    <%= paginate invites, theme: 'tailwind', params: { q: params[:q], invite_type: params[:invite_type], status: params[:status] }.compact %>
+  </div>
 <% end %>

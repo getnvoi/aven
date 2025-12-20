@@ -4,18 +4,16 @@ module Aven
   module System
     class FeaturesController < BaseController
       def index
-        @features = Aven::Feature.active.includes(:feature_tools).order(created_at: :desc)
+        @features = Aven::Feature.active.includes(:feature_tools)
+
+        # Apply search
+        @features = params[:q].present? ? @features.search(params[:q]) : @features.order(created_at: :desc)
 
         # Apply filters
-        if params[:q].present?
-          @features = @features.where("name ILIKE ? OR slug ILIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
-        end
+        @features = @features.where(feature_type: params[:feature_type]) if params[:feature_type].present?
 
-        if params[:feature_type].present?
-          @features = @features.where(feature_type: params[:feature_type])
-        end
-
-        @features = @features.limit(100)
+        # Paginate
+        @features = @features.page(params[:page]).per(params[:per_page] || 25)
 
         view_component("system/features/index", features: @features)
       end

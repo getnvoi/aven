@@ -27,6 +27,8 @@
 #
 module Aven
   class Feature < ApplicationRecord
+    include PgSearch::Model
+
     self.table_name = 'aven_features'
 
     # Tool/Access associations
@@ -35,6 +37,12 @@ module Aven
 
     validates :slug, presence: true, uniqueness: true
     validates :name, presence: true
+
+    pg_search_scope :search,
+      against: [:name, :slug, :editorial_title, :description],
+      using: {
+        tsearch: { prefix: true }
+      }
 
     # Scopes for soft deletes
     scope :active, -> { where(deleted_at: nil) }

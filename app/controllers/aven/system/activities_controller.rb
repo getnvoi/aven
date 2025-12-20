@@ -4,18 +4,16 @@ module Aven
   module System
     class ActivitiesController < BaseController
       def index
-        @logs = Aven::Log.includes(:workspace).order(created_at: :desc)
+        @logs = Aven::Log.includes(:workspace)
+
+        # Apply search
+        @logs = params[:q].present? ? @logs.search(params[:q]) : @logs.order(created_at: :desc)
 
         # Apply filters
-        if params[:q].present?
-          @logs = @logs.where("message ILIKE ?", "%#{params[:q]}%")
-        end
+        @logs = @logs.where(level: params[:level]) if params[:level].present?
 
-        if params[:level].present?
-          @logs = @logs.where(level: params[:level])
-        end
-
-        @logs = @logs.limit(100)
+        # Paginate
+        @logs = @logs.page(params[:page]).per(params[:per_page] || 25)
 
         view_component("system/activities/index", logs: @logs)
       end

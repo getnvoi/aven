@@ -4,22 +4,17 @@ module Aven
   module System
     class InvitesController < BaseController
       def index
-        @invites = Aven::Invite.includes(:workspace).order(created_at: :desc)
+        @invites = Aven::Invite.includes(:workspace)
+
+        # Apply search
+        @invites = params[:q].present? ? @invites.search(params[:q]) : @invites.order(created_at: :desc)
 
         # Apply filters
-        if params[:q].present?
-          @invites = @invites.where("invitee_email ILIKE ?", "%#{params[:q]}%")
-        end
+        @invites = @invites.where(invite_type: params[:invite_type]) if params[:invite_type].present?
+        @invites = @invites.where(status: params[:status]) if params[:status].present?
 
-        if params[:invite_type].present?
-          @invites = @invites.where(invite_type: params[:invite_type])
-        end
-
-        if params[:status].present?
-          @invites = @invites.where(status: params[:status])
-        end
-
-        @invites = @invites.limit(100)
+        # Paginate
+        @invites = @invites.page(params[:page]).per(params[:per_page] || 25)
 
         view_component("system/invites/index", invites: @invites)
       end

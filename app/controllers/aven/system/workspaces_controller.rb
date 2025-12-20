@@ -4,14 +4,13 @@ module Aven
   module System
     class WorkspacesController < BaseController
       def index
-        @workspaces = Aven::Workspace.includes(:users).order(created_at: :desc)
+        @workspaces = Aven::Workspace.includes(:users)
 
-        # Apply filters
-        if params[:q].present?
-          @workspaces = @workspaces.where("label ILIKE ? OR slug ILIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
-        end
+        # Apply search
+        @workspaces = params[:q].present? ? @workspaces.search(params[:q]) : @workspaces.order(created_at: :desc)
 
-        @workspaces = @workspaces.limit(100)
+        # Paginate
+        @workspaces = @workspaces.page(params[:page]).per(params[:per_page] || 25)
 
         view_component("system/workspaces/index", workspaces: @workspaces)
       end

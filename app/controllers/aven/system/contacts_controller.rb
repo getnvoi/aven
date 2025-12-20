@@ -4,18 +4,16 @@ module Aven
   module System
     class ContactsController < BaseController
       def index
-        @contacts = Aven::Item.by_schema("contact").active.includes(:workspace).order(created_at: :desc)
+        @contacts = Aven::Item.by_schema("contact").active.includes(:workspace)
+
+        # Apply search
+        @contacts = params[:q].present? ? @contacts.search(params[:q]) : @contacts.order(created_at: :desc)
 
         # Apply filters
-        if params[:q].present?
-          @contacts = @contacts.where("data->>'display_name' ILIKE ?", "%#{params[:q]}%")
-        end
+        @contacts = @contacts.where("data->>'gender' = ?", params[:gender]) if params[:gender].present?
 
-        if params[:gender].present?
-          @contacts = @contacts.where("data->>'gender' = ?", params[:gender])
-        end
-
-        @contacts = @contacts.limit(100)
+        # Paginate
+        @contacts = @contacts.page(params[:page]).per(params[:per_page] || 25)
 
         view_component("system/contacts/index", contacts: @contacts)
       end

@@ -41,6 +41,9 @@ Gem::Specification.new do |spec|
   # Search
   spec.add_dependency "pg_search", "~> 2.3"
 
+  # Pagination
+  spec.add_dependency "kaminari", "~> 1.2"
+
   # OAuth
   spec.add_dependency "omniauth-github", "~> 2.0"
   spec.add_dependency "omniauth-google-oauth2", "~> 1.2"

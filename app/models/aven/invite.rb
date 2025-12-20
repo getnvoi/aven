@@ -30,6 +30,8 @@
 #
 module Aven
   class Invite < ApplicationRecord
+    include PgSearch::Model
+
     self.table_name = 'aven_invites'
 
     # Links
@@ -40,5 +42,11 @@ module Aven
     validates :invite_type, presence: true
     validates :invitee_email, presence: true
     validates :auth_link_hash, presence: true, uniqueness: true
+
+    pg_search_scope :search,
+      against: [:invitee_email, :invitee_phone, :invite_type],
+      using: {
+        tsearch: { prefix: true }
+      }
   end
 end

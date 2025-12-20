@@ -68,4 +68,9 @@
       <% end %>
     <% end %>
   <% end %>
+
+  <%# Pagination %>
+  <div class="mt-4">
+    <%= paginate logs, theme: 'tailwind', params: { q: params[:q], level: params[:level] }.compact %>
+  </div>
 <% end %>

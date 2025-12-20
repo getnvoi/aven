@@ -72,4 +72,9 @@
       <% end %>
     <% end %>
   <% end %>
+
+  <%# Pagination %>
+  <div class="mt-4">
+    <%= paginate users, theme: 'tailwind', params: { q: params[:q], admin: params[:admin] }.compact %>
+  </div>
 <% end %>
