@@ -1,0 +1,32 @@
+<%= block("auth_card", title: "Create your account", subtitle: "Password must be at least #{minimum_length} characters.") do |card| %>
+  <% if alert.present? %>
+    <% card.with_alert do %>
+      <%= ui("alert", variant: :error, message: alert) %>
+    <% end %>
+  <% end %>
+
+  <%= form_tag(form_path, method: :post, class: "stack-6") do %>
+    <div class="stack-4">
+      <%= ui("input-text", name: "email", label: "Email address", value: email,
+          placeholder: "you@example.com", required: true, autocomplete: "email",
+          data: { autofocus: true }) %>
+
+      <%= ui("input-password", name: "password", label: "Password",
+          placeholder: "Enter your password", required: true, autocomplete: "new-password",
+          minlength: minimum_length) %>
+
+      <%= ui("input-password", name: "password_confirmation", label: "Confirm password",
+          placeholder: "Confirm your password", required: true, autocomplete: "new-password",
+          minlength: minimum_length) %>
+    </div>
+
+    <%= ui("button", label: "Create account", type: "submit", full: true) %>
+  <% end %>
+
+  <% card.with_footer do %>
+    <p class="text-center text-sm text-muted">
+      Already have an account?
+      <%= ui("link", label: "Sign in", href: login_path) %>
+    </p>
+  <% end %>
+<% end %>

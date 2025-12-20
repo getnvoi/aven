@@ -1,0 +1,50 @@
+<%= ui("page", title: "Workspaces", description: "System-wide workspace management") do |page| %>
+  <%= ui("table", sticky: :last) do |t| %>
+    <%# Filters %>
+    <% t.with_filter(
+      type: :search,
+      name: "q",
+      url: aven.system_workspaces_path,
+      placeholder: "Search workspaces...",
+      debounce: 300
+    ) %>
+
+    <% t.with_filter(
+      type: :button,
+      label: "Clear Filters",
+      url: aven.system_workspaces_path
+    ) %>
+
+    <%# Header %>
+    <% t.with_header do |h| %>
+      <% h.with_column { "Workspace" } %>
+      <% h.with_column { "Users" } %>
+      <% h.with_column { "Created" } %>
+      <% h.with_column { "Actions" } %>
+    <% end %>
+
+    <%# Rows %>
+    <% workspaces.each do |workspace| %>
+      <% t.with_row do |r| %>
+        <% r.with_cell do %>
+          <div class="flex flex-col">
+            <span class="font-medium"><%= workspace.label || "Unnamed Workspace" %></span>
+            <span class="text-sm text-gray-500"><%= workspace.slug %></span>
+          </div>
+        <% end %>
+        <% r.with_cell do %>
+          <span class="text-gray-500"><%= workspace.users.size %></span>
+        <% end %>
+        <% r.with_cell { workspace.created_at.strftime("%b %d, %Y") } %>
+        <% r.with_cell do %>
+          <%= link_to "View", "#", class: "text-indigo-600 hover:text-indigo-900" %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%# Pagination %>
+  <div class="mt-4">
+    <%= paginate workspaces, theme: 'tailwind', params: { q: params[:q] }.compact %>
+  </div>
+<% end %>

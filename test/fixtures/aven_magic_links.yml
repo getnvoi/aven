@@ -1,0 +1,42 @@
+# == Schema Information
+#
+# Table name: aven_magic_links
+#
+#  id         :bigint           not null, primary key
+#  code       :string           not null
+#  expires_at :datetime         not null
+#  purpose    :integer          default("sign_in"), not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  user_id    :bigint           not null
+#
+# Indexes
+#
+#  index_aven_magic_links_on_code        (code) UNIQUE
+#  index_aven_magic_links_on_expires_at  (expires_at)
+#  index_aven_magic_links_on_user_id     (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => aven_users.id)
+#
+_fixture:
+  model_class: Aven::MagicLink
+
+active_sign_in:
+  user: one
+  code: "ABC123"
+  purpose: 0
+  expires_at: <%= 10.minutes.from_now %>
+
+active_sign_up:
+  user: two
+  code: "XYZ789"
+  purpose: 1
+  expires_at: <%= 5.minutes.from_now %>
+
+expired:
+  user: one
+  code: "EXP001"
+  purpose: 0
+  expires_at: <%= 1.hour.ago %>

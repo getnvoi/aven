@@ -1,0 +1,28 @@
+<%= block("auth_card", title: "Enter your sign-in code", subtitle: "Check your email for a 6-digit code and enter it below.") do |card| %>
+  <% card.with_alert do %>
+    <% if notice.present? %>
+      <%= ui("alert", variant: :success, message: notice) %>
+    <% end %>
+    <% if alert.present? %>
+      <%= ui("alert", variant: :error, message: alert) %>
+    <% end %>
+    <% if show_dev_code? %>
+      <%= ui("alert", variant: :info, title: "Development only", message: "Your code is #{magic_link_code}") %>
+    <% end %>
+  <% end %>
+
+  <%= form_tag(form_path, method: :post, class: "stack-6") do %>
+    <%= ui("input-text", name: "code", label: "Sign-in code", value: code,
+        placeholder: "ABC123", required: true, autocomplete: "one-time-code",
+        data: { autofocus: true }) %>
+
+    <%= ui("button", label: "Sign in", type: "submit", full: true) %>
+  <% end %>
+
+  <% card.with_footer do %>
+    <p class="text-center text-sm text-muted">
+      Didn't receive the code?
+      <%= ui("link", label: "Request a new one", href: request_new_path) %>
+    </p>
+  <% end %>
+<% end %>

@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@source "../../components/**/*.{rb,erb}";
+
 @layer base {
   html {
     @apply text-stone-700;

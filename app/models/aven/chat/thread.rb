@@ -11,13 +11,11 @@
 #  tools            :jsonb
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  agent_id         :bigint
 #  user_id          :bigint           not null
 #  workspace_id     :bigint           not null
 #
 # Indexes
 #
-#  index_aven_chat_threads_on_agent_id                  (agent_id)
 #  index_aven_chat_threads_on_created_at                (created_at)
 #  index_aven_chat_threads_on_user_id                   (user_id)
 #  index_aven_chat_threads_on_workspace_id              (workspace_id)
@@ -25,7 +23,6 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (agent_id => aven_agentic_agents.id)
 #  fk_rails_...  (user_id => aven_users.id)
 #  fk_rails_...  (workspace_id => aven_workspaces.id)
 #
@@ -37,7 +34,6 @@ module Aven
       include Aven::Model::TenantModel
 
       belongs_to :user, class_name: "Aven::User"
-      belongs_to :agent, class_name: "Aven::Agentic::Agent", optional: true
 
       has_many :messages,
                class_name: "Aven::Chat::Message",
@@ -77,25 +73,6 @@ module Aven
         update!(documents: document_ids)
       end
 
-      # Returns the locked documents with OCR content for system prompt injection
-      def locked_documents
-        return [] unless documents_locked?
-
-        Aven::Agentic::Document.where(id: documents).where(ocr_status: "completed")
-      end
-
-      # Check if thread has an agent locked
-      def agent_locked?
-        agent_id.present?
-      end
-
-      # Lock the agent reference. Called once when an agent is first used.
-      def lock_agent!(agent)
-        return if agent_locked?
-
-        update!(agent:)
-      end
-
       # Ask a question and trigger chat processing
       def ask(question)
         user_message = messages.create!(
@@ -105,26 +82,6 @@ module Aven
         )
         Aven::Chat::RunJob.perform_later(id, user_message.id)
         user_message
-      end
-
-      # Ask with an agent, locking agent/tools/documents on first use
-      def ask_with_agent(agent, question = nil)
-        unless agent_locked?
-          lock_agent!(agent)
-          lock_tools!(agent.tool_names)
-          lock_documents!(agent.document_ids)
-        end
-
-        # Create hidden system message with agent's system prompt
-        if agent.system_prompt.present?
-          messages.create!(
-            role: :system,
-            content: agent.system_prompt,
-            status: :success
-          )
-        end
-
-        ask(question || agent.user_facing_question)
       end
 
       # Calculate usage statistics

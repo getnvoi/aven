@@ -1,0 +1,17 @@
+<div class="min-h-screen flex items-center justify-center p-4" style="background-color: var(--ui-area-bg);">
+  <div class="w-full <%= width_class %>">
+    <%= ui("card", title: title, subtitle: subtitle) do %>
+      <% if alert? %>
+        <%= alert %>
+      <% end %>
+
+      <%= content %>
+
+      <% if footer? %>
+        <div class="space-y-4 mt-6">
+          <%= footer %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,73 @@
+# == Schema Information
+#
+# Table name: aven_invites
+#
+#  id                :bigint           not null, primary key
+#  auth_link_hash    :string           not null
+#  expires_at        :datetime
+#  invite_type       :string           not null
+#  invitee_email     :string           not null
+#  invitee_phone     :string
+#  sent_at           :datetime
+#  status            :string           default("pending")
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  item_recipient_id :bigint
+#  workspace_id      :bigint           not null
+#
+# Indexes
+#
+#  index_aven_invites_on_auth_link_hash     (auth_link_hash) UNIQUE
+#  index_aven_invites_on_invite_type        (invite_type)
+#  index_aven_invites_on_invitee_email      (invitee_email)
+#  index_aven_invites_on_item_recipient_id  (item_recipient_id)
+#  index_aven_invites_on_workspace_id       (workspace_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (item_recipient_id => aven_item_recipients.id)
+#  fk_rails_...  (workspace_id => aven_workspaces.id)
+#
+_fixture:
+  model_class: Aven::Invite
+
+fulfillment_invite_one:
+  item_recipient: recipient_one
+  workspace: one
+  invite_type: 'fulfillment'
+  invitee_email: 'alice@example.com'
+  invitee_phone: '+33612345678'
+  auth_link_hash: 'secure_hash_123'
+  status: 'sent'
+  sent_at: <%= 1.day.ago %>
+  expires_at: <%= 30.days.from_now %>
+
+fulfillment_invite_two:
+  item_recipient: recipient_two
+  workspace: one
+  invite_type: 'fulfillment'
+  invitee_email: 'bob@example.com'
+  invitee_phone: '+33687654321'
+  auth_link_hash: 'secure_hash_456'
+  status: 'delivered'
+  sent_at: <%= 2.days.ago %>
+  expires_at: <%= 28.days.from_now %>
+
+workspace_invite_one:
+  workspace: one
+  invite_type: 'workspace'
+  invitee_email: 'charlie@example.com'
+  auth_link_hash: 'secure_hash_789'
+  status: 'pending'
+  expires_at: <%= 30.days.from_now %>
+
+reminder_invite:
+  item_recipient: recipient_one
+  workspace: one
+  invite_type: 'fulfillment'
+  invitee_email: 'alice@example.com'
+  invitee_phone: '+33612345678'
+  auth_link_hash: 'secure_hash_reminder_999'
+  status: 'sent'
+  sent_at: <%= 1.hour.ago %>
+  expires_at: <%= 30.days.from_now %>

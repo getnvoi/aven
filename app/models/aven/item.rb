@@ -25,6 +25,7 @@
 #
 module Aven
   class Item < ApplicationRecord
+    include PgSearch::Model
     include Aven::Model::TenantModel
     include Aven::Loggable
     include Item::Schemaed
@@ -33,9 +34,43 @@ module Aven
 
     self.table_name = "aven_items"
 
+    # User tracking
+    belongs_to :created_by, class_name: "Aven::User", optional: true
+    belongs_to :updated_by, class_name: "Aven::User", optional: true
+
+    # Recipients (ACL)
+    has_many :recipients,
+      class_name: 'Aven::ItemRecipient',
+      foreign_key: :source_item_id,
+      dependent: :destroy
+    accepts_nested_attributes_for :recipients, allow_destroy: true
+
+    # Documents
+    has_many :documents,
+      class_name: 'Aven::ItemDocument',
+      foreign_key: :item_id,
+      dependent: :destroy
+
     validates :schema_slug, presence: true
     validates :data, presence: true
     validate :validate_data_against_schema
+
+    # Search across JSONB data fields (for contacts: display_name, company, job_title, email)
+    pg_search_scope :search,
+      against: [:schema_slug],
+      using: {
+        tsearch: {
+          prefix: true,
+          any_word: true
+        }
+      },
+      additional_where: ->(query) {
+        sanitized_query = ActiveRecord::Base.connection.quote("%#{query}%")
+        "(data->>'display_name' ILIKE #{sanitized_query} OR " \
+        "data->>'company' ILIKE #{sanitized_query} OR " \
+        "data->>'job_title' ILIKE #{sanitized_query} OR " \
+        "data->>'email' ILIKE #{sanitized_query})"
+      }
 
     scope :active, -> { where(deleted_at: nil) }
     scope :deleted, -> { where.not(deleted_at: nil) }
@@ -54,12 +89,13 @@ module Aven
       deleted_at.present?
     end
 
-    # Schema resolution: code class first, then DB, then raise
+    # Schema resolution: configured schemas, then DB
     class << self
       def schema_class_for(slug)
-        "Aven::Item::Schemas::#{slug.to_s.camelize}".constantize
-      rescue NameError
-        nil
+        Aven.configuration.schemas.find do |schema_class|
+          schema_class = schema_class.constantize if schema_class.is_a?(String)
+          schema_class.slug == slug
+        end
       end
 
       def schema_for(slug, workspace: nil)

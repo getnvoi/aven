@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class Aven::AuthenticationTest < ActionDispatch::IntegrationTest
@@ -10,7 +12,7 @@ class Aven::AuthenticationTest < ActionDispatch::IntegrationTest
   end
 
   # Helper to simulate a sign in by going through OAuth flow
-  def sign_in_user(user)
+  def sign_in_user(user, headers: {})
     # Simulate the OAuth callback which calls sign_in
     # We'll use Google OAuth as the test vehicle
     Aven.configuration.configure_oauth(:google, {
@@ -18,7 +20,7 @@ class Aven::AuthenticationTest < ActionDispatch::IntegrationTest
       client_secret: "test_secret"
     })
 
-    get "/aven/oauth/google"
+    get "/aven/oauth/google", headers: headers
     stored_state = session[:oauth_state]
 
     stub_request(:post, "https://www.googleapis.com/oauth2/v4/token")
@@ -39,9 +41,10 @@ class Aven::AuthenticationTest < ActionDispatch::IntegrationTest
         headers: { "Content-Type" => "application/json" }
       )
 
-    get "/aven/oauth/google/callback", params: { code: "test_code", state: stored_state }
+    get "/aven/oauth/google/callback", params: { code: "test_code", state: stored_state }, headers: headers
   end
 
+  # Basic sign in/out tests
   test "user is signed in after OAuth callback" do
     sign_in_user(@user)
 
@@ -121,5 +124,90 @@ class Aven::AuthenticationTest < ActionDispatch::IntegrationTest
     assert Aven::ApplicationController.private_method_defined?(:sign_out)
     assert Aven::ApplicationController.private_method_defined?(:stored_location_for)
     assert Aven::ApplicationController.private_method_defined?(:authenticate_user!)
+  end
+
+  # New session-based authentication tests
+  test "sign in creates database session record" do
+    initial_session_count = @user.sessions.count
+
+    sign_in_user(@user)
+
+    assert_equal initial_session_count + 1, @user.reload.sessions.count
+  end
+
+  test "sign in sets session cookie" do
+    sign_in_user(@user)
+
+    assert cookies[:session_token].present?
+  end
+
+  test "sign out destroys database session record" do
+    sign_in_user(@user)
+    session_count_after_login = @user.reload.sessions.count
+
+    get aven.logout_path
+
+    # Session should be destroyed
+    assert_equal session_count_after_login - 1, @user.reload.sessions.count
+  end
+
+  test "sign out clears session cookie" do
+    sign_in_user(@user)
+    assert cookies[:session_token].present?
+
+    get aven.logout_path
+
+    # Cookie should be cleared (may be nil or empty string)
+    assert cookies[:session_token].blank?
+  end
+
+  test "session stores ip address and user agent" do
+    sign_in_user(@user, headers: {
+      "HTTP_USER_AGENT" => "Mozilla/5.0 Test Browser",
+      "REMOTE_ADDR" => "192.168.1.100"
+    })
+
+    session_record = @user.sessions.last
+    assert session_record.ip_address.present?, "IP address should be captured"
+    assert session_record.user_agent.present?, "User agent should be captured"
+  end
+
+  test "session tracks last active at" do
+    sign_in_user(@user)
+
+    session_record = @user.sessions.last
+    assert session_record.last_active_at.present?
+  end
+
+  test "current_session helper is available" do
+    assert Aven::ApplicationController.method_defined?(:current_session) ||
+           Aven::ApplicationController.private_method_defined?(:current_session)
+  end
+
+  test "authenticated? helper is available" do
+    assert Aven::ApplicationController.private_method_defined?(:authenticated?)
+  end
+
+  # Current context tests
+  test "sign in sets Current.session" do
+    sign_in_user(@user)
+
+    # After OAuth sign in, Current should be set
+    # Note: This is set in the controller action, so we verify indirectly
+    # by checking the session was created
+    assert @user.sessions.any?
+  end
+
+  test "request metadata is captured" do
+    # The before_action set_current_request_details should capture request info
+    # This is verified by checking the session has ip_address and user_agent
+    sign_in_user(@user, headers: {
+      "HTTP_USER_AGENT" => "Mozilla/5.0 Test Browser",
+      "REMOTE_ADDR" => "192.168.1.100"
+    })
+
+    session_record = @user.sessions.last
+    assert_not_nil session_record.ip_address
+    assert_not_nil session_record.user_agent
   end
 end

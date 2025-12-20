@@ -1,0 +1,41 @@
+# == Schema Information
+#
+# Table name: aven_sessions
+#
+#  id             :bigint           not null, primary key
+#  ip_address     :string
+#  last_active_at :datetime
+#  user_agent     :string
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  user_id        :bigint           not null
+#
+# Indexes
+#
+#  index_aven_sessions_on_updated_at  (updated_at)
+#  index_aven_sessions_on_user_id     (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => aven_users.id)
+#
+_fixture:
+  model_class: Aven::Session
+
+one:
+  user: one
+  ip_address: "192.168.1.1"
+  user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/120.0.0.0"
+  last_active_at: <%= Time.current %>
+
+two:
+  user: one
+  ip_address: "10.0.0.1"
+  user_agent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0) Safari/604.1"
+  last_active_at: <%= 1.day.ago %>
+
+inactive:
+  user: two
+  ip_address: "172.16.0.1"
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Edge/120.0.0.0"
+  last_active_at: <%= 60.days.ago %>

@@ -1,14 +1,15 @@
 GIT
   remote: https://github.com/getnvoi/aeno.git
-  revision: 141eb85ec85de78d2d948292f0e0132fdeb597d5
+  revision: 6d89c44588b6bf813191c977ff805d486bc2eb5c
   branch: main
   specs:
-    aeno (0.0.2)
+    aeno (0.0.1)
       dry-effects (~> 0.5.0)
       importmap-rails (~> 2.2.2)
       lucide-rails (~> 0.3)
       rails (>= 8.0.3)
       stimulus-rails (~> 1.3)
+      tailwindcss-rails (~> 4.4)
       turbo-rails (~> 2.0)
       view_component (~> 4.0)
       view_component-contrib (~> 0.2.5)
@@ -18,12 +19,15 @@ PATH
   specs:
     aven (0.0.5)
       acts-as-taggable-on (>= 12, < 14)
+      aeno
+      bcrypt (~> 3.1)
       dotenv-rails (~> 3.1)
       dry-effects (~> 0.5.0)
       friendly_id (~> 5.5)
       google-apis-people_v1 (~> 0.42)
       importmap-rails (~> 2.2.2)
       json_skooma
+      kaminari (~> 1.2)
       mcp (~> 0.2)
       neighbor (~> 0.6)
       omniauth-github (~> 2.0)
@@ -124,6 +128,7 @@ GEM
       activesupport (>= 6.0.0)
     ast (2.4.3)
     base64 (0.3.0)
+    bcrypt (3.1.20)
     bigdecimal (3.3.1)
     builder (3.3.0)
     concurrent-ruby (1.3.6)
@@ -151,7 +156,7 @@ GEM
       zeitwerk (~> 2.6)
     dry-inflector (1.2.0)
     dry-initializer (3.2.0)
-    erb (6.0.0)
+    erb (6.0.1)
     erubi (1.13.1)
     event_stream_parser (1.0.0)
     faraday (2.14.0)
@@ -202,7 +207,7 @@ GEM
       activesupport (>= 6.0.0)
       railties (>= 6.0.0)
     io-console (0.8.2)
-    irb (1.15.3)
+    irb (1.16.0)
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
@@ -219,13 +224,25 @@ GEM
       zeitwerk (~> 2.6)
     jwt (3.1.2)
       base64
+    kaminari (1.2.2)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.2.2)
+      kaminari-activerecord (= 1.2.2)
+      kaminari-core (= 1.2.2)
+    kaminari-actionview (1.2.2)
+      actionview
+      kaminari-core (= 1.2.2)
+    kaminari-activerecord (1.2.2)
+      activerecord
+      kaminari-core (= 1.2.2)
+    kaminari-core (1.2.2)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
-    loofah (2.24.1)
+    loofah (2.25.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    lucide-rails (0.7.1)
+    lucide-rails (0.7.3)
       railties (>= 4.1.0)
     mail (2.9.0)
       logger
@@ -238,16 +255,17 @@ GEM
       json-schema (>= 4.1)
       json_rpc_handler (~> 0.1)
     mini_mime (1.1.5)
-    minitest (5.27.0)
+    minitest (6.0.0)
+      prism (~> 1.5)
     multi_json (1.18.0)
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
     neighbor (0.6.0)
       activerecord (>= 7.1)
-    net-http (0.8.0)
+    net-http (0.9.1)
       uri (>= 0.11.1)
-    net-imap (0.6.0)
+    net-imap (0.6.2)
       date
       net-protocol
     net-pop (0.1.2)
@@ -300,12 +318,12 @@ GEM
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
-    prism (1.6.0)
+    prism (1.7.0)
     propshaft (1.3.1)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
       rack
-    psych (5.3.0)
+    psych (5.3.1)
       date
       stringio
     public_suffix (7.0.0)
@@ -357,7 +375,7 @@ GEM
     rainbow (3.1.1)
     rake (13.3.1)
     random_username (1.1.3)
-    rdoc (6.17.0)
+    rdoc (7.0.1)
       erb
       psych (>= 4.0.0)
       tsort
@@ -370,7 +388,7 @@ GEM
       uber (< 0.2.0)
     retriable (3.1.2)
     rexml (3.4.4)
-    rubocop (1.81.7)
+    rubocop (1.82.0)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -378,7 +396,7 @@ GEM
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
-      rubocop-ast (>= 1.47.1, < 2.0)
+      rubocop-ast (>= 1.48.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
     rubocop-ast (1.48.0)
@@ -422,9 +440,14 @@ GEM
       version_gem (>= 1.1.8, < 3)
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
-    stringio (3.1.9)
+    stringio (3.2.0)
+    tailwindcss-rails (4.4.0)
+      railties (>= 7.0.0)
+      tailwindcss-ruby (~> 4.0)
+    tailwindcss-ruby (4.1.18-arm64-darwin)
+    tailwindcss-ruby (4.1.18-x86_64-linux-gnu)
     thor (1.4.0)
-    timeout (0.5.0)
+    timeout (0.6.0)
     trailblazer-option (0.1.2)
     tsort (0.2.0)
     turbo-rails (2.0.20)
@@ -435,7 +458,7 @@ GEM
     uber (0.1.0)
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
-    unicode-emoji (4.1.0)
+    unicode-emoji (4.2.0)
     uri (1.1.1)
     uri-idna (0.3.1)
     useragent (0.16.11)
@@ -455,7 +478,7 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.7.3)
+    zeitwerk (2.7.4)
 
 PLATFORMS
   arm64-darwin

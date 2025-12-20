@@ -1,0 +1,80 @@
+<%= ui("page", title: "Users", description: "System-wide user management") do |page| %>
+  <%= ui("table", sticky: :last) do |t| %>
+    <%# Filters %>
+    <% t.with_filter(
+      type: :search,
+      name: "q",
+      url: aven.system_users_path,
+      placeholder: "Search users...",
+      debounce: 300
+    ) %>
+
+    <% t.with_filter(
+      type: :select,
+      name: "admin",
+      url: aven.system_users_path,
+      label: "Admin"
+    ) do |s| %>
+      <% s.with_option(value: "", label: "All Users") %>
+      <% s.with_option(value: "true", label: "Admin") %>
+      <% s.with_option(value: "false", label: "Regular") %>
+    <% end %>
+
+    <% t.with_filter(
+      type: :button,
+      label: "Clear Filters",
+      url: aven.system_users_path
+    ) %>
+
+    <%# Header %>
+    <% t.with_header do |h| %>
+      <% h.with_column { "User" } %>
+      <% h.with_column { "Admin" } %>
+      <% h.with_column { "Workspaces" } %>
+      <% h.with_column { "Created" } %>
+      <% h.with_column { "Actions" } %>
+    <% end %>
+
+    <%# Rows %>
+    <% users.each do |user| %>
+      <% t.with_row do |r| %>
+        <% r.with_cell do %>
+          <div class="flex items-center gap-3">
+            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-medium">
+              <%= user.email.first.upcase %>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-medium"><%= user.email %></span>
+              <span class="text-sm text-gray-500">ID: <%= user.id %></span>
+            </div>
+          </div>
+        <% end %>
+        <% r.with_cell do %>
+          <% if user.admin %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              Admin
+            </span>
+          <% else %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+              Regular
+            </span>
+          <% end %>
+        <% end %>
+        <% r.with_cell do %>
+          <span class="text-gray-500"><%= user.workspaces.size %></span>
+        <% end %>
+        <% r.with_cell { user.created_at.strftime("%b %d, %Y") } %>
+        <% r.with_cell do %>
+          <div class="flex items-center gap-2">
+            <%= button_to "Impersonate", aven.system_impersonate_path(user_id: user.id), method: :post, class: "text-sm text-indigo-600 hover:text-indigo-900" %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%# Pagination %>
+  <div class="mt-4">
+    <%= paginate users, theme: 'tailwind', params: { q: params[:q], admin: params[:admin] }.compact %>
+  </div>
+<% end %>

@@ -1,5 +1,32 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: aven_articles
+#
+#  id           :bigint           not null, primary key
+#  description  :text
+#  intro        :text
+#  published_at :datetime
+#  slug         :string
+#  title        :string           not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  author_id    :bigint
+#  workspace_id :bigint           not null
+#
+# Indexes
+#
+#  index_aven_articles_on_author_id              (author_id)
+#  index_aven_articles_on_published_at           (published_at)
+#  index_aven_articles_on_workspace_id           (workspace_id)
+#  index_aven_articles_on_workspace_id_and_slug  (workspace_id,slug) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (author_id => aven_users.id)
+#  fk_rails_...  (workspace_id => aven_workspaces.id)
+#
 module Aven
   class Article < ApplicationRecord
     self.table_name = "aven_articles"

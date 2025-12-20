@@ -1,2 +1,3 @@
 web: bin/rails s -p3000
 tailwind: bundle exec rake app:aven:tailwind_engine_watch
+aeno_tailwind: cd ../aeno && bundle exec rake app:aeno:tailwind_engine_watch

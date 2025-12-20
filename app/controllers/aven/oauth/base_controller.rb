@@ -109,8 +109,8 @@ module Aven
             user.reload
           end
 
-          # Set current workspace in session
-          session[:workspace_id] = workspace.id
+          # Set current workspace in session and Current context
+          self.current_workspace = workspace
         end
 
         def handle_failed_authentication(user)

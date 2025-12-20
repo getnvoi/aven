@@ -1,0 +1,24 @@
+<div class="min-h-screen flex items-center justify-center p-4" style="background-color: var(--ui-area-bg);">
+  <div class="w-full <%= width_class %> space-y-6">
+    <div class="text-center space-y-2">
+      <h1 class="text-2xl font-semibold" style="color: var(--ui-heading-color);"><%= title %></h1>
+      <% if subtitle.present? %>
+        <p class="text-sm" style="color: var(--ui-muted-foreground);"><%= subtitle %></p>
+      <% end %>
+    </div>
+
+    <div class="rounded-lg border p-6 space-y-6" style="background-color: var(--ui-card-bg); border-color: var(--ui-border);">
+      <% if alert? %>
+        <%= alert %>
+      <% end %>
+
+      <%= content %>
+
+      <% if footer? %>
+        <div class="space-y-4">
+          <%= footer %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

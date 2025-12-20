@@ -38,8 +38,11 @@ class Aven::WorkspaceOauthTest < ActionDispatch::IntegrationTest
 
     get "/aven/oauth/google/callback", params: { code: "code", state: }
 
-    # After OAuth, BOTH session[:user_id] AND session[:workspace_id] should be set
-    assert session[:user_id].present?, "User should be signed in"
+    # After OAuth, user should be signed in via DB-backed session
+    assert cookies[:session_token].present?, "Session cookie should be set"
+    assert @user.sessions.any?, "User should have a session record"
+
+    # Workspace should be set in Rails session
     assert session[:workspace_id].present?, "Workspace SHOULD be set immediately (eager loading)"
     assert_equal @workspace.id, session[:workspace_id], "Should be set to user's existing workspace"
   end
@@ -82,8 +85,9 @@ class Aven::WorkspaceOauthTest < ActionDispatch::IntegrationTest
     assert_equal 1, new_user.workspaces.count
     assert_equal "Default Workspace", new_user.workspaces.first.label
 
-    # Verify session has both user_id and workspace_id
-    assert session[:user_id].present?
+    # Verify user is signed in via DB-backed session and workspace is set
+    assert cookies[:session_token].present?, "Session cookie should be set"
+    assert new_user.sessions.any?, "User should have a session record"
     assert session[:workspace_id].present?
     assert_equal new_user.workspaces.first.id, session[:workspace_id]
   end

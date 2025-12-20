@@ -1,5 +1,5 @@
 import { application } from "aven/controllers/application";
-import { eagerLoadEngineControllersFrom } from "aeros/controllers/loader";
+import { eagerLoadEngineControllersFrom } from "aeno/controllers/loader";
 
 // Load controllers from the standard controllers directory
 eagerLoadEngineControllersFrom("aven/controllers", application);
@@ -8,4 +8,4 @@ eagerLoadEngineControllersFrom("aven/controllers", application);
 eagerLoadEngineControllersFrom("aven/components", application);
 
 // Load UI gem component controllers
-eagerLoadEngineControllersFrom("aeros/components", application);
+eagerLoadEngineControllersFrom("aeno/components", application);

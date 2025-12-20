@@ -1,0 +1,94 @@
+<%= ui("page", title: "Invites", description: "System-wide invite management") do |page| %>
+  <%= ui("table", sticky: :last) do |t| %>
+    <%# Filters %>
+    <% t.with_filter(
+      type: :search,
+      name: "q",
+      url: aven.system_invites_path,
+      placeholder: "Search invites...",
+      debounce: 300
+    ) %>
+
+    <% t.with_filter(
+      type: :select,
+      name: "invite_type",
+      url: aven.system_invites_path,
+      label: "Type"
+    ) do |s| %>
+      <% s.with_option(value: "", label: "All Types") %>
+      <% s.with_option(value: "join_workspace", label: "Join Workspace") %>
+      <% s.with_option(value: "fulfillment", label: "Fulfillment") %>
+      <% s.with_option(value: "join_workspace_fulfillment", label: "Join Workspace Fulfillment") %>
+    <% end %>
+
+    <% t.with_filter(
+      type: :select,
+      name: "status",
+      url: aven.system_invites_path,
+      label: "Status"
+    ) do |s| %>
+      <% s.with_option(value: "", label: "All Statuses") %>
+      <% s.with_option(value: "pending", label: "Pending") %>
+      <% s.with_option(value: "accepted", label: "Accepted") %>
+      <% s.with_option(value: "expired", label: "Expired") %>
+    <% end %>
+
+    <% t.with_filter(
+      type: :button,
+      label: "Clear Filters",
+      url: aven.system_invites_path
+    ) %>
+
+    <%# Header %>
+    <% t.with_header do |h| %>
+      <% h.with_column { "Invitee" } %>
+      <% h.with_column { "Type" } %>
+      <% h.with_column { "Status" } %>
+      <% h.with_column { "Workspace" } %>
+      <% h.with_column { "Sent At" } %>
+      <% h.with_column { "Expires At" } %>
+      <% h.with_column { "Actions" } %>
+    <% end %>
+
+    <%# Rows %>
+    <% invites.each do |invite| %>
+      <% t.with_row do |r| %>
+        <% r.with_cell do %>
+          <div class="flex flex-col">
+            <span class="font-medium"><%= invite.invitee_email %></span>
+            <% if invite.invitee_phone.present? %>
+              <span class="text-sm text-gray-500"><%= invite.invitee_phone %></span>
+            <% end %>
+          </div>
+        <% end %>
+        <% r.with_cell do %>
+          <% variant_class = invite.invite_type == "join_workspace" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800" %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= variant_class %>">
+            <%= invite.invite_type.humanize %>
+          </span>
+        <% end %>
+        <% r.with_cell do %>
+          <% variant_class = case invite.status
+                             when "accepted" then "bg-green-100 text-green-800"
+                             when "pending" then "bg-yellow-100 text-yellow-800"
+                             else "bg-gray-100 text-gray-800"
+                             end %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= variant_class %>">
+            <%= invite.status.humanize %>
+          </span>
+        <% end %>
+        <% r.with_cell { invite.workspace&.name || "N/A" } %>
+        <% r.with_cell { invite.sent_at&.strftime("%b %d, %Y") || "-" } %>
+        <% r.with_cell { invite.expires_at&.strftime("%b %d, %Y") || "-" } %>
+        <% r.with_cell do %>
+          <%= link_to "View", "#", class: "text-indigo-600 hover:text-indigo-900" %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%# Pagination %>
+  <div class="mt-4">
+    <%= paginate invites, theme: 'tailwind', params: { q: params[:q], invite_type: params[:invite_type], status: params[:status] }.compact %>
+  </div>
+<% end %>

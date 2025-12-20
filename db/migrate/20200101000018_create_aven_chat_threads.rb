@@ -5,7 +5,6 @@ class CreateAvenChatThreads < ActiveRecord::Migration[8.0]
     create_table :aven_chat_threads do |t|
       t.references :workspace, null: false, foreign_key: { to_table: :aven_workspaces }
       t.references :user, null: false, foreign_key: { to_table: :aven_users }
-      t.references :agent, foreign_key: { to_table: :aven_agentic_agents }
       t.string :title
       t.jsonb :tools, default: nil           # Locked tool names array
       t.jsonb :documents, default: nil       # Locked document IDs array

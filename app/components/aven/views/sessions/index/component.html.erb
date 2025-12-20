@@ -1,0 +1,81 @@
+<div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8" style="background-color: var(--ui-area-bg)">
+  <div class="max-w-3xl mx-auto">
+    <div class="mb-8">
+      <h1 class="text-3xl font-extrabold" style="color: var(--ui-heading-color)">Active Sessions</h1>
+      <p class="mt-2 text-sm" style="color: var(--ui-muted-foreground)">
+        Manage your active sessions across devices. You can revoke access to any session.
+      </p>
+    </div>
+
+    <% if has_other_sessions? %>
+      <div class="mb-6">
+        <%= button_to revoke_all_path,
+            method: :delete,
+            class: "cp-button cp-button--outline",
+            style: "color: var(--ui-error); border-color: var(--ui-error);",
+            data: { confirm: "Are you sure you want to revoke all other sessions?" } do %>
+          <%= lucide_icon("log-out", class: "w-4 h-4 mr-2") %>
+          Revoke All Other Sessions
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if sessions.any? %>
+      <%= ui("list") do |list| %>
+        <% sessions.each do |session| %>
+          <% list.with_item do %>
+            <div class="flex items-center justify-between w-full">
+              <div class="flex items-center space-x-4">
+                <div class="flex-shrink-0" style="color: var(--ui-muted-foreground)">
+                  <% if session.device_info.include?("Mobile") || session.device_info.include?("iPhone") || session.device_info.include?("Android") %>
+                    <%= lucide_icon("smartphone", class: "w-8 h-8") %>
+                  <% else %>
+                    <%= lucide_icon("monitor", class: "w-8 h-8") %>
+                  <% end %>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center space-x-2">
+                    <p class="text-sm font-medium truncate" style="color: var(--ui-foreground)">
+                      <%= session.browser_info %>
+                    </p>
+                    <% if current_session?(session) %>
+                      <%= ui("badge", label: "Current", variant: :success) %>
+                    <% end %>
+                  </div>
+                  <p class="text-sm truncate" style="color: var(--ui-muted-foreground)">
+                    <%= session.device_info %>
+                  </p>
+                  <div class="mt-1 flex items-center space-x-4 text-xs" style="color: var(--ui-muted-foreground)">
+                    <span><%= session.ip_address %></span>
+                    <span>&middot;</span>
+                    <span>Last active: <%= time_ago(session.last_active_at) %></span>
+                    <span>&middot;</span>
+                    <span>Signed in: <%= time_ago(session.created_at) %></span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-shrink-0 ml-4">
+                <%= button_to revoke_path(session),
+                    method: :delete,
+                    class: "cp-button cp-button--outline cp-button--sm",
+                    data: { confirm: current_session?(session) ? "This will sign you out. Are you sure?" : "Revoke this session?" } do %>
+                  <% if current_session?(session) %>
+                    Sign Out
+                  <% else %>
+                    Revoke
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% else %>
+      <div class="text-center py-12">
+        <%= lucide_icon("lock", class: "mx-auto w-12 h-12", style: "color: var(--ui-muted-foreground)") %>
+        <h3 class="mt-2 text-sm font-medium" style="color: var(--ui-foreground)">No active sessions</h3>
+        <p class="mt-1 text-sm" style="color: var(--ui-muted-foreground)">You don't have any active sessions.</p>
+      </div>
+    <% end %>
+  </div>
+</div>

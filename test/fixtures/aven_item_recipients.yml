@@ -1,0 +1,92 @@
+# == Schema Information
+#
+# Table name: aven_item_recipients
+#
+#  id                          :bigint           not null, primary key
+#  allow_delegate              :boolean          default(FALSE)
+#  completed_at                :datetime
+#  completion_state            :string           default("pending")
+#  otp_sent_at                 :datetime
+#  position                    :integer          default(0)
+#  security_level              :string           default("none")
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  created_by_id               :bigint           not null
+#  delegated_from_recipient_id :bigint
+#  invitee_id                  :bigint
+#  source_item_id              :bigint
+#  target_item_id              :bigint
+#  user_id                     :bigint
+#  workspace_id                :bigint           not null
+#
+# Indexes
+#
+#  index_aven_item_recipients_on_completion_state             (completion_state)
+#  index_aven_item_recipients_on_created_by_id                (created_by_id)
+#  index_aven_item_recipients_on_delegated_from_recipient_id  (delegated_from_recipient_id)
+#  index_aven_item_recipients_on_invitee_id                   (invitee_id)
+#  index_aven_item_recipients_on_source_item_id               (source_item_id)
+#  index_aven_item_recipients_on_target_item_id               (target_item_id)
+#  index_aven_item_recipients_on_user_id                      (user_id)
+#  index_aven_item_recipients_on_workspace_id                 (workspace_id)
+#  index_item_recipients_source_target                        (source_item_id,target_item_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (created_by_id => aven_users.id)
+#  fk_rails_...  (delegated_from_recipient_id => aven_item_recipients.id)
+#  fk_rails_...  (invitee_id => aven_users.id)
+#  fk_rails_...  (source_item_id => aven_items.id)
+#  fk_rails_...  (target_item_id => aven_items.id)
+#  fk_rails_...  (user_id => aven_users.id)
+#  fk_rails_...  (workspace_id => aven_workspaces.id)
+#
+_fixture:
+  model_class: Aven::ItemRecipient
+
+recipient_one:
+  source_item: company_one
+  target_item: contact_one
+  workspace: one
+  created_by: one
+  position: 0
+  security_level: 'otp_email'
+  completion_state: 'pending'
+
+recipient_two:
+  source_item: company_one
+  target_item: contact_two
+  workspace: one
+  created_by: one
+  position: 1
+  security_level: 'otp_both'
+  completion_state: 'verification_confirmed'
+
+recipient_completed:
+  source_item: note_one
+  target_item: contact_one
+  workspace: one
+  created_by: one
+  position: 0
+  security_level: 'none'
+  completion_state: 'completed'
+  completed_at: <%= 2.days.ago %>
+
+recipient_delegated:
+  source_item: company_one
+  target_item: contact_two
+  workspace: one
+  created_by: two
+  delegated_from_recipient: recipient_one
+  position: 2
+  security_level: 'otp_email'
+  completion_state: 'pending'
+
+recipient_with_user:
+  source_item: company_one
+  user: two
+  workspace: one
+  created_by: one
+  position: 0
+  security_level: 'none'
+  completion_state: 'pending'

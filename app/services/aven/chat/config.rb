@@ -12,43 +12,29 @@ module Aven
         end
 
         def system_prompt(user: nil, thread: nil)
-          parts = [base_system_prompt]
-
-          # Inject locked documents OCR content into system prompt
-          if thread&.documents_locked?
-            docs = thread.locked_documents
-            if docs.any?
-              docs_content = docs.map do |doc|
-                "### #{doc.filename}\n\n#{doc.ocr_content}"
-              end.join("\n\n---\n\n")
-
-              parts << <<~TEXT
-                ## Reference Documents
-
-                The following documents are provided as context for this conversation.
-                Use them to answer the user's questions.
-
-                #{docs_content}
-              TEXT
-            end
-          end
-
-          parts.compact.join("\n\n")
+          base_system_prompt
         end
 
         # Returns tools available for a thread.
         # - If thread.tools is nil: all tools are available (free-form chat)
-        # - If thread.tools is an array: only those tools are available (locked by agent)
+        # - If thread.tools is an array: only those tools are available (locked)
         def tools(thread = nil)
           workspace = thread&.workspace
-          all_tools = Aven::Agentic::DynamicToolBuilder.build_all(workspace:)
+          return [] unless workspace
+
+          # Get all active feature tools for the workspace
+          all_tools = Aven::FeatureTool
+            .joins(:feature)
+            .where(aven_features: { deleted_at: nil })
+            .where(aven_feature_tools: { deleted_at: nil })
+            .to_a
 
           return all_tools unless thread&.tools_locked?
 
           locked_names = thread.tools
           return [] if locked_names.empty?
 
-          all_tools.select { |tool| locked_names.include?(tool.tool_name) }
+          all_tools.select { |tool| locked_names.include?(tool.slug) }
         end
 
         # Calculate cost in USD based on token counts.

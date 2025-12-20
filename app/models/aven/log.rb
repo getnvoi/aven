@@ -29,6 +29,8 @@
 #
 module Aven
   class Log < ApplicationRecord
+    include PgSearch::Model
+
     self.table_name = "aven_logs"
 
     LEVELS = %w[debug info warn error fatal].freeze
@@ -38,6 +40,12 @@ module Aven
 
     validates :message, presence: true
     validates :level, inclusion: { in: LEVELS }
+
+    pg_search_scope :search,
+      against: [:message, :loggable_type],
+      using: {
+        tsearch: { prefix: true }
+      }
 
     scope :by_level, ->(level) { where(level:) }
     scope :recent, -> { order(created_at: :desc) }

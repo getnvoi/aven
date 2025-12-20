@@ -1,0 +1,87 @@
+<%= ui("page", title: "Features", description: "Manage platform features") do |page| %>
+  <%= ui("table", sticky: :last) do |t| %>
+    <%# Filters %>
+    <% t.with_filter(
+      type: :search,
+      name: "q",
+      url: aven.system_features_path,
+      placeholder: "Search features...",
+      debounce: 300
+    ) %>
+
+    <% t.with_filter(
+      type: :select,
+      name: "feature_type",
+      url: aven.system_features_path,
+      label: "Type"
+    ) do |s| %>
+      <% s.with_option(value: "", label: "All Types") %>
+      <% s.with_option(value: "producer", label: "Producer") %>
+      <% s.with_option(value: "core", label: "Core") %>
+      <% s.with_option(value: "knowledge", label: "Knowledge") %>
+      <% s.with_option(value: "system", label: "System") %>
+    <% end %>
+
+    <% t.with_filter(
+      type: :button,
+      label: "Clear Filters",
+      url: aven.system_features_path
+    ) %>
+
+    <%# Header %>
+    <% t.with_header do |h| %>
+      <% h.with_column { "Feature" } %>
+      <% h.with_column { "Type" } %>
+      <% h.with_column { "Tools" } %>
+      <% h.with_column { "Auto Activate" } %>
+      <% h.with_column { "Created" } %>
+      <% h.with_column { "Actions" } %>
+    <% end %>
+
+    <%# Rows %>
+    <% features.each do |feature| %>
+      <% t.with_row do |r| %>
+        <% r.with_cell do %>
+          <div class="flex flex-col">
+            <% display_title = feature.editorial_title.present? ? "#{feature.editorial_title} (#{feature.name})" : feature.name %>
+            <span class="font-medium"><%= display_title %></span>
+            <span class="text-sm text-gray-500"><%= feature.slug %></span>
+          </div>
+        <% end %>
+        <% r.with_cell do %>
+          <% variant_class = case feature.feature_type
+                             when "producer" then "bg-blue-100 text-blue-800"
+                             when "system" then "bg-gray-100 text-gray-800"
+                             else "bg-purple-100 text-purple-800"
+                             end %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= variant_class %>">
+            <%= feature.feature_type.humanize %>
+          </span>
+        <% end %>
+        <% r.with_cell do %>
+          <span class="text-gray-500"><%= feature.feature_tools.size %></span>
+        <% end %>
+        <% r.with_cell do %>
+          <% if feature.auto_activate %>
+            <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          <% else %>
+            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          <% end %>
+        <% end %>
+        <% r.with_cell { feature.created_at.strftime("%b %d, %Y") } %>
+        <% r.with_cell do %>
+          <%= link_to "Edit", aven.edit_system_feature_path(feature), class: "text-indigo-600 hover:text-indigo-900" %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%# Pagination %>
+  <div class="mt-4">
+    <%= paginate features, theme: 'tailwind', params: { q: params[:q], feature_type: params[:feature_type] }.compact %>
+  </div>
+<% end %>

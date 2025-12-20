@@ -39,5 +39,22 @@ module Aven
         include Aven::Engine.routes.url_helpers
       end
     end
+
+    # After migration callback support
+    initializer "aven.after_migrations" do
+      ActiveSupport.on_load(:active_record) do
+        ActiveRecord::Migration.class_eval do
+          class << self
+            alias_method :original_migrate, :migrate
+
+            def migrate(direction)
+              original_migrate(direction).tap do
+                Aven.configuration.after_migrate_callback&.call if direction == :up
+              end
+            end
+          end
+        end
+      end
+    end
   end
 end

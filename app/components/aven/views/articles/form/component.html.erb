@@ -1,4 +1,4 @@
-<%= form_with model: article, url: url, builder: Aeros::FormBuilder, class: "space-y-6" do |f| %>
+<%= form_with model: article, url: url, builder: Aeno::FormBuilder, class: "space-y-6" do |f| %>
   <%= f.text_field :title, label: "Title", required: true %>
 
   <%= f.text_area_ai_field :intro,
