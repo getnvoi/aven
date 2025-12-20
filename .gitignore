@@ -10,3 +10,5 @@
 .env
 master.key
 .DS_Store
+# Ignore engine migrations copied to dummy app
+test/dummy/db/migrate/*.aven.rb

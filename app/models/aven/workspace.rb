@@ -2,17 +2,24 @@
 #
 # Table name: aven_workspaces
 #
-#  id          :bigint           not null, primary key
-#  description :text
-#  domain      :string
-#  label       :string
-#  slug        :string
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id                :bigint           not null, primary key
+#  description       :text
+#  domain            :string
+#  label             :string
+#  onboarding_state  :string           default("pending")
+#  slug              :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  created_by_id     :bigint
 #
 # Indexes
 #
-#  index_aven_workspaces_on_slug  (slug) UNIQUE
+#  index_aven_workspaces_on_created_by_id  (created_by_id)
+#  index_aven_workspaces_on_slug           (slug) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (created_by_id => aven_users.id)
 #
 module Aven
   class Workspace < ApplicationRecord
@@ -21,6 +28,8 @@ module Aven
     friendly_id :label, use: :slugged
 
     self.table_name = "aven_workspaces"
+
+    belongs_to :created_by, class_name: "Aven::User"
 
     has_many :workspace_users, class_name: "Aven::WorkspaceUser", dependent: :destroy
     has_many :users, through: :workspace_users, class_name: "Aven::User"
