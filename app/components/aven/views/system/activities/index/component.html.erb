@@ -4,7 +4,7 @@
     <% t.with_filter(
       type: :search,
       name: "q",
-      url: aven.system_activities_path,
+      url: helpers.aven.system_activities_path,
       placeholder: "Search activities...",
       debounce: 300
     ) %>
@@ -12,7 +12,7 @@
     <% t.with_filter(
       type: :select,
       name: "level",
-      url: aven.system_activities_path,
+      url: helpers.aven.system_activities_path,
       label: "Level"
     ) do |s| %>
       <% s.with_option(value: "", label: "All Levels") %>
@@ -26,7 +26,7 @@
     <% t.with_filter(
       type: :button,
       label: "Clear Filters",
-      url: aven.system_activities_path
+      url: helpers.aven.system_activities_path
     ) %>
 
     <%# Header %>
@@ -44,7 +44,7 @@
       <% t.with_row do |r| %>
         <% r.with_cell { log.message } %>
         <% r.with_cell { log.loggable_type&.demodulize || "N/A" } %>
-        <% r.with_cell { log.workspace&.name || "N/A" } %>
+        <% r.with_cell { log.workspace&.label || "N/A" } %>
         <% r.with_cell do %>
           <% variant = case log.level
                        when "error", "fatal" then "destructive"
@@ -71,6 +71,6 @@
 
   <%# Pagination %>
   <div class="mt-4">
-    <%= paginate logs, theme: 'tailwind', params: { q: params[:q], level: params[:level] }.compact %>
+    <%= helpers.paginate logs, params: { q: params[:q], level: params[:level] }.compact %>
   </div>
 <% end %>

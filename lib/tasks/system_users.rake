@@ -10,8 +10,8 @@ namespace :aven do
       # 1. Create system user
       puts "1️⃣  Creating system user..."
       system_user = Aven::SystemUser.find_or_initialize_by(email: "admin@test.com")
-      system_user.password = "password"
-      system_user.password_confirmation = "password"
+      system_user.password = "password123456"
+      system_user.password_confirmation = "password123456"
 
       if system_user.save
         puts "   ✅ System user: admin@test.com / password"
@@ -43,7 +43,7 @@ namespace :aven do
 
       users.each do |user_data|
         user = Aven::User.find_or_initialize_by(email: user_data[:email])
-        user.password = "password"
+        user.password = "password123456"
         user.admin = user_data[:admin]
 
         if user.save
@@ -86,8 +86,30 @@ namespace :aven do
       end
       puts ""
 
-      # 5. Create contacts (Items with contact schema)
-      puts "5️⃣  Creating test contacts..."
+      # 5. Create contact schema if it doesn't exist
+      puts "5️⃣  Creating contact schema..."
+      contact_schema = Aven::ItemSchema.find_or_create_by!(workspace:, slug: "contact") do |schema|
+        schema.schema = {
+          type: "object",
+          properties: {
+            display_name: { type: "string" },
+            first_name: { type: "string" },
+            last_name: { type: "string" },
+            email: { type: "string" },
+            company: { type: "string" },
+            job_title: { type: "string" },
+            gender: { type: "string" }
+          }
+        }
+        schema.fields = {}
+        schema.embeds = {}
+        schema.links = {}
+      end
+      puts "   ✅ Contact schema created"
+      puts ""
+
+      # 6. Create contacts (Items with contact schema)
+      puts "6️⃣  Creating test contacts..."
       contacts_data = [
         {
           display_name: "John Doe",
@@ -136,40 +158,69 @@ namespace :aven do
       end
       puts ""
 
-      # 6. Create item recipients
-      puts "6️⃣  Creating item recipients..."
+      # 7. Create rib_check schema
+      puts "7️⃣  Creating rib_check schema..."
+      rib_check_schema = Aven::ItemSchema.find_or_create_by!(workspace:, slug: "rib_check") do |schema|
+        schema.schema = {
+          type: "object",
+          properties: {
+            subject: { type: "string" },
+            status: { type: "string" }
+          }
+        }
+        schema.fields = {}
+        schema.embeds = {}
+        schema.links = {}
+      end
+      puts "   ✅ RIB check schema created"
+      puts ""
+
+      # 8. Create item recipients
+      puts "8️⃣  Creating item recipients..."
       first_contact = Aven::Item.by_schema("contact").first
       second_contact = Aven::Item.by_schema("contact").second
 
       if first_contact && second_contact
         # Create a source item (e.g., a RIB check request)
-        source_item = Aven::Item.find_or_create_by!(
+        begin
+          source_item = Aven::Item.create!(
+            workspace:,
+            schema_slug: "rib_check",
+            data: {
+              subject: "Bank details verification",
+              status: "pending"
+            },
+            created_by: first_user
+          )
+        rescue => e
+          puts "   ❌ Failed to create source item: #{e.message}"
+          puts "   Debug: workspace=#{workspace.inspect}, first_user=#{first_user.inspect}"
+          raise
+        end
+
+        # Add recipients
+        recipient1 = Aven::ItemRecipient.create!(
+          source_item:,
+          target_item: first_contact,
           workspace:,
-          schema_slug: "rib_check",
-          data: {
-            subject: "Bank details verification",
-            status: "pending"
-          },
           created_by: first_user
         )
 
-        # Add recipients
-        recipient1 = Aven::ItemRecipient.find_or_create_by!(
+        recipient2 = Aven::ItemRecipient.create!(
           source_item:,
-          target_item: first_contact
-        )
-
-        recipient2 = Aven::ItemRecipient.find_or_create_by!(
-          source_item:,
-          target_item: second_contact
+          target_item: second_contact,
+          workspace:,
+          created_by: first_user
         )
 
         puts "   ✅ Created recipients for source item"
+      else
+        puts "   ⚠️  Skipped: Not enough contacts"
       end
       puts ""
 
-      # 7. Create invites
-      puts "7️⃣  Creating test invites..."
+      # 9. Create invites
+      puts "9️⃣  Creating test invites..."
       invites_data = [
         { email: "invited1@test.com", type: "join_workspace", status: "pending" },
         { email: "invited2@test.com", type: "fulfillment", status: "accepted" },

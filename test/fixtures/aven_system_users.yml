@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+# Password for all fixtures: password123456
+# Digest generated with: BCrypt::Password.create("password123456", cost: 4)
+
+_fixture:
+  model_class: Aven::SystemUser
+
+one:
+  email: admin@test.com
+  password_digest: $2a$04$OXZtCexNIzs/m5osBE6HfOr7HA5C1GYNS53UfvwQVFMP9WI85QfeK
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+two:
+  email: admin2@test.com
+  password_digest: $2a$04$OXZtCexNIzs/m5osBE6HfOr7HA5C1GYNS53UfvwQVFMP9WI85QfeK
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 2.days.ago %>

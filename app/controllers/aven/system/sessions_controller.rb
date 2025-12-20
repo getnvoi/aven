@@ -2,9 +2,8 @@
 
 module Aven
   module System
-    class SessionsController < Aven::ApplicationController
-      layout "aven/system"
-
+    class SessionsController < BaseController
+      skip_before_action :authenticate_system_user!
       skip_before_action :verify_authenticity_token, only: :create
       before_action :redirect_if_authenticated, only: [:new, :create]
 

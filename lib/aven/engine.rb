@@ -5,6 +5,8 @@ require "json_skooma"
 require "aeno"
 require "friendly_id"
 require "acts-as-taggable-on"
+require "pg_search"
+require "kaminari"
 require "aven/model"
 
 module Aven

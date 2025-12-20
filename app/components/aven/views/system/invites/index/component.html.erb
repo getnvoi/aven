@@ -4,7 +4,7 @@
     <% t.with_filter(
       type: :search,
       name: "q",
-      url: aven.system_invites_path,
+      url: helpers.aven.system_invites_path,
       placeholder: "Search invites...",
       debounce: 300
     ) %>
@@ -12,7 +12,7 @@
     <% t.with_filter(
       type: :select,
       name: "invite_type",
-      url: aven.system_invites_path,
+      url: helpers.aven.system_invites_path,
       label: "Type"
     ) do |s| %>
       <% s.with_option(value: "", label: "All Types") %>
@@ -24,7 +24,7 @@
     <% t.with_filter(
       type: :select,
       name: "status",
-      url: aven.system_invites_path,
+      url: helpers.aven.system_invites_path,
       label: "Status"
     ) do |s| %>
       <% s.with_option(value: "", label: "All Statuses") %>
@@ -36,7 +36,7 @@
     <% t.with_filter(
       type: :button,
       label: "Clear Filters",
-      url: aven.system_invites_path
+      url: helpers.aven.system_invites_path
     ) %>
 
     <%# Header %>
@@ -77,7 +77,7 @@
             <%= invite.status.humanize %>
           </span>
         <% end %>
-        <% r.with_cell { invite.workspace&.name || "N/A" } %>
+        <% r.with_cell { invite.workspace&.label || "N/A" } %>
         <% r.with_cell { invite.sent_at&.strftime("%b %d, %Y") || "-" } %>
         <% r.with_cell { invite.expires_at&.strftime("%b %d, %Y") || "-" } %>
         <% r.with_cell do %>
@@ -89,6 +89,6 @@
 
   <%# Pagination %>
   <div class="mt-4">
-    <%= paginate invites, theme: 'tailwind', params: { q: params[:q], invite_type: params[:invite_type], status: params[:status] }.compact %>
+    <%= helpers.paginate invites, params: { q: params[:q], invite_type: params[:invite_type], status: params[:status] }.compact %>
   </div>
 <% end %>

@@ -4,7 +4,7 @@
     <% t.with_filter(
       type: :search,
       name: "q",
-      url: aven.system_workspaces_path,
+      url: helpers.aven.system_workspaces_path,
       placeholder: "Search workspaces...",
       debounce: 300
     ) %>
@@ -12,7 +12,7 @@
     <% t.with_filter(
       type: :button,
       label: "Clear Filters",
-      url: aven.system_workspaces_path
+      url: helpers.aven.system_workspaces_path
     ) %>
 
     <%# Header %>
@@ -45,6 +45,6 @@
 
   <%# Pagination %>
   <div class="mt-4">
-    <%= paginate workspaces, theme: 'tailwind', params: { q: params[:q] }.compact %>
+    <%= helpers.paginate workspaces, params: { q: params[:q] }.compact %>
   </div>
 <% end %>

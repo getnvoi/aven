@@ -50,6 +50,7 @@ if ActiveSupport::TestCase.respond_to?(:fixture_paths=)
     :aven_workspace_user_roles,
     :aven_sessions,
     :aven_magic_links,
+    :aven_system_users,
     :aven_items,
     :aven_item_links,
     :aven_item_schemas,

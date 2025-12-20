@@ -4,7 +4,7 @@
     <% t.with_filter(
       type: :search,
       name: "q",
-      url: aven.system_features_path,
+      url: helpers.aven.system_features_path,
       placeholder: "Search features...",
       debounce: 300
     ) %>
@@ -12,7 +12,7 @@
     <% t.with_filter(
       type: :select,
       name: "feature_type",
-      url: aven.system_features_path,
+      url: helpers.aven.system_features_path,
       label: "Type"
     ) do |s| %>
       <% s.with_option(value: "", label: "All Types") %>
@@ -25,7 +25,7 @@
     <% t.with_filter(
       type: :button,
       label: "Clear Filters",
-      url: aven.system_features_path
+      url: helpers.aven.system_features_path
     ) %>
 
     <%# Header %>
@@ -74,7 +74,7 @@
         <% end %>
         <% r.with_cell { feature.created_at.strftime("%b %d, %Y") } %>
         <% r.with_cell do %>
-          <%= link_to "Edit", aven.edit_system_feature_path(feature), class: "text-indigo-600 hover:text-indigo-900" %>
+          <%= link_to "Edit", helpers.aven.edit_system_feature_path(feature), class: "text-indigo-600 hover:text-indigo-900" %>
         <% end %>
       <% end %>
     <% end %>
@@ -82,6 +82,6 @@
 
   <%# Pagination %>
   <div class="mt-4">
-    <%= paginate features, theme: 'tailwind', params: { q: params[:q], feature_type: params[:feature_type] }.compact %>
+    <%= helpers.paginate features, params: { q: params[:q], feature_type: params[:feature_type] }.compact %>
   </div>
 <% end %>

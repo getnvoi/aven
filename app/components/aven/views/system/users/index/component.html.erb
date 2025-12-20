@@ -4,7 +4,7 @@
     <% t.with_filter(
       type: :search,
       name: "q",
-      url: aven.system_users_path,
+      url: helpers.aven.system_users_path,
       placeholder: "Search users...",
       debounce: 300
     ) %>
@@ -12,7 +12,7 @@
     <% t.with_filter(
       type: :select,
       name: "admin",
-      url: aven.system_users_path,
+      url: helpers.aven.system_users_path,
       label: "Admin"
     ) do |s| %>
       <% s.with_option(value: "", label: "All Users") %>
@@ -23,7 +23,7 @@
     <% t.with_filter(
       type: :button,
       label: "Clear Filters",
-      url: aven.system_users_path
+      url: helpers.aven.system_users_path
     ) %>
 
     <%# Header %>
@@ -66,7 +66,7 @@
         <% r.with_cell { user.created_at.strftime("%b %d, %Y") } %>
         <% r.with_cell do %>
           <div class="flex items-center gap-2">
-            <%= button_to "Impersonate", aven.system_impersonate_path(user_id: user.id), method: :post, class: "text-sm text-indigo-600 hover:text-indigo-900" %>
+            <%= button_to "Impersonate", helpers.aven.system_impersonate_path(user_id: user.id), method: :post, class: "text-sm text-indigo-600 hover:text-indigo-900" %>
           </div>
         <% end %>
       <% end %>
@@ -75,6 +75,6 @@
 
   <%# Pagination %>
   <div class="mt-4">
-    <%= paginate users, theme: 'tailwind', params: { q: params[:q], admin: params[:admin] }.compact %>
+    <%= helpers.paginate users, params: { q: params[:q], admin: params[:admin] }.compact %>
   </div>
 <% end %>

@@ -32,3 +32,4 @@ end
 gem "rubocop-rails-omakase", require: false
 
 gem("aeno", github: "getnvoi/aeno", branch: :main)
+gem "tailwind_merge", "~> 1.3"

@@ -48,7 +48,6 @@ class Aven::Item::LinkableItemLinksWithMetadataTest < ActiveSupport::TestCase
 
     assert_nil Aven::ItemLink.find_by(id: link.id)
   end
-end
 
   # Deeply nested: update relationship AND target's nested attributes
   test "creates ItemLink and updates target's nested attributes" do
