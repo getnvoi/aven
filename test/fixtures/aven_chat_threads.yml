@@ -9,13 +9,11 @@
 #  tools            :jsonb
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  agent_id         :bigint
 #  user_id          :bigint           not null
 #  workspace_id     :bigint           not null
 #
 # Indexes
 #
-#  index_aven_chat_threads_on_agent_id                  (agent_id)
 #  index_aven_chat_threads_on_created_at                (created_at)
 #  index_aven_chat_threads_on_user_id                   (user_id)
 #  index_aven_chat_threads_on_workspace_id              (workspace_id)
@@ -23,7 +21,6 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (agent_id => aven_agentic_agents.id)
 #  fk_rails_...  (user_id => aven_users.id)
 #  fk_rails_...  (workspace_id => aven_workspaces.id)
 #
@@ -33,7 +30,6 @@ _fixture:
 basic_thread:
   workspace: one
   user: one
-  agent: ~
   title: "General Chat"
   tools: ~
   documents: ~
@@ -42,26 +38,23 @@ basic_thread:
 agent_thread:
   workspace: one
   user: one
-  agent: research_agent
   title: "Research Session"
   tools: ["search"]
-  documents: [<%= ActiveRecord::FixtureSet.identify(:pdf_document) %>]
+  documents: []
   context_markdown: "Research context here"
 
 empty_thread:
   workspace: one
   user: two
-  agent: ~
   title: ~
   tools: ~
   documents: ~
   context_markdown: ~
 
-# Fresh thread for user one (for ask_agent tests)
+# Fresh thread for user one
 fresh_thread:
   workspace: one
   user: one
-  agent: ~
   title: "Fresh Thread"
   tools: ~
   documents: ~
@@ -70,7 +63,6 @@ fresh_thread:
 workspace_two_thread:
   workspace: two
   user: one
-  agent: ~
   title: "Workspace Two Chat"
   tools: ~
   documents: ~

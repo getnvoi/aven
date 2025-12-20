@@ -1,5 +1,24 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: aven_article_attachments
+#
+#  id         :bigint           not null, primary key
+#  position   :integer          default(0), not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  article_id :bigint           not null
+#
+# Indexes
+#
+#  index_aven_article_attachments_on_article_id               (article_id)
+#  index_aven_article_attachments_on_article_id_and_position  (article_id,position)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (article_id => aven_articles.id)
+#
 module Aven
   class ArticleAttachment < ApplicationRecord
     self.table_name = "aven_article_attachments"

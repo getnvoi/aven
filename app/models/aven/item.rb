@@ -33,6 +33,23 @@ module Aven
 
     self.table_name = "aven_items"
 
+    # User tracking
+    belongs_to :created_by, class_name: "Aven::User", optional: true
+    belongs_to :updated_by, class_name: "Aven::User", optional: true
+
+    # Recipients (ACL)
+    has_many :recipients,
+      class_name: 'Aven::ItemRecipient',
+      foreign_key: :source_item_id,
+      dependent: :destroy
+    accepts_nested_attributes_for :recipients, allow_destroy: true
+
+    # Documents
+    has_many :documents,
+      class_name: 'Aven::ItemDocument',
+      foreign_key: :item_id,
+      dependent: :destroy
+
     validates :schema_slug, presence: true
     validates :data, presence: true
     validate :validate_data_against_schema
@@ -54,12 +71,13 @@ module Aven
       deleted_at.present?
     end
 
-    # Schema resolution: code class first, then DB, then raise
+    # Schema resolution: configured schemas, then DB
     class << self
       def schema_class_for(slug)
-        "Aven::Item::Schemas::#{slug.to_s.camelize}".constantize
-      rescue NameError
-        nil
+        Aven.configuration.schemas.find do |schema_class|
+          schema_class = schema_class.constantize if schema_class.is_a?(String)
+          schema_class.slug == slug
+        end
       end
 
       def schema_for(slug, workspace: nil)

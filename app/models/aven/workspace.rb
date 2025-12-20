@@ -26,15 +26,14 @@ module Aven
     has_many :workspace_roles, class_name: "Aven::WorkspaceRole", dependent: :destroy
     has_many :workspace_user_roles, through: :workspace_roles, class_name: "Aven::WorkspaceUserRole"
 
-    # Agentic associations
-    has_many :aven_agentic_agents, class_name: "Aven::Agentic::Agent", dependent: :destroy
-    has_many :aven_agentic_documents, class_name: "Aven::Agentic::Document", dependent: :destroy
-
     # Chat associations
     has_many :aven_chat_threads, class_name: "Aven::Chat::Thread", dependent: :destroy
 
     # Article associations
     has_many :aven_articles, class_name: "Aven::Article", dependent: :destroy
+
+    # Feature associations
+    has_many :feature_workspace_users, class_name: "Aven::FeatureWorkspaceUser", dependent: :destroy
 
     validates :slug, uniqueness: true, allow_blank: true
     validates :label, length: { maximum: 255 }, allow_blank: true

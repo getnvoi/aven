@@ -5,8 +5,10 @@ module Aven
     extend ActiveSupport::Concern
 
     included do
-      has_many :outgoing_links, class_name: "Aven::ItemLink", foreign_key: :source_id, dependent: :destroy
-      has_many :incoming_links, class_name: "Aven::ItemLink", foreign_key: :target_id, dependent: :destroy
+      has_many :outgoing_links, class_name: "Aven::ItemLink", foreign_key: :source_id, dependent: :destroy, inverse_of: :source
+      has_many :incoming_links, class_name: "Aven::ItemLink", foreign_key: :target_id, dependent: :destroy, inverse_of: :target
+
+      accepts_nested_attributes_for :outgoing_links, allow_destroy: true
 
       after_save :persist_pending_links
     end

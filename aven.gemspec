@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "view_component-contrib", "~> 0.2.5"
 
   # Utilities
+  spec.add_dependency "aeno"
   spec.add_dependency "dry-effects", "~> 0.5.0"
   spec.add_dependency "random_username", "~> 1.1"
   spec.add_dependency "dotenv-rails", "~> 3.1"
@@ -43,6 +44,9 @@ Gem::Specification.new do |spec|
   # OAuth
   spec.add_dependency "omniauth-github", "~> 2.0"
   spec.add_dependency "omniauth-google-oauth2", "~> 1.2"
+
+  # Password authentication
+  spec.add_dependency "bcrypt", "~> 3.1"
 
   # Google APIs
   spec.add_dependency "google-apis-people_v1", "~> 0.42"

@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="zinc">
   <head>
     <title>Aven</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= yield :head %>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
-    <%= stylesheet_link_tag "aeros/application", media: "all" %>
-    <%= stylesheet_link_tag "aeros/tailwind", media: "all" %>
+    <%# Aeno UI framework styles %>
+    <%= stylesheet_link_tag "aeno/application", media: "all" %>
+    <%= aeno_theme_tag %>
+    <%# Aven engine styles %>
     <%= stylesheet_link_tag "aven/application", media: "all" %>
     <%= stylesheet_link_tag "aven/tailwind", media: "all" %>
     <%= javascript_importmap_tags "aven/application", importmap: Aven.importmap %>

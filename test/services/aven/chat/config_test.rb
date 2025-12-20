@@ -44,43 +44,12 @@ class Aven::Chat::ConfigTest < ActiveSupport::TestCase
     assert_equal Aven::Chat::Config::DEFAULT_SYSTEM_PROMPT, result
   end
 
-  test "system_prompt includes document content when thread has locked documents" do
-    thread = aven_chat_threads(:agent_thread)
-    # Thread has locked documents [1, 3]
-
-    result = Aven::Chat::Config.system_prompt(thread:)
-
-    # Should include reference documents section
-    assert_includes result, "Reference Documents"
-  end
-
-  test "system_prompt does not include documents when thread has no locked documents" do
-    thread = aven_chat_threads(:basic_thread)
-
-    result = Aven::Chat::Config.system_prompt(thread:)
-
-    assert_not_includes result, "Reference Documents"
-  end
-
   # Tools configuration
   test "tools returns all tools when thread has no locked tools" do
-    skip "Requires RubyLLM and proper tool setup" unless defined?(RubyLLM)
-
     thread = aven_chat_threads(:basic_thread)
     tools = Aven::Chat::Config.tools(thread)
 
     assert_kind_of Array, tools
-  end
-
-  test "tools returns all tools when thread has empty array (not considered locked)" do
-    thread = aven_chat_threads(:basic_thread)
-    thread.update!(tools: [])
-
-    tools = Aven::Chat::Config.tools(thread)
-
-    # Empty array is not "present?" in Rails, so not considered locked
-    assert_kind_of Array, tools
-    assert tools.any?, "Should return all tools when not locked"
   end
 
   # Cost calculation

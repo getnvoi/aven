@@ -1,0 +1,47 @@
+<%= block("auth_card", title: "Sign in to your account") do |card| %>
+  <% if alert.present? %>
+    <% card.with_alert do %>
+      <%= ui("alert", variant: :error, message: alert) %>
+    <% end %>
+  <% end %>
+
+  <%= form_tag(form_path, method: :post, class: "stack-6") do %>
+    <div class="stack-4">
+      <%= ui("input-text", name: "email", label: "Email address", value: email,
+          placeholder: "you@example.com", required: true, autocomplete: "email",
+          data: { autofocus: true }) %>
+
+      <%= ui("input-password", name: "password", label: "Password",
+          placeholder: "Enter your password", required: true, autocomplete: "current-password") %>
+    </div>
+
+    <div class="text-right">
+      <%= ui("link", label: "Forgot your password?", href: password_reset_path, size: :sm) %>
+    </div>
+
+    <%= ui("button", label: "Sign in", type: "submit", full: true) %>
+  <% end %>
+
+  <% card.with_footer do %>
+    <% if magic_link_enabled? %>
+      <%= ui("divider", label: "Or") %>
+      <%= ui("button", label: "Sign in with email link", href: magic_link_path, variant: :outline, full: true) %>
+    <% end %>
+
+    <% if show_oauth_providers? %>
+      <%= ui("divider", label: "Or continue with") %>
+      <div class="oauth-providers">
+        <% oauth_providers.each do |provider| %>
+          <%= ui("button", label: provider.to_s.capitalize, href: oauth_path_for(provider), variant: :outline) %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if registration_enabled? %>
+      <p class="text-center text-sm text-muted">
+        Don't have an account?
+        <%= ui("link", label: "Create one", href: register_path) %>
+      </p>
+    <% end %>
+  <% end %>
+<% end %>

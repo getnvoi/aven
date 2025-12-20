@@ -1,0 +1,26 @@
+<%= block("auth_card", title: "Sign in with email", subtitle: "Enter your email address and we'll send you a sign-in code.") do |card| %>
+  <% if alert.present? %>
+    <% card.with_alert do %>
+      <%= ui("alert", variant: :error, message: alert) %>
+    <% end %>
+  <% end %>
+
+  <%= form_tag(form_path, method: :post, class: "stack-6") do %>
+    <%= ui("input-text", name: "email", label: "Email address", value: email,
+        placeholder: "you@example.com", required: true, autocomplete: "email",
+        data: { autofocus: true }) %>
+
+    <%= ui("button", label: "Send sign-in code", type: "submit", full: true) %>
+  <% end %>
+
+  <% if show_oauth_providers? %>
+    <% card.with_footer do %>
+      <%= ui("divider", label: "Or sign in with") %>
+      <div class="oauth-providers">
+        <% oauth_providers.each do |provider| %>
+          <%= ui("button", label: provider.to_s.capitalize, href: oauth_path_for(provider), variant: :outline) %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

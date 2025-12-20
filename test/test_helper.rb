@@ -9,6 +9,15 @@ GC.disable
 
 require_relative "dummy/config/environment"
 
+# Configure Aven schemas for tests
+Aven.configure do |config|
+  config.schemas = [
+    Aven::Item::Schemas::Contact,
+    Aven::Item::Schemas::Note,
+    Aven::Item::Schemas::Company
+  ]
+end
+
 # Silence ActiveRecord and Rails logging in tests
 ActiveRecord::Base.logger = nil
 Rails.logger.level = :fatal
@@ -26,15 +35,36 @@ OmniAuth.config.logger = Logger.new("/dev/null")
 require_relative "dummy/app/models/test_project"
 require_relative "dummy/app/models/test_resource" if File.exist?(File.join(__dir__, "dummy/app/models/test_resource.rb"))
 
-# Load test support (stubs, helpers)
-require_relative "support/test_tools"
-
 # Load fixtures from the engine
 if ActiveSupport::TestCase.respond_to?(:fixture_paths=)
   ActiveSupport::TestCase.fixture_paths = [ File.expand_path("fixtures", __dir__) ]
   ActionDispatch::IntegrationTest.fixture_paths = ActiveSupport::TestCase.fixture_paths
   ActiveSupport::TestCase.file_fixture_path = File.expand_path("fixtures", __dir__) + "/files"
-  ActiveSupport::TestCase.fixtures :all
+
+  # Load fixtures in dependency order (item_recipients must load before invites)
+  ActiveSupport::TestCase.fixtures(
+    :aven_workspaces,
+    :aven_workspace_roles,
+    :aven_users,
+    :aven_workspace_users,
+    :aven_workspace_user_roles,
+    :aven_sessions,
+    :aven_magic_links,
+    :aven_items,
+    :aven_item_links,
+    :aven_item_schemas,
+    :aven_item_recipients,  # Must load before invites
+    :aven_invites,          # Depends on item_recipients
+    :aven_articles,
+    :aven_article_attachments,
+    :aven_article_relationships,
+    :aven_logs,
+    :aven_imports,
+    :aven_import_entries,
+    :aven_import_item_links,
+    :aven_chat_threads,
+    :aven_chat_messages
+  )
 end
 
 # WebMock helpers for API stubs
@@ -101,6 +131,7 @@ module APIStubHelpers
 end
 
 # Test authentication - injects user at controller level (no HTTP requests)
+# Uses Aven::Current for thread-safe context, with fallback to thread locals
 module Aven
   module TestAuthentication
     extend ActiveSupport::Concern
@@ -111,11 +142,17 @@ module Aven
 
     module AuthOverrides
       def current_user
-        Thread.current[:aven_test_user] || super
+        # Check thread-local override first (for tests), then Current
+        Thread.current[:aven_test_user] || Aven::Current.user || super
       end
 
       def current_workspace
-        Thread.current[:aven_test_workspace] || super
+        # Check thread-local override first (for tests), then Current
+        Thread.current[:aven_test_workspace] || Aven::Current.workspace || super
+      end
+
+      def current_session
+        Thread.current[:aven_test_session] || Aven::Current.session || super
       end
     end
   end
@@ -125,16 +162,32 @@ end
 Aven::ApplicationController.include(Aven::TestAuthentication)
 
 module IntegrationAuthHelpers
-  # Zero-request sign in - sets thread-local user
+  # Zero-request sign in - sets thread-local user and Current context
   def sign_in_as(user, workspace = nil)
     workspace ||= user.workspace_users.first&.workspace
+
+    # Create a test session for the user
+    session_record = user.sessions.create!(
+      ip_address: "127.0.0.1",
+      user_agent: "Test Agent",
+      last_active_at: Time.current
+    )
+
+    # Set thread locals for backward compatibility
     Thread.current[:aven_test_user] = user
     Thread.current[:aven_test_workspace] = workspace
+    Thread.current[:aven_test_session] = session_record
+
+    # Also set Current context
+    Aven::Current.session = session_record
+    Aven::Current.workspace = workspace
   end
 
   def sign_out_test_user
     Thread.current[:aven_test_user] = nil
     Thread.current[:aven_test_workspace] = nil
+    Thread.current[:aven_test_session] = nil
+    Aven::Current.reset
   end
 
   # Full OAuth flow - use only for testing OAuth itself
@@ -179,6 +232,7 @@ class ActiveSupport::TestCase
 
   teardown do
     WebMock.reset!
+    Aven::Current.reset
   end
 end
 
@@ -189,5 +243,7 @@ class ActionDispatch::IntegrationTest
   teardown do
     Thread.current[:aven_test_user] = nil
     Thread.current[:aven_test_workspace] = nil
+    Thread.current[:aven_test_session] = nil
+    Aven::Current.reset
   end
 end

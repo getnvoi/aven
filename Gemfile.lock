@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/getnvoi/aeno.git
-  revision: 141eb85ec85de78d2d948292f0e0132fdeb597d5
+  revision: 6aaf02e94aa3466ae1271bcdc9787e61593fa785
   branch: main
   specs:
-    aeno (0.0.2)
+    aeno (0.0.3)
       dry-effects (~> 0.5.0)
       importmap-rails (~> 2.2.2)
       lucide-rails (~> 0.3)
@@ -18,6 +18,8 @@ PATH
   specs:
     aven (0.0.5)
       acts-as-taggable-on (>= 12, < 14)
+      aeno
+      bcrypt (~> 3.1)
       dotenv-rails (~> 3.1)
       dry-effects (~> 0.5.0)
       friendly_id (~> 5.5)
@@ -124,6 +126,7 @@ GEM
       activesupport (>= 6.0.0)
     ast (2.4.3)
     base64 (0.3.0)
+    bcrypt (3.1.20)
     bigdecimal (3.3.1)
     builder (3.3.0)
     concurrent-ruby (1.3.6)
