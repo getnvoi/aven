@@ -1,4 +1,4 @@
-<%= block("auth_card", title: "Authentication Failed") do |card| %>
+<%= ui("auth_card", title: "Authentication Failed") do |card| %>
   <% card.with_alert do %>
     <%= ui("alert", variant: :error, message: error_message, title: error_class.present? ? "Error: #{error_class}" : nil) %>
   <% end %>

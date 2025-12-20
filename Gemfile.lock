@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/getnvoi/aeno.git
-  revision: 0308f37ad69328d4702f5b29238f6b50cc4fdc55
+  revision: 3b018a9d39c02e2dfd0aa5df64d4af237e7cab94
   branch: main
   specs:
     aeno (0.0.1)

@@ -1,4 +1,4 @@
-<%= block("auth_card", title: "Enter your sign-in code", subtitle: "Check your email for a 6-digit code and enter it below.") do |card| %>
+<%= ui("auth_card", title: "Enter your sign-in code", subtitle: "Check your email for a 6-digit code and enter it below.") do |card| %>
   <% card.with_alert do %>
     <% if notice.present? %>
       <%= ui("alert", variant: :success, message: notice) %>
@@ -12,7 +12,7 @@
   <% end %>
 
   <%= form_tag(form_path, method: :post, class: "stack-6") do %>
-    <%= ui("input-text", name: "code", label: "Sign-in code", value: code,
+    <%= ui("input", type: :text, name: "code", label: "Sign-in code", value: code,
         placeholder: "ABC123", required: true, autocomplete: "one-time-code",
         data: { autofocus: true }) %>
 

@@ -1,4 +1,4 @@
-<%= block("auth_card", title: "Set new password", subtitle: "Enter your new password below. It must be at least #{minimum_length} characters.") do |card| %>
+<%= ui("auth_card", title: "Set new password", subtitle: "Enter your new password below. It must be at least #{minimum_length} characters.") do |card| %>
   <% if alert.present? %>
     <% card.with_alert do %>
       <%= ui("alert", variant: :error, message: alert) %>
@@ -9,11 +9,11 @@
     <%= hidden_field_tag :token, token %>
 
     <div class="stack-4">
-      <%= ui("input-password", name: "password", label: "New password",
+      <%= ui("input", type: :password, name: "password", label: "New password",
           placeholder: "Enter new password", required: true, autocomplete: "new-password",
           minlength: minimum_length, data: { autofocus: true }) %>
 
-      <%= ui("input-password", name: "password_confirmation", label: "Confirm new password",
+      <%= ui("input", type: :password, name: "password_confirmation", label: "Confirm new password",
           placeholder: "Confirm new password", required: true, autocomplete: "new-password",
           minlength: minimum_length) %>
     </div>
