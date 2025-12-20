@@ -210,7 +210,7 @@ class Aven::Auth::RegistrationsControllerTest < ActionDispatch::IntegrationTest
         auth_tenant: "www.example.com",
         password: "securepassword123"
       )
-      workspace = Aven::Workspace.create!(label: "Test Workspace")
+      workspace = Aven::Workspace.create!(label: "Test Workspace", created_by: @user)
       Aven::WorkspaceUser.create!(user: user, workspace: workspace)
       user.reload
       user

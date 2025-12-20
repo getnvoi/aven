@@ -32,6 +32,8 @@ module Aven
     belongs_to :source, class_name: "Aven::Item"
     belongs_to :target, class_name: "Aven::Item"
 
+    accepts_nested_attributes_for(:target, allow_destroy: true)
+
     validates :relation, presence: true
     validates :target_id, uniqueness: { scope: [:source_id, :relation] }
 

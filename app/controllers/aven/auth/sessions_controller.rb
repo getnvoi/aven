@@ -62,7 +62,7 @@ module Aven
           workspace = user.workspaces.first
 
           if workspace.nil?
-            workspace = Aven::Workspace.create!(label: "Default Workspace")
+            workspace = Aven::Workspace.create!(label: "Default Workspace", created_by: user)
             Aven::WorkspaceUser.create!(user: user, workspace: workspace)
             user.reload
           end

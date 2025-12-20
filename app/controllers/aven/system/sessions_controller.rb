@@ -54,6 +54,11 @@ module Aven
 
       private
 
+      def current_system_user
+        @current_system_user ||= Aven::SystemUser.find_by(id: session[:system_user_id])
+      end
+      helper_method :current_system_user
+
       def redirect_if_authenticated
         if session[:system_user_id].present?
           redirect_to aven.system_root_path

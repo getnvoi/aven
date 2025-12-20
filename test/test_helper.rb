@@ -25,6 +25,10 @@ ActiveRecord::Migrator.migrations_paths = [ File.expand_path("dummy/db/migrate",
 require "rails/test_help"
 require "webmock/minitest"
 
+# Initialize Minitest seed for minitest 6.0 compatibility
+seed_match = ENV.fetch("TESTOPTS", "").match(/--seed[= ](\d+)/)
+Minitest.seed = seed_match ? seed_match[1].to_i : (srand % 0xFFFF)
+
 # Configure WebMock
 WebMock.disable_net_connect!(allow_localhost: true)
 
@@ -41,11 +45,11 @@ if ActiveSupport::TestCase.respond_to?(:fixture_paths=)
   ActionDispatch::IntegrationTest.fixture_paths = ActiveSupport::TestCase.fixture_paths
   ActiveSupport::TestCase.file_fixture_path = File.expand_path("fixtures", __dir__) + "/files"
 
-  # Load fixtures in dependency order (item_recipients must load before invites)
+  # Load fixtures in dependency order (users before workspaces, item_recipients before invites)
   ActiveSupport::TestCase.fixtures(
+    :aven_users,
     :aven_workspaces,
     :aven_workspace_roles,
-    :aven_users,
     :aven_workspace_users,
     :aven_workspace_user_roles,
     :aven_sessions,

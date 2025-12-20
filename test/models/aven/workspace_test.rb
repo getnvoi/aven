@@ -115,8 +115,9 @@ class Aven::WorkspaceTest < ActiveSupport::TestCase
   end
 
   test "destroy_tenant_data destroys all tenant records for workspace" do
-    workspace1 = Aven::Workspace.create!(label: "Workspace 1")
-    workspace2 = Aven::Workspace.create!(label: "Workspace 2")
+    user = aven_users(:one)
+    workspace1 = Aven::Workspace.create!(label: "Workspace 1", created_by: user)
+    workspace2 = Aven::Workspace.create!(label: "Workspace 2", created_by: user)
 
     project1 = TestProject.create!(name: "Project 1", workspace: workspace1)
     project2 = TestProject.create!(name: "Project 2", workspace: workspace2)

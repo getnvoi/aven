@@ -59,6 +59,7 @@ class Aven::Item::LinkableItemLinksWithMetadataTest < ActiveSupport::TestCase
         target_attributes: {
           id: @contact2.id,
           data: {
+            first_name: "Jane",
             emails: [
               { id: SecureRandom.uuid, address: "spouse@example.com", kind: "personal" }
             ]

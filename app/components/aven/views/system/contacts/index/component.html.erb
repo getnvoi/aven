@@ -54,7 +54,7 @@
             <span class="text-gray-400">-</span>
           <% end %>
         <% end %>
-        <% r.with_cell { contact.workspace&.name || "N/A" } %>
+        <% r.with_cell { contact.workspace&.label || "N/A" } %>
         <% r.with_cell { contact.created_at.strftime("%b %d, %Y") } %>
         <% r.with_cell do %>
           <%= link_to "View", "#", class: "text-indigo-600 hover:text-indigo-900" %>
@@ -65,6 +65,6 @@
 
   <%# Pagination %>
   <div class="mt-4">
-    <%= paginate contacts, theme: 'tailwind', params: { q: params[:q], gender: params[:gender] }.compact %>
+    <%= helpers.paginate contacts,  params: { q: params[:q], gender: params[:gender] }.compact %>
   </div>
 <% end %>

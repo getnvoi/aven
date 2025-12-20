@@ -44,7 +44,7 @@
       <% t.with_row do |r| %>
         <% r.with_cell { log.message } %>
         <% r.with_cell { log.loggable_type&.demodulize || "N/A" } %>
-        <% r.with_cell { log.workspace&.name || "N/A" } %>
+        <% r.with_cell { log.workspace&.label || "N/A" } %>
         <% r.with_cell do %>
           <% variant = case log.level
                        when "error", "fatal" then "destructive"
@@ -71,6 +71,6 @@
 
   <%# Pagination %>
   <div class="mt-4">
-    <%= paginate logs, theme: 'tailwind', params: { q: params[:q], level: params[:level] }.compact %>
+    <%= helpers.paginate logs,  params: { q: params[:q], level: params[:level] }.compact %>
   </div>
 <% end %>

@@ -9,7 +9,8 @@ class Aven::WorkspaceOauthTest < ActionDispatch::IntegrationTest
     )
 
     @workspace = Aven::Workspace.create!(
-      label: "Test Workspace"
+      label: "Test Workspace",
+      created_by: @user
     )
 
     Aven::WorkspaceUser.create!(

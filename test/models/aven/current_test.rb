@@ -75,7 +75,7 @@ class Aven::CurrentTest < ActiveSupport::TestCase
 
     # Ensure user has multiple workspaces
     workspace1 = aven_workspaces(:one)
-    workspace2 = Aven::Workspace.create!(label: "Second Workspace")
+    workspace2 = Aven::Workspace.create!(label: "Second Workspace", created_by: user)
     Aven::WorkspaceUser.find_or_create_by!(user: user, workspace: workspace1)
     Aven::WorkspaceUser.find_or_create_by!(user: user, workspace: workspace2)
     user.reload
@@ -121,7 +121,8 @@ class Aven::CurrentTest < ActiveSupport::TestCase
 
   test "with_workspace restores previous workspace after block" do
     original_workspace = aven_workspaces(:one)
-    other_workspace = Aven::Workspace.create!(label: "Other")
+    user = aven_users(:one)
+    other_workspace = Aven::Workspace.create!(label: "Other", created_by: user)
 
     Aven::Current.workspace = original_workspace
 

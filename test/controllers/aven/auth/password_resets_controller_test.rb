@@ -9,7 +9,7 @@ class Aven::Auth::PasswordResetsControllerTest < ActionDispatch::IntegrationTest
       auth_tenant: "www.example.com",
       password: "oldpassword123"
     )
-    @workspace = Aven::Workspace.create!(label: "Test Workspace")
+    @workspace = Aven::Workspace.create!(label: "Test Workspace", created_by: @user)
     Aven::WorkspaceUser.create!(user: @user, workspace: @workspace)
   end
 

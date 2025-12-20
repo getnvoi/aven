@@ -94,7 +94,7 @@ module Aven
         end
 
         def set_current_workspace_for(user)
-          workspace = Aven::Workspace.create!(label: "Default Workspace")
+          workspace = Aven::Workspace.create!(label: "Default Workspace", created_by: user)
           Aven::WorkspaceUser.create!(user: user, workspace: workspace)
           user.reload
           self.current_workspace = workspace

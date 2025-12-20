@@ -105,7 +105,7 @@ module Aven
 
           # Create default workspace if user has none
           if workspace.nil?
-            workspace = Aven::Workspace.create!(label: "Default Workspace")
+            workspace = Aven::Workspace.create!(label: "Default Workspace", created_by: user)
             Aven::WorkspaceUser.create!(user: user, workspace: workspace)
             user.reload
           end

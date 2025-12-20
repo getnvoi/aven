@@ -8,7 +8,7 @@ class Aven::SessionsControllerTest < ActionDispatch::IntegrationTest
       email: "sessions-test@example.com",
       auth_tenant: "www.example.com"
     )
-    @workspace = Aven::Workspace.create!(label: "Test Workspace")
+    @workspace = Aven::Workspace.create!(label: "Test Workspace", created_by: @user)
     Aven::WorkspaceUser.create!(user: @user, workspace: @workspace)
   end
 
