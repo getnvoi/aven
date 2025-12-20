@@ -1,0 +1,72 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-start">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900"><%= feature.editorial_title.presence || feature.name %></h1>
+      <p class="mt-2 text-sm text-gray-700"><%= feature.slug %></p>
+    </div>
+    <div>
+      <%= link_to "Edit", aven.edit_system_feature_path(feature), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow rounded-lg divide-y divide-gray-200">
+    <div class="px-4 py-5 sm:p-6">
+      <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Name</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= feature.name %></dd>
+        </div>
+
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Type</dt>
+          <dd class="mt-1">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              <%= feature.feature_type.humanize %>
+            </span>
+          </dd>
+        </div>
+
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Auto Activate</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= feature.auto_activate ? "Yes" : "No" %></dd>
+        </div>
+
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Tools Count</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= feature.feature_tools.size %></dd>
+        </div>
+
+        <div class="sm:col-span-2">
+          <dt class="text-sm font-medium text-gray-500">Editorial Title</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= feature.editorial_title || "-" %></dd>
+        </div>
+
+        <div class="sm:col-span-2">
+          <dt class="text-sm font-medium text-gray-500">Editorial Description</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= feature.editorial_description || "-" %></dd>
+        </div>
+
+        <div class="sm:col-span-2">
+          <dt class="text-sm font-medium text-gray-500">Editorial Body</dt>
+          <dd class="mt-1 text-sm text-gray-900 prose max-w-none">
+            <%= simple_format(feature.editorial_body || "-") %>
+          </dd>
+        </div>
+
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Created At</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= feature.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+        </div>
+
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Updated At</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= feature.updated_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="flex justify-end">
+    <%= link_to "Back to Features", aven.system_features_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+  </div>
+</div>

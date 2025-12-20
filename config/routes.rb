@@ -94,5 +94,27 @@ Aven::Engine.routes.draw do
     root(to: "dashboard#index")
   end
 
+  # System Admin routes
+  namespace :system do
+    root to: "dashboard#index"
+
+    # Authentication
+    get "login", to: "sessions#new", as: :login
+    post "login", to: "sessions#create"
+    delete "logout", to: "sessions#destroy", as: :logout
+
+    # System resources
+    resources :activities, only: [:index]
+    resources :contacts, only: [:index]
+    resources :features, only: [:index, :show, :edit, :update]
+    resources :invites, only: [:index]
+    resources :users, only: [:index]
+    resources :workspaces, only: [:index]
+
+    # Impersonation
+    post "impersonate/:user_id", to: "impersonations#create", as: :impersonate
+    delete "impersonate", to: "impersonations#destroy", as: :stop_impersonation
+  end
+
   root(to: "static#index")
 end

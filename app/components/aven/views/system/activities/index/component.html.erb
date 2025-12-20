@@ -1,0 +1,71 @@
+<%= ui("page", title: "Activities", description: "System-wide activity log") do |page| %>
+  <%= ui("table", sticky: :last) do |t| %>
+    <%# Filters %>
+    <% t.with_filter(
+      type: :search,
+      name: "q",
+      url: aven.system_activities_path,
+      placeholder: "Search activities...",
+      debounce: 300
+    ) %>
+
+    <% t.with_filter(
+      type: :select,
+      name: "level",
+      url: aven.system_activities_path,
+      label: "Level"
+    ) do |s| %>
+      <% s.with_option(value: "", label: "All Levels") %>
+      <% s.with_option(value: "debug", label: "Debug") %>
+      <% s.with_option(value: "info", label: "Info") %>
+      <% s.with_option(value: "warn", label: "Warning") %>
+      <% s.with_option(value: "error", label: "Error") %>
+      <% s.with_option(value: "fatal", label: "Fatal") %>
+    <% end %>
+
+    <% t.with_filter(
+      type: :button,
+      label: "Clear Filters",
+      url: aven.system_activities_path
+    ) %>
+
+    <%# Header %>
+    <% t.with_header do |h| %>
+      <% h.with_column { "Message" } %>
+      <% h.with_column { "Type" } %>
+      <% h.with_column { "Workspace" } %>
+      <% h.with_column { "Level" } %>
+      <% h.with_column { "When" } %>
+      <% h.with_column { "Actions" } %>
+    <% end %>
+
+    <%# Rows %>
+    <% logs.each do |log| %>
+      <% t.with_row do |r| %>
+        <% r.with_cell { log.message } %>
+        <% r.with_cell { log.loggable_type&.demodulize || "N/A" } %>
+        <% r.with_cell { log.workspace&.name || "N/A" } %>
+        <% r.with_cell do %>
+          <% variant = case log.level
+                       when "error", "fatal" then "destructive"
+                       when "warn" then "warning"
+                       else "default"
+                       end %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%=
+            case variant
+            when "destructive" then "bg-red-100 text-red-800"
+            when "warning" then "bg-yellow-100 text-yellow-800"
+            else "bg-green-100 text-green-800"
+            end
+          %>">
+            <%= log.level %>
+          </span>
+        <% end %>
+        <% r.with_cell { time_ago_in_words(log.created_at) + " ago" } %>
+        <% r.with_cell do %>
+          <%= link_to "View", "#", class: "text-indigo-600 hover:text-indigo-900" %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

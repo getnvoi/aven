@@ -1,0 +1,65 @@
+<%= ui("page", title: "Contacts", description: "System-wide contact directory") do |page| %>
+  <%= ui("table", sticky: :last) do |t| %>
+    <%# Filters %>
+    <% t.with_filter(
+      type: :search,
+      name: "q",
+      url: aven.system_contacts_path,
+      placeholder: "Search contacts...",
+      debounce: 300
+    ) %>
+
+    <% t.with_filter(
+      type: :select,
+      name: "gender",
+      url: aven.system_contacts_path,
+      label: "Gender"
+    ) do |s| %>
+      <% s.with_option(value: "", label: "All Genders") %>
+      <% s.with_option(value: "male", label: "Male") %>
+      <% s.with_option(value: "female", label: "Female") %>
+      <% s.with_option(value: "other", label: "Other") %>
+      <% s.with_option(value: "prefer_not_to_say", label: "Prefer not to say") %>
+    <% end %>
+
+    <% t.with_filter(
+      type: :button,
+      label: "Clear Filters",
+      url: aven.system_contacts_path
+    ) %>
+
+    <%# Header %>
+    <% t.with_header do |h| %>
+      <% h.with_column { "Name" } %>
+      <% h.with_column { "Company" } %>
+      <% h.with_column { "Job Title" } %>
+      <% h.with_column { "Gender" } %>
+      <% h.with_column { "Workspace" } %>
+      <% h.with_column { "Created" } %>
+      <% h.with_column { "Actions" } %>
+    <% end %>
+
+    <%# Rows %>
+    <% contacts.each do |contact| %>
+      <% t.with_row do |r| %>
+        <% r.with_cell { contact.data["display_name"] || "N/A" } %>
+        <% r.with_cell { contact.data["company"] || "-" } %>
+        <% r.with_cell { contact.data["job_title"] || "-" } %>
+        <% r.with_cell do %>
+          <% if contact.data["gender"].present? %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+              <%= contact.data["gender"].humanize %>
+            </span>
+          <% else %>
+            <span class="text-gray-400">-</span>
+          <% end %>
+        <% end %>
+        <% r.with_cell { contact.workspace&.name || "N/A" } %>
+        <% r.with_cell { contact.created_at.strftime("%b %d, %Y") } %>
+        <% r.with_cell do %>
+          <%= link_to "View", "#", class: "text-indigo-600 hover:text-indigo-900" %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
