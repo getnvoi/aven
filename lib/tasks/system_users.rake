@@ -10,21 +10,44 @@ namespace :aven do
       # 1. Create system user
       puts "1️⃣  Creating system user..."
       system_user = Aven::SystemUser.find_or_initialize_by(email: "admin@test.com")
-      system_user.password = "password"
-      system_user.password_confirmation = "password"
+      unless system_user.persisted?
+        system_user.password = "password123456"
+        system_user.password_confirmation = "password123456"
+      end
 
       if system_user.save
-        puts "   ✅ System user: admin@test.com / password"
+        puts "   ✅ System user: admin@test.com / password123456"
       else
         puts "   ❌ Failed: #{system_user.errors.full_messages.join(', ')}"
       end
       puts ""
 
-      # 2. Create workspace
-      puts "2️⃣  Creating test workspace..."
+      # 2. Create first user (needed for workspace created_by)
+      puts "2️⃣  Creating first user..."
+      first_user = Aven::User.find_or_initialize_by(email: "user1@test.com", auth_tenant: "localhost")
+      unless first_user.persisted?
+        first_user.password = "password123456"
+        first_user.password_confirmation = "password123456"
+        first_user.admin = false
+      end
+
+      if first_user.save
+        puts "   ✅ User: #{first_user.email}"
+      else
+        puts "   ❌ Failed: #{first_user.errors.full_messages.join(', ')}"
+        exit 1
+      end
+      puts ""
+
+      # 3. Create workspace
+      puts "3️⃣  Creating test workspace..."
       workspace = Aven::Workspace.find_or_initialize_by(slug: "test-workspace")
-      workspace.label = "Test Workspace"
-      workspace.description = "A test workspace for development"
+      unless workspace.persisted?
+        workspace.label = "Test Workspace"
+        workspace.description = "A test workspace for development"
+        workspace.created_by = first_user
+        workspace.onboarding_state = "completed"
+      end
 
       if workspace.save
         puts "   ✅ Workspace: #{workspace.label} (#{workspace.slug})"
@@ -33,18 +56,23 @@ namespace :aven do
       end
       puts ""
 
-      # 3. Create regular users
-      puts "3️⃣  Creating test users..."
+      # 4. Add first user to workspace
+      Aven::WorkspaceUser.find_or_create_by!(workspace:, user: first_user)
+
+      # 5. Create additional users
+      puts "4️⃣  Creating additional test users..."
       users = [
-        { email: "user1@test.com", admin: false },
         { email: "user2@test.com", admin: false },
         { email: "admin.user@test.com", admin: true }
       ]
 
       users.each do |user_data|
-        user = Aven::User.find_or_initialize_by(email: user_data[:email])
-        user.password = "password"
-        user.admin = user_data[:admin]
+        user = Aven::User.find_or_initialize_by(email: user_data[:email], auth_tenant: "localhost")
+        unless user.persisted?
+          user.password = "password123456"
+          user.password_confirmation = "password123456"
+          user.admin = user_data[:admin]
+        end
 
         if user.save
           # Add to workspace
@@ -56,8 +84,8 @@ namespace :aven do
       end
       puts ""
 
-      # 4. Create features
-      puts "4️⃣  Creating features..."
+      # 6. Create features
+      puts "6️⃣  Creating features..."
       features_data = [
         { name: "Contacts", slug: "contacts", feature_type: "core", auto_activate: true },
         { name: "RIB Checks", slug: "rib_checks", feature_type: "producer", auto_activate: true },
@@ -86,90 +114,161 @@ namespace :aven do
       end
       puts ""
 
-      # 5. Create contacts (Items with contact schema)
-      puts "5️⃣  Creating test contacts..."
-      contacts_data = [
-        {
-          display_name: "John Doe",
-          first_name: "John",
-          last_name: "Doe",
-          email: "john.doe@example.com",
-          company: "Acme Corp",
-          job_title: "CEO",
-          gender: "male"
-        },
-        {
-          display_name: "Jane Smith",
-          first_name: "Jane",
-          last_name: "Smith",
-          email: "jane.smith@example.com",
-          company: "Tech Inc",
-          job_title: "CTO",
-          gender: "female"
-        },
-        {
-          display_name: "Bob Johnson",
-          first_name: "Bob",
-          last_name: "Johnson",
-          email: "bob.johnson@example.com",
-          company: "StartUp LLC",
-          job_title: "Founder",
-          gender: "male"
-        }
-      ]
-
-      first_user = Aven::User.find_by(email: "user1@test.com")
-
-      contacts_data.each do |contact_data|
-        contact = Aven::Item.find_or_initialize_by(
-          workspace:,
-          schema_slug: "contact",
-          data: contact_data
+      # 7. Create item schema for contacts (if needed)
+      puts "7️⃣  Creating contact schema..."
+      contact_schema = Aven::ItemSchema.find_or_initialize_by(workspace:, slug: "contact")
+      unless contact_schema.persisted?
+        contact_schema.assign_attributes(
+          schema: {
+            type: "object",
+            properties: {
+              display_name: { type: "string" },
+              first_name: { type: "string" },
+              last_name: { type: "string" },
+              email: { type: "string" },
+              company: { type: "string" },
+              job_title: { type: "string" },
+              gender: { type: "string" }
+            }
+          },
+          fields: {},
+          embeds: {},
+          links: {}
         )
-        contact.created_by = first_user
+      end
 
-        if contact.save
-          puts "   ✅ Contact: #{contact_data[:display_name]}"
-        else
-          puts "   ❌ Failed: #{contact.errors.full_messages.join(', ')}"
-        end
+      if contact_schema.save
+        puts "   ✅ Contact schema created"
+      else
+        puts "   ⚠️  Contact schema skipped (#{contact_schema.errors.full_messages.join(', ')})"
       end
       puts ""
 
-      # 6. Create item recipients
-      puts "6️⃣  Creating item recipients..."
+      # 8. Create contacts (Items with contact schema)
+      puts "8️⃣  Creating test contacts..."
+      if Aven::ItemSchema.exists?(workspace:, slug: "contact")
+        contacts_data = [
+          {
+            display_name: "John Doe",
+            first_name: "John",
+            last_name: "Doe",
+            email: "john.doe@example.com",
+            company: "Acme Corp",
+            job_title: "CEO",
+            gender: "male"
+          },
+          {
+            display_name: "Jane Smith",
+            first_name: "Jane",
+            last_name: "Smith",
+            email: "jane.smith@example.com",
+            company: "Tech Inc",
+            job_title: "CTO",
+            gender: "female"
+          },
+          {
+            display_name: "Bob Johnson",
+            first_name: "Bob",
+            last_name: "Johnson",
+            email: "bob.johnson@example.com",
+            company: "StartUp LLC",
+            job_title: "Founder",
+            gender: "male"
+          }
+        ]
+
+        contacts_data.each do |contact_data|
+          contact = Aven::Item.where(workspace_id: workspace.id, schema_slug: "contact")
+                              .where("data @> ?", contact_data.to_json)
+                              .first_or_initialize
+          unless contact.persisted?
+            contact.workspace_id = workspace.id
+            contact.data = contact_data
+            contact.created_by_id = first_user.id
+          end
+
+          if contact.save
+            puts "   ✅ Contact: #{contact_data[:display_name]}"
+          else
+            puts "   ❌ Failed: #{contact.errors.full_messages.join(', ')}"
+          end
+        end
+      else
+        puts "   ⚠️  Skipping contacts (schema not found)"
+      end
+      puts ""
+
+      # 9. Create item recipients
+      puts "9️⃣  Creating item recipients..."
       first_contact = Aven::Item.by_schema("contact").first
       second_contact = Aven::Item.by_schema("contact").second
 
       if first_contact && second_contact
+        # Create rib_check schema if needed
+        rib_schema = Aven::ItemSchema.find_or_initialize_by(workspace:, slug: "rib_check")
+        unless rib_schema.persisted?
+          rib_schema.assign_attributes(
+            schema: {
+              type: "object",
+              properties: {
+                subject: { type: "string" },
+                status: { type: "string" }
+              }
+            },
+            fields: {},
+            embeds: {},
+            links: {}
+          )
+          rib_schema.save!
+          puts "   ✅ RIB check schema created"
+        end
+
         # Create a source item (e.g., a RIB check request)
-        source_item = Aven::Item.find_or_create_by!(
+        # Use a unique identifier in the data to make it idempotent
+        source_item_data = {
+          subject: "Bank details verification",
+          status: "pending",
+          _seed_id: "test_rib_check_1"
+        }
+
+        source_item = Aven::Item.where(
           workspace:,
-          schema_slug: "rib_check",
-          data: {
-            subject: "Bank details verification",
-            status: "pending"
-          },
-          created_by: first_user
-        )
+          schema_slug: "rib_check"
+        ).where("data @> ?", { _seed_id: "test_rib_check_1" }.to_json).first
+
+        unless source_item
+          puts "   → Creating RIB check item (workspace_id: #{workspace.id}, created_by_id: #{first_user.id})"
+          source_item = Aven::Item.create!(
+            workspace_id: workspace.id,
+            schema_slug: "rib_check",
+            data: source_item_data,
+            created_by_id: first_user.id
+          )
+        end
 
         # Add recipients
-        recipient1 = Aven::ItemRecipient.find_or_create_by!(
+        Aven::ItemRecipient.find_or_create_by!(
           source_item:,
-          target_item: first_contact
+          target_item: first_contact,
+          workspace_id: workspace.id,
+          created_by_id: first_user.id
         )
 
-        recipient2 = Aven::ItemRecipient.find_or_create_by!(
+        Aven::ItemRecipient.find_or_create_by!(
           source_item:,
-          target_item: second_contact
+          target_item: second_contact,
+          workspace_id: workspace.id,
+          created_by_id: first_user.id
         )
 
         puts "   ✅ Created recipients for source item"
+      else
+        raise "Cannot create recipients: contacts not found"
       end
       puts ""
 
-      # 7. Create invites
-      puts "7️⃣  Creating test invites..."
+      # 🔟 Create invites
+      puts "🔟 Creating test invites..."
       invites_data = [
         { email: "invited1@test.com", type: "join_workspace", status: "pending" },
         { email: "invited2@test.com", type: "fulfillment", status: "accepted" },
@@ -181,11 +280,13 @@ namespace :aven do
           workspace:,
           invitee_email: invite_data[:email]
         )
-        invite.assign_attributes(
-          invite_type: invite_data[:type],
-          status: invite_data[:status],
-          auth_link_hash: SecureRandom.hex(32)
-        )
+        unless invite.persisted?
+          invite.assign_attributes(
+            invite_type: invite_data[:type],
+            status: invite_data[:status],
+            auth_link_hash: SecureRandom.hex(32)
+          )
+        end
 
         if invite.save
           puts "   ✅ Invite: #{invite_data[:email]} (#{invite_data[:type]})"
@@ -201,21 +302,23 @@ namespace :aven do
       puts "=" * 60
       puts ""
       puts "System Admin Login:"
-      puts "  URL: /system/login"
+      puts "  URL: /aven/system"
       puts "  Email: admin@test.com"
-      puts "  Password: password"
+      puts "  Password: password123456"
       puts ""
       puts "Regular User Login:"
-      puts "  URL: /login (or your main auth endpoint)"
+      puts "  URL: /aven/auth/sign_in"
       puts "  Email: user1@test.com"
-      puts "  Password: password"
+      puts "  Password: password123456"
       puts ""
       puts "Summary:"
       puts "  - #{Aven::SystemUser.count} system users"
       puts "  - #{Aven::Workspace.count} workspaces"
       puts "  - #{Aven::User.count} users"
       puts "  - #{Aven::Feature.count} features"
-      puts "  - #{Aven::Item.by_schema('contact').count} contacts"
+      puts "  - #{Aven::ItemSchema.count} item schemas"
+      puts "  - #{Aven::Item.where(schema_slug: 'contact').count} contacts"
+      puts "  - #{Aven::ItemRecipient.count} item recipients"
       puts "  - #{Aven::Invite.count} invites"
       puts ""
     end

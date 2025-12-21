@@ -21,10 +21,18 @@
     <% end %>
 
     <% t.with_filter(
-      type: :button,
+      type: :clear_filters,
       label: "Clear Filters",
       url: aven.system_users_path
     ) %>
+
+    <%# Empty State %>
+    <% t.with_empty_state do %>
+      <%= ui("empty", icon: "users") do |e| %>
+        <% e.with_title { "No users found" } %>
+        <% e.with_description { "No users match your current filters" } %>
+      <% end %>
+    <% end %>
 
     <%# Header %>
     <% t.with_header do |h| %>

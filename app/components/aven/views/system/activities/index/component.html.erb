@@ -24,10 +24,18 @@
     <% end %>
 
     <% t.with_filter(
-      type: :button,
+      type: :clear_filters,
       label: "Clear Filters",
       url: aven.system_activities_path
     ) %>
+
+    <%# Empty State %>
+    <% t.with_empty_state do %>
+      <%= ui("empty", icon: "activity") do |e| %>
+        <% e.with_title { "No activities found" } %>
+        <% e.with_description { "No activities match your current filters" } %>
+      <% end %>
+    <% end %>
 
     <%# Header %>
     <% t.with_header do |h| %>

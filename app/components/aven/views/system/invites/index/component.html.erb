@@ -34,10 +34,18 @@
     <% end %>
 
     <% t.with_filter(
-      type: :button,
+      type: :clear_filters,
       label: "Clear Filters",
       url: aven.system_invites_path
     ) %>
+
+    <%# Empty State %>
+    <% t.with_empty_state do %>
+      <%= ui("empty", icon: "mail") do |e| %>
+        <% e.with_title { "No invites found" } %>
+        <% e.with_description { "No invites match your current filters" } %>
+      <% end %>
+    <% end %>
 
     <%# Header %>
     <% t.with_header do |h| %>

@@ -10,10 +10,18 @@
     ) %>
 
     <% t.with_filter(
-      type: :button,
+      type: :clear_filters,
       label: "Clear Filters",
       url: aven.system_workspaces_path
     ) %>
+
+    <%# Empty State %>
+    <% t.with_empty_state do %>
+      <%= ui("empty", icon: "briefcase") do |e| %>
+        <% e.with_title { "No workspaces found" } %>
+        <% e.with_description { "No workspaces match your current filters" } %>
+      <% end %>
+    <% end %>
 
     <%# Header %>
     <% t.with_header do |h| %>

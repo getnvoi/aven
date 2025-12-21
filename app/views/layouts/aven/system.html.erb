@@ -12,32 +12,32 @@
   <body class="bg-gray-100">
     <div class="min-h-screen">
       <!-- Navigation -->
-      <nav class="bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between h-16">
-            <div class="flex">
-              <div class="flex-shrink-0 flex items-center">
-                <span class="text-xl font-bold text-gray-900">System Admin</span>
+      <% if current_system_user %>
+        <nav class="bg-white shadow-sm">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+              <div class="flex">
+                <div class="flex-shrink-0 flex items-center">
+                  <span class="text-xl font-bold text-gray-900">System Admin</span>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                  <%= link_to "Dashboard", aven.system_root_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(aven.system_root_path) ? 'border-b-2 border-indigo-500 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+                  <%= link_to "Activities", aven.system_activities_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(aven.system_activities_path) ? 'border-b-2 border-indigo-500 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+                  <%= link_to "Contacts", aven.system_contacts_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(aven.system_contacts_path) ? 'border-b-2 border-indigo-500 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+                  <%= link_to "Features", aven.system_features_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(aven.system_features_path) ? 'border-b-2 border-indigo-500 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+                  <%= link_to "Invites", aven.system_invites_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(aven.system_invites_path) ? 'border-b-2 border-indigo-500 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+                  <%= link_to "Users", aven.system_users_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(aven.system_users_path) ? 'border-b-2 border-indigo-500 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+                  <%= link_to "Workspaces", aven.system_workspaces_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(aven.system_workspaces_path) ? 'border-b-2 border-indigo-500 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
+                </div>
               </div>
-              <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                <%= link_to "Dashboard", aven.system_root_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(aven.system_root_path) ? 'border-b-2 border-indigo-500 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
-                <%= link_to "Activities", aven.system_activities_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(aven.system_activities_path) ? 'border-b-2 border-indigo-500 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
-                <%= link_to "Contacts", aven.system_contacts_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(aven.system_contacts_path) ? 'border-b-2 border-indigo-500 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
-                <%= link_to "Features", aven.system_features_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(aven.system_features_path) ? 'border-b-2 border-indigo-500 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
-                <%= link_to "Invites", aven.system_invites_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(aven.system_invites_path) ? 'border-b-2 border-indigo-500 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
-                <%= link_to "Users", aven.system_users_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(aven.system_users_path) ? 'border-b-2 border-indigo-500 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
-                <%= link_to "Workspaces", aven.system_workspaces_path, class: "inline-flex items-center px-1 pt-1 text-sm font-medium #{current_page?(aven.system_workspaces_path) ? 'border-b-2 border-indigo-500 text-gray-900' : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'}" %>
-              </div>
-            </div>
-            <div class="hidden sm:ml-6 sm:flex sm:items-center">
-              <% if current_system_user %>
+              <div class="hidden sm:ml-6 sm:flex sm:items-center">
                 <span class="text-sm text-gray-700 mr-4"><%= current_system_user.email %></span>
                 <%= button_to "Logout", aven.system_logout_path, method: :delete, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-              <% end %>
+              </div>
             </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      <% end %>
 
       <!-- Flash Messages -->
       <% if flash[:notice] %>
